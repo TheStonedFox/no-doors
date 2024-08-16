@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Корзина</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+    <header class="header inert">
+  <div class="header__container">
+    <section class="header__top">
+      <div>
+        <nav class="header__top-nav">
+          <a class="nav-link" href="./about.html">О компании</a>
+          <a class="nav-link" href="./delivery-payment.html">Доставка и оплата</a>
+          <a class="nav-link" href="./guarantees.html">Гарантии</a>
+          <a class="nav-link" href="./contacts.html">Контакты</a>
+        </nav>
+      </div>
+      <div class="header__top-right-box">
+        <div class="header__top-phone-number">
+          <img src="./img/header/icons/phone.svg" alt="phone" />
+          <a href="tell:79652374449">+7 (965) 237-44-49</a>
+        </div>
+        <div class="header__top-language">Русский</div>
+        <a class="header__top-account" href="#">Личный кабинет</a>
+      </div>
+    </section>
+    <section class="header__middle">
+      <div class="header__middle-menu-button">
+        <ul>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <h2>Меню</h2>
+      </div>
+      <div class="header__middle-logo">
+        <a href="./index.html"> <img src="./img/header/logo.svg" alt="logo" /></a>
+      </div>
+      <div class="header__middle-input">
+        <input type="text" placeholder="Введите поисковой запрос.." />
+        <button class="header__middle-search-button" type="button">
+          <img src="./img/header/icons/search.svg" alt="search" />
+          <p>Найти</p>
+        </button>
+        <div class="header__middle-search-area">
+
+        </div>
+      </div>
+      <div class="header__middle-buttons">
+        <a class="header__middle-button" href="./favorites.html">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_51_1062)">
+              <path
+                d="M27.5768 4.26124C26.0059 2.69033 23.9262 1.83173 21.7066 1.83173C19.487 1.83173 17.4009 2.69669 15.83 4.2676L15.0095 5.08803L14.1764 4.25488C12.6055 2.68397 10.5131 1.81265 8.29342 1.81265C6.08016 1.81265 3.99409 2.67761 2.42954 4.24216C0.858629 5.81307 -0.00632514 7.89914 3.48253e-05 10.1188C3.48253e-05 12.3384 0.871349 14.4181 2.44226 15.989L14.3863 27.933C14.5516 28.0984 14.7742 28.1874 14.9905 28.1874C15.2067 28.1874 15.4293 28.1047 15.5947 27.9394L27.5641 16.0144C29.135 14.4435 30 12.3575 30 10.1378C30.0063 7.91821 29.1477 5.83215 27.5768 4.26124ZM26.3557 14.7997L14.9905 26.1204L3.65065 14.7806C2.4041 13.5341 1.71722 11.8805 1.71722 10.1188C1.71722 8.35705 2.39774 6.70346 3.64429 5.46327C4.88448 4.22308 6.53807 3.5362 8.29342 3.5362C10.0551 3.5362 11.7151 4.22308 12.9616 5.46963L14.399 6.90698C14.7361 7.24406 15.2767 7.24406 15.6137 6.90698L17.0384 5.48235C18.2849 4.2358 19.9449 3.54892 21.7002 3.54892C23.4556 3.54892 25.1092 4.2358 26.3557 5.47599C27.6023 6.72254 28.2828 8.37613 28.2828 10.1378C28.2891 11.8996 27.6023 13.5531 26.3557 14.7997Z"
+                fill="currentColor" />
+            </g>
+            <defs>
+              <clipPath id="clip0_51_1062">
+                <rect width="30" height="30" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          <p>Избранное</p>
+        </a>
+        <a class="header__middle-button" href="./cart.html">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M9.66568 19.3948H9.66705C9.6682 19.3948 9.66934 19.3945 9.67049 19.3945H25.6055C25.9978 19.3945 26.3427 19.1343 26.4505 18.7571L29.9661 6.45241C30.0419 6.18713 29.9888 5.90195 29.8228 5.68176C29.6567 5.46158 29.3969 5.33203 29.1211 5.33203H7.6387L7.01042 2.50465C6.92093 2.10251 6.56433 1.81641 6.15234 1.81641H0.878906C0.393448 1.81641 0 2.20985 0 2.69531C0 3.18077 0.393448 3.57422 0.878906 3.57422H5.44739C5.55862 4.07524 8.45398 17.1046 8.6206 17.8542C7.68654 18.2602 7.03125 19.1915 7.03125 20.2734C7.03125 21.7273 8.21411 22.9102 9.66797 22.9102H25.6055C26.0909 22.9102 26.4844 22.5167 26.4844 22.0312C26.4844 21.5458 26.0909 21.1523 25.6055 21.1523H9.66797C9.18342 21.1523 8.78906 20.758 8.78906 20.2734C8.78906 19.7896 9.18205 19.3959 9.66568 19.3948ZM27.9559 7.08984L24.9424 17.6367H10.3729L8.02917 7.08984H27.9559Z"
+              fill="currentColor" />
+            <path
+              d="M8.78903 25.5469C8.78903 27.0007 9.9719 28.1836 11.4258 28.1836C12.8796 28.1836 14.0625 27.0007 14.0625 25.5469C14.0625 24.093 12.8796 22.9101 11.4258 22.9101C9.9719 22.9101 8.78903 24.093 8.78903 25.5469ZM11.4258 24.668C11.9103 24.668 12.3047 25.0623 12.3047 25.5469C12.3047 26.0314 11.9103 26.4258 11.4258 26.4258C10.9412 26.4258 10.5468 26.0314 10.5468 25.5469C10.5468 25.0623 10.9412 24.668 11.4258 24.668Z"
+              fill="currentColor" />
+            <path
+              d="M21.2109 25.5469C21.2109 27.0007 22.3938 28.1836 23.8476 28.1836C25.3015 28.1836 26.4844 27.0007 26.4844 25.5469C26.4844 24.093 25.3015 22.9101 23.8476 22.9101C22.3938 22.9101 21.2109 24.093 21.2109 25.5469ZM23.8476 24.668C24.3322 24.668 24.7265 25.0623 24.7265 25.5469C24.7265 26.0314 24.3322 26.4258 23.8476 26.4258C23.3631 26.4258 22.9687 26.0314 22.9687 25.5469C22.9687 25.0623 23.3631 24.668 23.8476 24.668Z"
+              fill="currentColor" />
+          </svg>
+          <p>Моя корзина</p>
+        </a>
+      </div>
+    </section>
+    <section class="header__bottom">
+      <nav class="header__bottom-nav">
+        <a class="header__bottom-nav-link header__bottom-nav-link_list" href="#">Apple</a>
+        <a class="header__bottom-nav-link header__bottom-nav-link_list" href="#">Huawei</a>
+        <a class="header__bottom-nav-link header__bottom-nav-link_list" href="#">Xiaomi</a>
+        <a class="header__bottom-nav-link header__bottom-nav-link_list" href="#">Samsung</a>
+        <a class="header__bottom-nav-link" href="#">Питание и кабели</a>
+        <a class="header__bottom-nav-link" href="#">Powerbank</a>
+        <a class="header__bottom-nav-link" href="#">Акции</a>
+        <div class="header__bottom-nav-list"></div>
+      </nav>
+      <a class="header__bottom-nav-link header__bottom-price-list" href="#">Прайс-лист</a>
+    </section>
+    <section class="header__mobile-nav">
+      <div class="header__mobile-nav-language">
+        <p>Русский</p>
+        <img src="./img/header/icons/arrow.svg" alt="#" />
+      </div>
+      <ul>
+        <li><a href="./about.html">О компании</a></li>
+        <li><a href="./delivery-payment.html">Доставка и оплата</a></li>
+        <li><a href="./guarantees.html">Гарантии </a></li>
+        <li><a href="./contacts.html">Контакты</a></li>
+        <li><a href="#">Личный кабинет</a></li>
+        <li class="header__mobile-nav-phone">
+          <a href="tell:+79652374449">+7 (965) 237-44-49</a>
+        </li>
+      </ul>
+    </section>
+  </div>
+  <section class="header__mobile-search">
+    <div class="mobile-search__container">
+      <div class="header__mobile-catalog">
+        <ul>
+          <li>
+            <a href="#">Apple</a>
+            <img src="./img/header/icons/arrow.svg" alt="#" />
+          </li>
+          <li>
+            <a href="#">Huawei</a>
+            <img src="./img/header/icons/arrow.svg" alt="#" />
+          </li>
+          <li>
+            <a href="#">Xiaomi</a>
+            <img src="./img/header/icons/arrow.svg" alt="#" />
+          </li>
+          <li>
+            <a href="#">Samsung</a>
+            <img src="./img/header/icons/arrow.svg" alt="#" />
+          </li>
+          <li>
+            <a href="#">Питание и кабели</a>
+          </li>
+          <li>
+            <a href="#">Акции</a>
+          </li>
+          <li>
+            <a href="#">Прайс-лист</a>
+          </li>
+        </ul>
+      </div>
+      <div class="mobile-search__catalog-button">
+        <h2>Каталог</h2>
+        <ul>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+      <div class="mobile-search__input">
+        <img src="./img/header/icons/search.svg" alt="#" />
+        <input type="text" placeholder="Поиск товара" />
+      </div>
+    </div>
+  </section>
+</header>
+
+    <main class="guarantees-page">
+    <div class='guarantees-page__container'>
+        <section class="guarantees-page__site-location site-location">Главная / Гарантии</section>
+        <section class="guarantees-page__header">
+            <h1 class="guarantees-page__title title">Гарантии</h1>
+        </section>
+        <section class="guarantees-page__text-content">
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Запчасти в нашем интернет-магазине тщательно проверяются на наличие
+                    брака царапин и механических повреждений перед продажей клиенту.
+                </h2>
+                <p class="guarantees-page__text">Вернуть товар по причине "не пригодилось" или "больше не нужно"
+                    возможно лишь в течении 14 дней после его отгрузки Вам.</p>
+            </div>
+
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Все запчасти и комплектующие проходят тщательный контроль качества,
+                    что гарантирует нашим клиентам:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— Дисплеи не имеют битых пикселей и царапин, а сенсор и 3D Touch работают
+                        отлично; </li>
+                    <li class="green-li">— Аккумуляторы не посаженные, их ёмкость не ниже рабочих норм</li>
+                    <li class="green-li">— Корпусы, шлейфы, аксессуары и другие комплектующие - не имеют механических
+                        повреждений</li>
+                </ul>
+            </div>
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Продавец принимает на гарантийный обмен АКБ, если:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— С момента покупки прошло менее 120 дней</li>
+                    <li class="green-li">— АКБ использовалась менее 90 циклов</li>
+                    <li class="green-li">— В наличии печати/штампы/пломбы/маркировки</li>
+                    <li class="green-li">— Отсутствуют механические повреждения, обрыв шлейфа, повреждения коннектора
+                    </li>
+                    <li class="green-li">— Выявлена просадка ёмкости АКБ (mAh) меньше заявленной</li>
+                    <li class="green-li">— Неправильно работает чип</li>
+                    <li class="green-li">— Отсутствуют контакты «+ / — »</li>
+                    <li class="green-li">— Происходит отказ в зарядке или наблюдаются скачки % заряда при исправном
+                        контроллере питания</li>
+                    <li class="green-li">— В наличии документ, подтверждающий покупку</li>
+                </ul>
+            </div>
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Продавец принимает на гарантийный обмен ДИСПЛЕИ, если:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— С момента покупки прошло менее 150 дней</li>
+                    <li class="green-li"> — Нет разводов на обратной стороне дисплея</li>
+                    <li class="green-li">— Нет видимых механических повреждений экрана дисплея, шлейфов, коннекторов
+                    </li>
+                    <li class="green-li">— Выявлен брак, а именно: отсутствие подсветки дисплея, отсутствие изображения,
+                        недостаточная или искажённая цветопередача</li>
+                    <li class="green-li">— Тачскрин (сенсор) работает некорректно: наблюдаются произвольные нажатия, не
+                        работает определённая зона, есть слепая зона</li>
+                    <li class="green-li">— Отсутствуют контакты шлейфа кнопки Home (при наличии такого шлейфа на
+                        дисплее, в зависимости от модели)</li>
+                    <li class="green-li">— Произошел отказ работы 3D-Touch</li>
+                    <li class="green-li">— В наличии документ, подтверждающий покупку</li>
+                </ul>
+            </div>
+
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Продавец принимает на гарантийный обмен АКСЕССУАРЫ, если:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— С момента покупки прошло менее 14 дней</li>
+                    <li class="green-li">— В наличии упаковка</li>
+                    <li class="green-li">— Упаковка и сам товар имеют первоначальный вид</li>
+                    <li class="green-li">— В наличии документ, подтверждающий покупку</li>
+                </ul>
+            </div>
+
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Продавец НЕ принимает на гарантийный обмен АКБ, если:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— АКБ использовалась более 90 циклов</li>
+                    <li class="green-li">— Имеются механические повреждения: надорванные шлейфы, поврежденные
+                        коннекторы, сильные помятости, неестественные для АКБ.</li>
+                </ul>
+            </div>
+
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Продавец НЕ принимает на гарантийный обмен ДИСПЛЕИ, если:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— Присутствуют механические повреждения, сколы, трещины, царапины</li>
+                    <li class="green-li">— Имеются сквозные царапины — при установке кнопки «Home», установке лицевой
+                        камеры</li>
+                    <li class="green-li">— Установлены и вкручены болты не тех размеров</li>
+                    <li class="green-li">— Произошло повреждение коннектора тачскрина (матрицы)</li>
+                    <li class="green-li">— Произошел обрыв шлейфа матрицы, шлейфа кнопки «Home»</li>
+                    <li class="green-li">— Произошел облом, повреждение матрицы — в процессе неправильной установки,
+                        эксплуатации</li>
+                    <li class="green-li">— Имеются механические повреждения креплений дисплея, рамки</li>
+                    <li class="green-li">— Выявлены следы воды</li>
+                    <li class="green-li">— Есть окисление на шлейфах (если дисплей устанавливался)</li>
+                </ul>
+            </div>
+
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">Продавец НЕ принимает на гарантийный обмен КАМЕРЫ, если:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— С момента отгрузки прошло более 30 дней
+                    </li>
+                    <li class="green-li">— Есть видимые или объективные неисправности</li>
+                </ul>
+            </div>
+
+            <div class="guarantees-page__block">
+                <h2 class="guarantees-page__title">А так же продавец НЕ принимает на гарантийный обмен:</h2>
+                <ul class="guarantees-page__ul">
+                    <li class="green-li">— Кнопки Home</li>
+                    <li class="green-li">— Стёкла защитные 0,26 - 0,3 мм</li>
+                    <li class="green-li">— Стёкла защитные 3D, 4D, 5D, если те отклеивались от подложки</li>
+                    <li class="green-li">— Динамики, микрофоны, микросхемы, коннекторы</li>
+                    <li class="green-li">— Антенны</li>
+                    <li class="green-li">— Системные разъёмы</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</main>
+    <footer class="footer inert">
+  <div class="footer__container">
+    <div class="footer__logo">
+      <a href="#"><img src="./img/footer/logo.svg" alt="#" /></a>
+    </div>
+    <div class="footer__navigation">
+      <h2 class="footer__navigation-title footer-title">Навигация</h2>
+      <nav>
+        <li class="footer__navigation-li nav-link"><a href="#">О компании</a></li>
+        <li class="footer__navigation-li nav-link"><a href="#">Доставка и оплата</a></li>
+        <li class="footer__navigation-li nav-link"><a href="#">Гарантии</a></li>
+        <li class="footer__navigation-li nav-link"><a href="#">Контакты</a></li>
+      </nav>
+    </div>
+    <div class="footer__contacts">
+      <h2 class="footer__contacts-title footer-title">Контакты</h2>
+      <nav>
+        <li class="footer__contacts-li">
+          <img src="./img/footer/icons/call.svg" alt="call" />
+          <a href="tell:79652374449">+7 (965) 237-44-49</a>
+        </li>
+        <div class="saasdsda__container"></div>
+        <li class="footer__contacts-li">
+          <img src="./img/footer/icons/vk.svg" alt="vk" />
+          <a href="#">vk.com/*long_link*</a>
+        </li>
+        <li class="footer__contacts-li">
+          <img src="./img/footer/icons/instagram.svg" alt="instagram" />
+          <a href="#">@*long_nickname*</a>
+        </li>
+      </nav>
+    </div>
+    <div class="footer__pay-methods">
+      <h2 class="footer__pay-methods-title">Способы оплаты</h2>
+      <div class="footer__pay-methods-box">
+        <img src="./img/footer/logo-visa.png" alt="logo-visa" />
+        <img src="./img/footer/logo-mastercard.png" alt="logo-mastercard" />
+        <img src="./img/footer/logo-maestro.png" alt="logo-maestro" />
+        <img src="./img/footer/logo-mir.png" alt="logo-mir" />
+      </div>
+    </div>
+    <div class="footer__copyright">
+      <h2 class="footer__copyright-title">РАЗРАБОТКА САЙТА</h2>
+      <div class="footer__copyright-logo">
+        <a href="#"><img src="./img/footer/dev-logo.png" alt="dev-logo" /></a>
+      </div>
+      <a class="footer__copyright-policy" href="#">Политика конфиденциальности</a>
+      <p class="footer__copyright-label">No Doors Technology © 2020</p>
+    </div>
+  </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="./js/index.bundle.js"></script>
+</body>
+
+</html>
