@@ -1,0 +1,11 @@
+.div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cards{
+    display: flex;
+    /* gap: 30px; */
+    flex-wrap: wrap;
+}

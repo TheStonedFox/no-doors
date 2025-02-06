@@ -1,0 +1,17 @@
+.field{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.field__title{
+    color: var(--typography---second);
+}
+
+.field__value{
+    text-align: right;
+    font-weight: 400;
+    color: var(--typography---main);
+}

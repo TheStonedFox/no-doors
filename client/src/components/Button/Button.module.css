@@ -1,0 +1,17 @@
+.button{
+    border-radius: 4px;
+    padding: 16px 32px;
+    background: var(--ui---main);
+    border: 0;
+    font-weight: 700;
+    line-height: 130%;
+    color: #fff;
+    transition: 0.2s;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.button:hover{
+    transition: 0.2s;
+    background: var(--ui---main-hover);
+}
