@@ -1,0 +1,37 @@
+.search-input{
+    display: flex;
+    width: 665px;
+    min-width: 300px;
+}
+
+.input{
+    width: 100%;
+    display: flex;    
+    padding: 10px 20px;
+    border: 2px solid var(--ui---main);
+    border-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    font-family: var(--second-family);
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.input::placeholder{
+    color: var(--typography---second);
+}
+
+.button{
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 10px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+    background: var(--ui---main);
+}
+
+.button svg{
+    min-width: 18px;
+}

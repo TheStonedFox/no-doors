@@ -3,5 +3,8 @@
   display: flex;
   justify-content: center;
   flex: 1 1 auto;
-  font-family: var(--font-family)
+  font-family: var(--font-family);
+  color: var(--typography---main);;
 }
+
+

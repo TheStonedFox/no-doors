@@ -1,3 +1,149 @@
 .header{
+    display: flex;
+    flex-direction: column;
     width: 100%;
+}
+
+.header__top-content{
+    display: flex;
+    padding: 11px;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.header__top-content a:hover{
+    text-decoration: underline;
+    color: var(--ui---main);
+    transition: 0.2s;
+}
+
+.header__top-links{
+    display: flex;
+    flex: 1 1 50%;
+    gap: 20px;
+}
+
+.header__top-links a {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    color: var(--typography---main);
+    transition: 0.2s;
+}
+
+
+.header__top-buttons{
+    display: flex;
+    flex: 1 1 50%;
+    justify-content: end;
+    gap: 30px;
+}
+
+.header__phone-number{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
+    gap: 8px;
+}
+
+.header__language-switch{
+    display: flex;
+    font-weight: 400;
+    align-items: center;
+    font-size: 14px;
+    line-height: 100%;
+    gap: 5px;
+}
+
+/* .header__language-switch svg{
+
+} */
+
+
+.header__middle-content{
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header__logo{
+    min-width: 99px;
+}
+
+.header__search-input{
+}
+
+.header__middle-buttons{
+    display: flex;
+    gap: 30px;
+}
+
+.header__middle-button{
+    display: flex;
+    gap: 10px;
+    text-align: center;
+    align-items: center;
+    text-wrap: nowrap;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.header__middle-button div {
+    position: absolute;
+    border-radius: 10px;
+    padding: 2px 6px;
+    background: var(--ui---red);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    text-align: center;
+    color: #fff;
+    top: -6px;
+    right: 15px;
+}
+
+
+.header__bottom-content{
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.header__brands-list{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.header__brands-list li {
+    display: flex;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.header__bottom-list{
+    display: flex;
+    gap: 20px;
+}
+
+.header__brands-list .header__price-link{
+    color: var(--ui---main);
 }
