@@ -47,6 +47,7 @@
     --second-family: "Roboto", sans-serif;
 
     --container-width: 1100px;
+    --safe-padding: 15px;
   }
 
   /* reset css */

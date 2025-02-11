@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './SearchInput.module.css'
 
-export default function SearchInput() {
+
+export default function SearchInput({ className }) {
     return (
-        <div className={styles['search-input']}>
+        <div className={className} >
             <input className={styles.input} type="text" placeholder='Введите поисковой запрос..' />
             <button className={styles.button}>
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -12,5 +13,6 @@ export default function SearchInput() {
                 <p>Найти</p>
             </button>
         </div>
+
     )
 }

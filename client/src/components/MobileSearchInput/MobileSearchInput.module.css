@@ -1,0 +1,19 @@
+.mobile-input{
+    display: flex;
+    background-color: var(  --ui---main);
+    padding: 12px 18px;
+    gap: 15px;
+}
+
+.input{
+    display: flex;
+    gap: 10px;
+}
+
+.input input{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
+    color: #fff;
+    padding: 0;
+}
