@@ -1,4 +1,5 @@
 .layout{
+    position: relative;
     width: 100vw;
     /* padding: 0 15px; */
 }
@@ -17,3 +18,7 @@
     margin: 0 auto;
 }
 
+.catalog-menu{
+    position: absolute;
+    top: 200px;
+}

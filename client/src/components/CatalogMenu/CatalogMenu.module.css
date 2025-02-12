@@ -1,7 +1,7 @@
-.burger-menu{
+.catalog-menu{
     position: absolute;
-    top: 0px;
-    z-index: 9;
+    top: 160px;
+    z-index: 8;
     height: 100vh;
     background-color: #fff;
     transition: 0.2s;

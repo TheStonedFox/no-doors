@@ -6,11 +6,10 @@
 
 .header__top-content{
     display: flex;
-    padding: 11px;
     gap: 20px;
     justify-content: space-between;
     margin-bottom: 15px;
-    padding: 0 var(--safe-padding);
+    padding: 11px var(--safe-padding);
 }
 
 
@@ -18,7 +17,7 @@
     text-decoration: underline;
     color: var(--ui---main);
     transition: 0.2s;
-    padding: 0 15px;
+    /* padding: 0 15px; */
 }
 
 .header__top-links{
@@ -56,20 +55,6 @@
     line-height: 100%;
     gap: 8px;
 }
-
-.header__language-switch{
-    display: flex;
-    font-weight: 400;
-    align-items: center;
-    font-size: 14px;
-    line-height: 100%;
-    gap: 5px;
-}
-
-/* .header__language-switch svg{
-
-} */
-
 
 .header__middle-content{
     display: flex;
@@ -122,11 +107,36 @@
     right: 15px;
 }
 
-.mobile-input-box{
+.header__mobile-input{
     display: none;
     align-items: center;
-    padding: 0 15px;
+    padding: 15px;
+    height: 46px;
+    gap: 15px;
     background-color: var(--ui---main);
+}
+
+.input-container{
+    display: flex;
+    flex: 1 1 auto;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
+    color: #fff;
+    height: 46px;
+    gap: 10px;
+    border-left: solid 1px #44b045;
+    padding-left: 18px;
+}
+
+.header__mobile-input input{
+    display: flex;
+    flex: 1 1 auto;
+}
+
+
+.header__mobile-input input::placeholder{
+    color: #fff;
 }
 
 .header__middle-menu-button{
@@ -136,9 +146,8 @@
 
 .header__middle-catalog-button{
     display: none;
-    z-index: 8;
+    z-index: 9;
 }
-
 
 
 .header__bottom-content{
@@ -175,6 +184,60 @@
     color: var(--ui---main);
 }
 
+
+.burger{
+    display: none;
+    position: relative;
+    gap: 10px;
+    align-items: center;
+    height: 22px;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.lines{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.line{
+    position: relative;
+    display: flex;
+    width: 22px;
+    height: 2px;
+    left: 0px;
+    border-radius: 2px;
+    background-color: var(--typography---main);
+    transition: 0.2s;
+}
+
+.line:nth-child(1){
+    top: 0;
+}
+
+.line:nth-child(3){
+    bottom: 0;
+}
+
+.line_active:nth-child(3){
+    transform: rotate(-45deg);
+    transition: 0.2s;
+    bottom: 4.5px;
+
+}
+
+.line_active:nth-child(1){
+    transform: rotate(45deg);
+    top: 2px;
+    transition: 0.2s;
+}
+
+.hide{
+    display: none;
+}
+
+
 @media (max-width: 992px){
 
     .header__top-content,
@@ -200,7 +263,7 @@
         margin: 0;
     }
 
-    .mobile-input-box{
+    .header__mobile-input{
         display: flex;
     }
 
@@ -209,6 +272,7 @@
         display: none;
     }
 
-    .header__logo{
+    .burger{
+        display: flex;
     }
 }

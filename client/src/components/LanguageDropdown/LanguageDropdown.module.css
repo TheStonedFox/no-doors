@@ -1,0 +1,13 @@
+.language-switch{
+    display: flex;
+    font-weight: 400;
+    align-items: center;
+    justify-items: start;
+    font-size: 14px;
+    line-height: 100%;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.language-switch__title{
+}

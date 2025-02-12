@@ -11,9 +11,11 @@ export const uiSlice = createSlice({
     reducers: {
         toggleBurger: (state) => {
             state.isBurgerOpen = !state.isBurgerOpen
+            state.isCatalogOpen = false
         },
         toggleCatalog: (state) => {
             state.isCatalogOpen = !state.isCatalogOpen
+            state.isBurgerOpen = false
         }
     }
 })

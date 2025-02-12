@@ -9,6 +9,8 @@
     transition: 0.2s;
     width: fit-content;
     color: var(--ui---main);
+    line-height: 100%;
+    text-wrap: nowrap;
 }
 
 .button:hover{
