@@ -85,7 +85,6 @@ export default function Header() {
                     </Link>
                 </div>
             </div>
-
             <div className={styles['header__bottom-content']}>
                 <ul className={styles['header__brands-list']}>
                     <li>

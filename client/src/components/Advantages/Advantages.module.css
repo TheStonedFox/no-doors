@@ -1,0 +1,17 @@
+.advantages__items{
+    display: flex;
+    font-weight: 500;
+    line-height: 150%;
+    text-align: center;
+    gap: 30px;
+}
+
+.advantages__item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1 1 25%;
+    padding: 20px;
+}

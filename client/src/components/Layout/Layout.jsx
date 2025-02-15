@@ -9,12 +9,9 @@ import CatalogMenu from '../CatalogMenu/CatalogMenu'
 export default function Layout({ children }) {
     return (
         <div className={styles.layout}>
-
-            <div className={styles.layout__content}>
-                <Header></Header>
-                <main className={styles.main}>{children}</main>
-                <Footer></Footer>
-            </div>
+            <div className={styles.header}><Header></Header></div>
+            <main className={styles.main}>{children}</main>
+            <div className={styles.footer}><Footer></Footer></div>
         </div>
     )
 }

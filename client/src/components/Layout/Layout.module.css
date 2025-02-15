@@ -1,24 +1,24 @@
 .layout{
+    display: flex;
+    flex-direction: column;
     position: relative;
     width: 100vw;
+    height: 100vh;
     /* padding: 0 15px; */
 }
 
-.layout__content{
-    display: flex;
-    flex-direction: column;
-    max-width: var(--container-width);
-    height: 100vh;
+.header{
     margin: 0 auto;
+    width: 100%;
 }
 
 .main{
     flex: 1 1 auto;
     width: 100%;
-    margin: 0 auto;
+    padding: 0 var(--safe-padding);
 }
 
-.catalog-menu{
-    position: absolute;
-    top: 200px;
+.footer{
+    width: 100%;
+    background-color: #1e1e1e;
 }

@@ -49,6 +49,14 @@
     --container-width: 1100px;
     --safe-padding: 15px;
   }
+  
+/* вспомогательные классы----------------------------------------------------------- */
+
+  .section-title{
+    font-weight: 700;
+    font-size: 40px;
+    color: var(--typography---main);
+  }
 
   /* reset css */
  /* Reset and base styles  */

@@ -7,7 +7,7 @@ export default function CatalogMenu() {
     const isOpen = useSelector((state) => state.burger.isCatalogOpen)
 
     return (
-        <div style={isOpen ? { width: '320px', padding: '50px' } : { width: '0', padding: '50px 0px' }} className={styles['catalog-menu']} >
+        <div style={isOpen ? { width: '320px' } : { width: '0', padding: '0px' }} className={styles['catalog-menu']} >
             <div className={styles.box}>
                 <ul className={styles.links}>
                     <li>
@@ -38,7 +38,7 @@ export default function CatalogMenu() {
                     <Link>Питание и кабели</Link>
                     <Link>Powerbank</Link>
                     <Link>Акции</Link>
-                    <Link className={styles['header__price-link']}>Прайс-лист</Link>
+                    <Link className={styles['price-link']}>Прайс-лист</Link>
                 </ul>
             </div>
 

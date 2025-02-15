@@ -1,7 +1,8 @@
 .header{
     display: flex;
+    margin: 0 auto;
     flex-direction: column;
-    width: 100%;
+    max-width: var( --container-width)
 }
 
 .header__top-content{

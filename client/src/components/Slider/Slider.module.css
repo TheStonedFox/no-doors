@@ -1,0 +1,12 @@
+.slider{
+    display: flex;
+    gap: 10px;
+    background-color: rebeccapurple;
+    overflow: hidden;
+}
+
+.slide{
+    background-color: gray;
+    width: 200px;
+    height: 400px;
+}
