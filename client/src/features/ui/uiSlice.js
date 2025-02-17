@@ -16,8 +16,12 @@ export const uiSlice = createSlice({
         toggleCatalog: (state) => {
             state.isCatalogOpen = !state.isCatalogOpen
             state.isBurgerOpen = false
+        },
+        closeAll: (state) => {
+            state.isBurgerOpen = false
+            state.isCatalogOpen = false
         }
     }
 })
 
-export const { toggleBurger, toggleCatalog } = uiSlice.actions
+export const { toggleBurger, toggleCatalog, closeAll } = uiSlice.actions

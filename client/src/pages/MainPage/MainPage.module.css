@@ -1,31 +1,124 @@
-.main-page{
+.main-page {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    max-width: var( --container-width);
+    max-width: var(--container-width);
     user-select: none;
+    padding-top: 45px;
 }
 
-.find-item-section{
+.intro-section {
+    display: flex;
+    gap: 30px;
+    height: 400px;
+}
+
+.intro-slider {
+    position: relative;
+    width: 100%;
+}
+
+.slide {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    position: relative;
+    padding: 20px;
+    background: var(--ui---main);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.slide img {
+    position: relative;
+    bottom: 130px;
+    left: 205px;
+}
+
+/*  Оформляем пагинацию (добавляем через JS) */
+.pagination {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    bottom: 40px;
+    left: 20px;
+    text-align: center;
+    padding: 20px;
+}
+
+/*  Делаем глобальную стилизацию кнопок пагинации */
+:global(.swiper-pagination-bullet) {
+    width: 30px;
+    height: 5px;
+    /* Цвет кнопки */
+    background: #fff;
+    opacity: 0.4;
+    border-radius: 99px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+/*  При наведении */
+:global(.swiper-pagination-bullet:hover) {
+    opacity: 0.7;
+}
+
+/*  Активная кнопка */
+:global(.swiper-pagination-bullet-active) {
+    /* Активная кнопка */
+    opacity: 1;
+}
+
+.slide h2 {
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 130%;
+    color: #fff;
+}
+
+.slide .slide__button {
+    background-color: #fff;
+    color: var(--ui---main);
+}
+
+.slide .slide__button:hover {
+    background-color: #cecece;
+}
+
+.into-section__products {
+    display: flex;
+    width: 100%;
+    /* background-color: red; */
+    padding: 20px;
+}
+
+
+
+.find-item-section {
     display: flex;
     flex-direction: column;
     padding-top: 75px;
     padding-bottom: 100px;
 }
 
-.popular-products-section{
+.find-item-section .categories {
+    background-color: rebeccapurple;
+}
+
+.popular-products-section {
     display: flex;
     flex-direction: column;
     gap: 60px;
     padding: 100px 0;
 }
 
-.advantages-section{
+.advantages-section {
     display: flex;
     padding: 100px 0;
 }
 
-.about-section{
+.about-section {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -33,7 +126,7 @@
     padding: 100px 0;
 }
 
-.about-section h2{
+.about-section h2 {
     font-weight: 500;
     font-size: 22px;
 }
@@ -44,8 +137,21 @@
     color: var(--typography---second);
 }
 
-.gallery-section{
+.gallery-section {
     display: flex;
     padding-top: 100px;
     padding-bottom: 150px;
+}
+
+
+@media(max-width: 992px) {
+    .find-item-section .find-item__categories {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width: 450px) {
+    .find-item-section .find-item__categories {
+        grid-template-columns: 1fr;
+    }
 }

@@ -2,11 +2,18 @@ import React from 'react'
 import Slider from '../../components/Slider/Slider'
 import styles from './MainPage.module.css'
 
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import 'swiper/css/bundle'
+
 import ChooseCard from '../../components/ChooseCard/ChooseCard'
 import ItemsList from '../../components/ItemsList/ItemsList'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import Advantages from '../../components/Advantages/Advantages'
 import Gallery from '../../components/Gallery/gallery'
+
+import Button from '../../components/Button/Button';
 
 export default function MainPage() {
     const products = [
@@ -75,9 +82,49 @@ export default function MainPage() {
 
     return (
         <div className={styles['main-page']}>
+            <section className={styles['intro-section']}>
+                <Swiper
+                    modules={[Pagination]}
+                    className={styles['intro-slider']}
+                    spaceBetween={50}
+                    slidesPerView={1}
+                    loop={true}
+                    pagination={{ clickable: true, el: `.${styles.pagination}` }}
+                >
+                    <SwiperSlide className={styles.slide}>
+                        <h2>Защитное стекло на
+                            iPhone 11 Pro
+                            по лучшей цене!</h2>
+                        <Button className={styles['slide__button']}>Подробнее</Button>
+                        <img src="../../../public/images/intro-slider/01.png" alt="slider image" />
+                    </SwiperSlide>
+                    <SwiperSlide className={styles.slide}>
+                        <h2>Защитное стекло на
+                            iPhone 11 Pro
+                            по лучшей цене!</h2>
+                        <Button className={styles['slide__button']}>Подробнее</Button>
+                        <img src="../../../public/images/intro-slider/01.png" alt="slider image" />
+                    </SwiperSlide>
+                    <SwiperSlide className={styles.slide}>
+                        <h2>Защитное стекло на
+                            iPhone 11 Pro
+                            по лучшей цене!</h2>
+                        <Button className={styles['slide__button']}>Подробнее</Button>
+                        <img src="../../../public/images/intro-slider/01.png" alt="slider image" />
+                    </SwiperSlide>
+
+                    <div className={styles.pagination}></div>
+                </Swiper>
+                <div className={styles['into-section__products']}>
+                    <div className={styles['into-section__product']}>
+                        <h2>Silicone Case
+                            для iPhone Xr</h2>
+                    </div>
+                </div>
+            </section>
             <section className={styles['find-item-section']}>
                 <h2 className='section-title'>Выберите бренд</h2>
-                <ItemsList>
+                <ItemsList className={styles['find-item__categories']}>
                     <ChooseCard title='Apple' picture={'../../../public/images/brands/01.png'} />
                     <ChooseCard title='Huawei' picture={'../../../public/images/brands/02.png'} />
                     <ChooseCard title='Xiaomi' picture={'../../../public/images/brands/03.png'} />

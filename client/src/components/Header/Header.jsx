@@ -15,7 +15,7 @@ export default function Header() {
     const dispatch = useDispatch()
     const isCatalogOpen = useSelector((state) => state.burger.isCatalogOpen)
     const isBurgerOpen = useSelector((state) => state.burger.isBurgerOpen)
-
+    const isLogin = true
     return (
         <header className={styles.header}>
             <div className={styles['header__top-content']}>
@@ -40,7 +40,7 @@ export default function Header() {
                         <a href="tel:+79652374449">{'+7 (965) 237-44-49'}</a>
                     </div>
                     <LanguageDropdown />
-                    <Link to='/profile'>Личный кабинет</Link>
+                    <Link to={isLogin ? '/profile' : '/auth'}>Личный кабинет</Link>
                 </div>
             </div>
             <div className={styles['header__middle-content']}>
