@@ -1,0 +1,48 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+    isBurgerOpen: false,
+    isCatalogOpen: false,
+    isPopuoOpen: false,
+    popupContent: null,
+    cartCounter: 0,
+    favoriteCounter: 0,
+}
+
+
+export const uiSlice = createSlice({
+    name: 'ui',
+    initialState,
+    reducers: {
+        toggleBurger: (state) => {
+            state.isBurgerOpen = !state.isBurgerOpen
+            state.isCatalogOpen = false
+        },
+        toggleCatalog: (state) => {
+            state.isCatalogOpen = !state.isCatalogOpen
+            state.isBurgerOpen = false
+        },
+        togglePopup: (state, action) => {
+            state.isPopuoOpen = !state.isPopuoOpen
+            state.popupContent = action.payload
+        },
+        closeAll: (state) => {
+            state.isBurgerOpen = false
+            state.isCatalogOpen = false
+        },
+        closeBurger: (state) => {
+            state.isBurgerOpen = false
+        },
+        updateCartCounter: (state, payload) => {
+            state.cartCounter = payload.payload
+        },
+        updateFavoriteCounter: (state, payload) => {
+            state.favoriteCounter = payload.payload
+        }
+    }
+})
+
+
+
+
+export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger } = uiSlice.actions

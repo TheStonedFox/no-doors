@@ -1,0 +1,5 @@
+.profile-page {
+    margin: 0 auto;
+    max-width: var(--container-width);
+    background-color: rebeccapurple;
+}

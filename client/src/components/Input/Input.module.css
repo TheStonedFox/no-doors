@@ -1,0 +1,20 @@
+.input {
+    height: 58px;
+    width: 100%;
+    padding: 0px 20px;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 130%;
+    border: 1px solid transparent;
+    transition: 0.1s;
+}
+
+.input.active {
+    border: 1px solid var(--ui---main);
+    transition: 0.1s;
+}
+
+input::placeholder {
+    color: var(--typography---label-non-active-text);
+}

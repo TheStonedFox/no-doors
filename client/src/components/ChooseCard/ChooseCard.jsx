@@ -2,10 +2,11 @@ import React from 'react'
 
 import styles from './ChooseCard.module.css'
 
-export default function ChooseCard({ picture, title }) {
+export default function ChooseCard({ picture, title, onClick }) {
     return (
-        <div>
-            <div className={styles.card}
+        <div className={onClick}>
+            <div
+className={styles.card}
                 onMouseEnter={(e) => {
                     e.currentTarget.querySelector('h3').style = 'color: var(--ui---main);'
                     e.currentTarget.querySelector('svg').style = 'width: 24px'
@@ -13,7 +14,8 @@ export default function ChooseCard({ picture, title }) {
                 onMouseLeave={(e) => {
                     e.currentTarget.querySelector('h3').style = ''
                     e.currentTarget.querySelector('svg').style = 'width: 0px'
-                }}>
+                }}
+            >
                 <img src={picture} alt="choose-card-image" />
                 <div className={styles.title}>
                     <h3>{title}</h3>

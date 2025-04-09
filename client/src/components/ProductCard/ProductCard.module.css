@@ -1,4 +1,4 @@
-.product-card{
+.product-card {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -8,28 +8,67 @@
     padding-bottom: 20px;
 }
 
-.product-card__fav-button{
+.product-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* width: 70%; */
+    padding: 11px;
+}
+
+.product-card__tag {
+    padding: 4px 10px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
+    text-align: center;
+    color: #fff;
+    border-radius: 99px;
+}
+
+.product-card__new-tag {
+    background: var(--ui---blue);
+}
+
+.product-card__popular-tag {
+    background: var(--ui---red);
+}
+
+.product-card__discount-tag {
+    background: var(--ui---main);
+}
+
+.product-card__fav-button {
     position: absolute;
     right: 10px;
     top: 10px;
     cursor: pointer;
 }
 
-.product-card__image img{
+.product-card__image {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 6/4.5;
 }
 
-.product-card__fav-button:active{
+.product-card__image img {}
+
+.product-card__fav-button:active {
     fill: var(--ui---red);
-    color:  var(--ui---red);
+    color: var(--ui---red);
     transition: 0.2s;
 }
 
-.product-card__fav-button:hover{
-    color:  var(--ui---red);
+.product-card__fav-button:hover {
+    color: var(--ui---red);
     transition: 0.2s;
 }
 
-.product-card__bottom-box{
+.product-card__bottom-box {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -38,27 +77,30 @@
     justify-content: space-between;
 }
 
-.product-card__title{
+.product-card__title {
     font-weight: 500;
     font-size: 18px;
     line-height: 120%;
 }
 
-.product-card__title:hover{
+.product-card__title:hover {
     text-decoration: underline;
 }
-.product-card__fields{
+
+.product-card__fields {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.product-card__bottom{
+.product-card__bottom {
     display: flex;
     gap: 2px;
 }
 
-.product-card__bottom > button{
+.product-card__bottom>button {
     width: 100%;
-    text-wrap: nowrap;
+    /* text-wrap: nowrap; */
+
+
 }

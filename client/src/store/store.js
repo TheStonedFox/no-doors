@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { uiSlice } from '../features/ui/uiSlice'
+import { uiSlice } from '../features/uiSlice'
+import { userSlice } from '../features/userSlice'
+
 
 
 export const store = configureStore({
     reducer: {
-        burger: uiSlice.reducer
+        ui: uiSlice.reducer,
+        user: userSlice.reducer
     }
 })

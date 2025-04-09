@@ -1,7 +1,7 @@
-.footer{
+.footer {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    max-width: var( --container-width);
+    max-width: var(--container-width);
     margin: 0 auto;
     padding: 30px var(--safe-padding);
     gap: 20px;
@@ -9,31 +9,33 @@
     text-wrap: nowrap;
 }
 
-.footer h3{
+.footer h3 {
     font-weight: 700;
     text-transform: uppercase;
     color: #fff;
 }
 
-.footer__logo{
+.footer__logo {
     display: flex;
     min-width: 99px;
 }
 
-.footer__navigation, .footer__contacts, .footer__pay-methods{
+.footer__navigation,
+.footer__contacts,
+.footer__pay-methods {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.footer__navigation ul{
+.footer__navigation ul {
     display: flex;
     flex-direction: column;
     line-height: 150%;
     gap: 5px;
 }
 
-.footer__contacts ul{
+.footer__contacts ul {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -46,27 +48,28 @@
     gap: 10px;
 }
 
-.footer__contacts svg{
+.footer__contacts svg {
     min-width: 14px;
 }
 
-.footer__pay-methods{
+.footer__pay-methods {
     display: flex;
     flex-direction: column;
 }
 
-.footer__pay-icons{
+.footer__pay-icons {
     display: flex;
     justify-content: center;
     align-items: start;
     flex-wrap: wrap;
     gap: 15px;
 }
-.footer__pay-methods img{
+
+.footer__pay-methods img {
     /* width: auto; */
 }
 
-.footer__policy{
+.footer__policy {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,53 +77,63 @@
     gap: 15px;
 }
 
-.footer__policy a{
+.footer__policy a {
     text-decoration: underline;
     font-weight: 400;
     font-size: 14px;
 }
+
 .footer__policy p {
     font-weight: 400;
     font-size: 14px;
     color: var(--typography---second);
 }
 
-@media(max-width: 992px){
-    .footer{
+@media(max-width: 992px) {
+    .footer {
         display: flex;
         flex-wrap: wrap;
     }
 
-    .footer__navigation, .footer__contacts, .footer__pay-methods,  .footer__logo{
+    .footer__navigation,
+    .footer__contacts,
+    .footer__pay-methods,
+    .footer__logo {
         flex: 1 1 20%;
         align-items: center;
     }
 
-    .footer__logo{
+    .footer__logo {
         justify-content: center;
     }
 
-    .footer__contacts li, .footer__navigation a{
+    .footer__contacts li,
+    .footer__navigation a {
         display: flex;
         justify-content: center;
     }
 
-    .footer__policy{
+    .footer__policy {
         flex: 1 1 100%;
     }
 }
 
-@media(max-width: 767px){
-    .footer{
+@media(max-width: 767px) {
+    .footer {
         row-gap: 40px;
     }
-     .footer__logo{
+
+    .footer__logo {
         flex: 1 1 100%;
     }
 }
 
-@media(max-width: 450px){
-    .footer__navigation, .footer__contacts, .footer__pay-methods,  .footer__logo{
+@media(max-width: 450px) {
+
+    .footer__navigation,
+    .footer__contacts,
+    .footer__pay-methods,
+    .footer__logo {
         flex: 1 1 100%;
         justify-content: center;
     }

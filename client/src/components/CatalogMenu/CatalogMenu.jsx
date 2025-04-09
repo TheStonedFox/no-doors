@@ -1,13 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import styles from './CatalogMenu.module.css'
 import { useSelector } from 'react-redux'
+
 export default function CatalogMenu() {
-    const isOpen = useSelector((state) => state.burger.isCatalogOpen)
+    const isOpen = useSelector((state) => state.ui.isCatalogOpen)
+
+    const [fixedMobileInput, setFisxedMobileInput] = useState(false)
+    // const cartCaunter = useSelector((state) => state.user.userData?.cartItems.length) || 0
+    // const favoriteCounter = useSelector((state) => state.user.userData?.favoriteItems.length) || 0
+
+    const userData = useSelector((state) => state.user.userData);
+
+    const scrollHandler = () => setFisxedMobileInput(window.scrollY > 160 ? true : false)
+
+    useEffect(() => {
+        window.addEventListener('scroll', scrollHandler)
+
+        return () => removeEventListener('scroll', scrollHandler)
+    }, []);
 
     return (
-        <div style={isOpen ? { width: '320px' } : { width: '0', padding: '0px' }} className={styles['catalog-menu']} >
+        <div style={isOpen ? { width: '320px', top: fixedMobileInput ? 0 : '160px' } : { width: '0', padding: '0px', top: fixedMobileInput ? 0 : '160px' }} className={styles['catalog-menu']} >
             <div className={styles.box}>
                 <ul className={styles.links}>
                     <li>

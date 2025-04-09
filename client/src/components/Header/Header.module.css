@@ -1,11 +1,11 @@
-.header{
+.header {
     display: flex;
     margin: 0 auto;
     flex-direction: column;
-    max-width: var( --container-width)
+    max-width: var(--container-width)
 }
 
-.header__top-content{
+.header__top-content {
     display: flex;
     gap: 20px;
     justify-content: space-between;
@@ -14,14 +14,14 @@
 }
 
 
-.header__top-content a:hover{
+.header__top-content a:hover {
     text-decoration: underline;
     color: var(--ui---main);
     transition: 0.2s;
     /* padding: 0 15px; */
 }
 
-.header__top-links{
+.header__top-links {
     display: flex;
     flex: 1 1 50%;
     gap: 20px;
@@ -40,14 +40,14 @@
 }
 
 
-.header__top-buttons{
+.header__top-buttons {
     display: flex;
     flex: 1 1 50%;
     justify-content: end;
     gap: 30px;
 }
 
-.header__phone-number{
+.header__phone-number {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -57,7 +57,7 @@
     gap: 8px;
 }
 
-.header__middle-content{
+.header__middle-content {
     display: flex;
     gap: 20px;
     justify-content: space-between;
@@ -66,22 +66,22 @@
     padding: 0 var(--safe-padding);
 }
 
-.header__logo{
+.header__logo {
     min-width: 99px;
 }
 
-.header__search-input{
+.header__search-input {
     display: flex;
     width: 665px;
     min-width: 300px;
 }
 
-.header__middle-buttons{
+.header__middle-buttons {
     display: flex;
     gap: 30px;
 }
 
-.header__middle-button{
+.header__middle-button {
     display: flex;
     gap: 10px;
     text-align: center;
@@ -108,16 +108,23 @@
     right: 15px;
 }
 
-.header__mobile-input{
+.header__mobile-input {
     display: none;
+    width: 100%;
+    z-index: 1000;
     align-items: center;
+    position: relative;
     padding: 15px;
     height: 46px;
     gap: 15px;
     background-color: var(--ui---main);
+
+    -webkit-box-shadow: 5px 6px 8px -4px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 5px 6px 8px -4px rgba(34, 60, 80, 0.2);
+    box-shadow: 5px 6px 8px -4px rgba(34, 60, 80, 0.2);
 }
 
-.input-container{
+.input-container {
     display: flex;
     flex: 1 1 auto;
     font-weight: 500;
@@ -130,28 +137,28 @@
     padding-left: 18px;
 }
 
-.header__mobile-input input{
+.header__mobile-input input {
     display: flex;
     flex: 1 1 auto;
 }
 
 
-.header__mobile-input input::placeholder{
+.header__mobile-input input::placeholder {
     color: #fff;
 }
 
-.header__middle-menu-button{
+.header__middle-menu-button {
     display: none;
     z-index: 10;
 }
 
-.header__middle-catalog-button{
+.header__middle-catalog-button {
     display: none;
     z-index: 9;
 }
 
 
-.header__bottom-content{
+.header__bottom-content {
     display: flex;
     gap: 20px;
     justify-content: space-between;
@@ -162,7 +169,7 @@
 
 }
 
-.header__brands-list{
+.header__brands-list {
     display: flex;
     align-items: center;
     width: 100%;
@@ -176,17 +183,17 @@
     cursor: pointer;
 }
 
-.header__bottom-list{
+.header__bottom-list {
     display: flex;
     gap: 20px;
 }
 
-.header__brands-list .header__price-link{
+.header__brands-list .header__price-link {
     color: var(--ui---main);
 }
 
 
-.burger{
+.burger {
     display: none;
     position: relative;
     gap: 10px;
@@ -196,13 +203,13 @@
     transition: 0.2s;
 }
 
-.lines{
+.lines {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.line{
+.line {
     position: relative;
     display: flex;
     width: 22px;
@@ -213,67 +220,67 @@
     transition: 0.2s;
 }
 
-.line:nth-child(1){
+.line:nth-child(1) {
     top: 0;
 }
 
-.line:nth-child(3){
+.line:nth-child(3) {
     bottom: 0;
 }
 
-.line_active:nth-child(3){
+.line_active:nth-child(3) {
     transform: rotate(-45deg);
     transition: 0.2s;
     bottom: 4.5px;
 
 }
 
-.line_active:nth-child(1){
+.line_active:nth-child(1) {
     transform: rotate(45deg);
     top: 2px;
     transition: 0.2s;
 }
 
-.hide{
+.hide {
     display: none;
 }
 
 
-@media (max-width: 992px){
+@media (max-width: 992px) {
 
     .header__top-content,
-    .header__bottom-content{
+    .header__bottom-content {
         display: none;
-    } 
+    }
 
     .header__search-input {
-        display: none ;
+        display: none;
     }
 
-    .header__middle-menu-button{
+    .header__middle-menu-button {
         display: flex;
     }
 
-    .header__middle-catalog-button{
+    .header__middle-catalog-button {
         display: flex;
     }
 
-    .header__middle-content{
+    .header__middle-content {
         padding-top: 40px;
         padding-bottom: 20px;
         margin: 0;
     }
 
-    .header__mobile-input{
+    .header__mobile-input {
         display: flex;
     }
 
 
-    .header__middle-buttons p{
+    .header__middle-buttons p {
         display: none;
     }
 
-    .burger{
+    .burger {
         display: flex;
     }
 }

@@ -1,0 +1,29 @@
+.radio-buttons-group {
+    display: flex;
+    gap: 40px;
+}
+
+.radio-buttons-group__option {
+    display: flex;
+    gap: 8px;
+    cursor: pointer;
+    align-items: center;
+    user-select: none;
+}
+
+.option__check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    min-height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: 0.2s;
+    border: 1px solid var(--typography---label-non-active-text);
+}
+
+.option__check.active {
+    background: var(--ui---main);
+    border: 1px solid transparent;
+}

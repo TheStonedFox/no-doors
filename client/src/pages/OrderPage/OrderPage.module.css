@@ -1,0 +1,132 @@
+.order-page {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: var(--container-width);
+    padding-bottom: 100px;
+    padding-top: 50px;
+}
+
+.order-page__title {
+    margin-bottom: 60px;
+}
+
+.contacts-data__input {
+    padding: 0 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    height: 50px;
+}
+
+.contacts-data__input:focus {
+    border: 1px solid var(--ui---main);
+    border-radius: 4px;
+}
+
+.order-page__layout {
+    display: grid;
+    grid-template-columns: minmax(350px, 50%) minmax(350px, auto);
+    gap: 95px;
+}
+
+.contacts-data {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.delivery-method {
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    gap: 9px;
+}
+
+.delivery-method__radio-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.contacts-data__input-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.contacts-data__input-box h5 {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+}
+
+.result {
+    display: flex;
+    padding: 40px;
+    flex-direction: column;
+    min-width: 360px;
+}
+
+.result__title {
+    margin-bottom: 30px;
+}
+
+.result__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 42px;
+}
+
+.pay-methods {
+    display: flex;
+    flex-direction: column;
+}
+
+.pay-methods__title {
+    margin-bottom: 15px;
+}
+
+.pay-methods__title,
+.contacts-data__title,
+.delivery-method__title {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 150%;
+    color: var(--typography---main);
+}
+
+.pay-methods__radio-buttons {
+    display: flex;
+    /* justify-content: space-between; */
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.pay-methods__policy {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 130%;
+    text-align: center;
+    color: var(--typography---label-non-active-text);
+}
+
+.result button {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+@media(max-width: 992px) {
+    .order-page__layout {
+        gap: 50px;
+    }
+
+    .result {
+        padding: 20px;
+    }
+}
+
+@media(max-width: 767px) {
+    .order-page__layout {
+        grid-template-columns: 1fr;
+    }
+}

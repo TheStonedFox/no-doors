@@ -1,23 +1,23 @@
-.items-list{
+.items-list {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
 }
 
-@media(max-width: 1050px){
-    .items-list{
+@media(max-width: 1050px) {
+    .items-list {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
 
-@media(max-width: 767px){
-    .items-list{
+@media(max-width: 767px) {
+    .items-list {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-@media(max-width: 500px){
-    .items-list{
+@media(max-width: 500px) {
+    .items-list {
         grid-template-columns: 1fr;
     }
 }

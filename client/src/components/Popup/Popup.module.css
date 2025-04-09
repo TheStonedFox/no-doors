@@ -1,0 +1,46 @@
+.popup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    /* Префикс для Safari */
+    transition: 0.2s ease-out opacity, backdrop-filter;
+    overflow: hidden;
+    user-select: none;
+    padding: 0px var(--safe-padding);
+}
+
+.popup__content {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: transparent;
+    flex-direction: column;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 4px;
+    gap: 20px;
+}
+
+.popup__close-button {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    cursor: pointer;
+}
+
+@media(max-width: 450px) {
+    .popup__content {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .popup__close-button {
+        right: 0px;
+    }
+}

@@ -1,0 +1,26 @@
+.products-page {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: var(--container-width);
+}
+
+.products-list__section {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    padding-top: 60px;
+    padding-bottom: 100px;
+}
+
+.products-list__title {
+    margin-bottom: 60px;
+}
+
+.products-list__items {
+    margin-bottom: 40px;
+}
+
+.products-list__more-button {
+    align-self: center;
+}

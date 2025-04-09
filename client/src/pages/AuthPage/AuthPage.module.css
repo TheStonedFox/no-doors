@@ -1,0 +1,122 @@
+.auth-page {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: var(--container-width);
+}
+
+
+
+.auth-page__title {
+    padding-bottom: 60px;
+    padding-top: 50px;
+}
+
+.auth-page__layout {
+    display: grid;
+    grid-template-columns: 380px auto;
+    gap: 30px;
+}
+
+.auth-page__auth-box {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    gap: 20px;
+}
+
+.auth-page__auth-box h3 {
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 150%;
+}
+
+.auth-box__input-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.auth-box__input {
+    padding: 0 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    height: 50px;
+}
+
+.auth-box__input:focus {
+    border: 1px solid var(--ui---main);
+    border-radius: 4px;
+}
+
+.auth-box__input::placeholder {
+    line-height: 100%;
+    color: var(--typography---label-non-active-text);
+}
+
+.auth-page__remember-me-box {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.auth-page__policy-box {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
+}
+
+.auth-page__policy-box p a {
+    color: var(--ui---blue);
+    font-weight: 300;
+}
+
+.auth-page__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-page__buttons * {
+    width: 100%;
+}
+
+.auth-page__advantages-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+}
+
+.advantages-box__icon {
+    margin-bottom: 20px;
+}
+
+.advantages-box__title {
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 150%;
+    margin-bottom: 15px;
+}
+
+.advantages-box__list {
+    font-weight: 500;
+    line-height: 150%;
+    color: var(--typography---main);
+}
+
+.advantages-box__list>li>ul>li::first-letter {
+    color: var(--ui---main);
+}
+
+@media(max-width: 992px) {
+    .auth-page__layout {
+        display: flex;
+        flex-direction: column-reverse;
+        /* align-items: center; */
+    }
+
+    /* .auth-page__auth-box {
+        max-width: 80%;
+    } */
+}
