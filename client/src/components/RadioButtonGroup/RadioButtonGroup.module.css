@@ -20,10 +20,10 @@
     border-radius: 50%;
     background: #fff;
     transition: 0.2s;
-    border: 1px solid var(--typography---label-non-active-text);
+    border: 2px solid var(--ui---main);
 }
 
 .option__check.active {
     background: var(--ui---main);
-    border: 1px solid transparent;
+    border: 2px solid transparent;
 }

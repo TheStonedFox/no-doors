@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import UserModel from './models/UserModel.js'
+import OrderModel from './models/OrderModel.js'
 
 import dotenv from 'dotenv'
 
@@ -10,6 +11,11 @@ import * as userController from './controllers/userController.js'
 import * as productController from './controllers/productController.js'
 import * as favoriteController from './controllers/favoriteController.js'
 import * as cartController from './controllers/cartController.js'
+
+import * as validations from './validations.js'
+
+
+import { validationResult } from 'express-validator'
 dotenv.config()
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qamea.mongodb.net/no-doors?retryWrites=true&w=majority&appName=Cluster0`)
@@ -56,6 +62,26 @@ app.delete('/favorites/:productId', CheckAuth, favoriteController.remove)
 app.post('/cart/:productId', cartController.add)
 app.delete('/cart/:productId', cartController.remove)
 app.patch('/cart/:id', cartController.update)
+
+app.post('/oeder', async (req, res) => {
+
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty())
+        return res.json({ errors })
+
+
+    const order = new OrderModel({
+        // userId: req.body.userId,
+        deliveryType: req.body.deliveryType,
+        products: req.body.products,
+        userData: { fio: req.body.fio, phone: req.body.phone, email: req.body.email }
+
+    })
+
+    const doc = await order.save()
+    res.json({ doc })
+})
 
 app.use((err, req, res, next) => {
     console.error(err.stack); // Логируем ошибку

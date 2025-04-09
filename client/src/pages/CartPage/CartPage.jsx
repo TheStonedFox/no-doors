@@ -21,7 +21,8 @@ export default function CartPage() {
     return (
         <div className={styles['cart-page']} >
             <h2 className={`${'section-title'} ${styles['cart-page__title']}`}>Ваша корзина</h2>
-            {!loadingStatus ? <div className={styles['cart-page__cart-items']}>
+
+            {!loadingStatus && userData.cartItems.length ? <div className={styles['cart-page__cart-items']}>
                 <p className={styles['cart-items__title']}>Название товара</p>
                 <p className={styles['cart-items__title']}>Цена (Розница)</p>
                 <p className={styles['cart-items__title']}>Цена (Опт от 5)</p>
@@ -33,8 +34,11 @@ export default function CartPage() {
                     const item = products.find(item => item._id === cartItem.productId)
                     return item ? <CartItem key={item._id} productData={item} initialQuantityValue={cartItem.quantity}></CartItem> : null
                 })}
-            </div> : <Spinner />}
-            <div className={styles['cart-page__result']}>
+            </div> : <p>Ваша корзина пуста...</p>}
+            {loadingStatus && <Spinner />}
+            {/* {userData?.cartItems.length === 0 && !loadingStatus && <p>Ваша корзина пуста...</p>} */}
+
+            {userData?.cartItems.length ? <div className={styles['cart-page__result']}>
                 <div className={styles['result__promo-code']}>
                     <div className={styles['promo-code__box']}>
                         <h4>Введите промокод на скидку:</h4>
@@ -49,8 +53,7 @@ export default function CartPage() {
                     <p>Итого:<strong>{sum} грн.</strong></p>
                     <Button title='Оформить заказ' onClick={() => negative('/order')} />
                 </div>
-
-            </div>
+            </div> : null}
         </div >
     )
 }

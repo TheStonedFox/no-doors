@@ -49,6 +49,7 @@
 
 .contacts-data__input-box {
     display: flex;
+    gap: 8px;
     flex-direction: column;
 }
 
@@ -77,6 +78,7 @@
 }
 
 .pay-methods {
+    margin-top: 25px;
     display: flex;
     flex-direction: column;
 }

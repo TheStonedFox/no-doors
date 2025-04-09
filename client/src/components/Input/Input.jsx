@@ -12,7 +12,13 @@ export default function Input({ value, placeholder, type, onChange, className })
             value={value}
             placeholder={placeholder}
             type={type}
-            onChange={(event) => onChange(event.target.value)}
+            onChange={(event) => {
+                // onChange(event.target.value)
+
+                const digitsOnly = event.target.value.replace(/\D/g, '');
+                console.log(digitsOnly)
+                onChange(digitsOnly)
+            }}
             onBlur={() => setActive(false)}
             onFocus={() => setActive(true)} />
     )
