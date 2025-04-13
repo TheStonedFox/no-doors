@@ -16,7 +16,10 @@ export default function RadioButtonGroup({ options, style, onSelect }) {
             }}>
                 <div className={`${styles['option__check']} ${index === selectedOption ? styles['active'] : null}`}></div>
                 <p className={styles['option__title']}>{option}</p>
+                <div className={styles.class__name}></div>
             </div>)}
         </div>
     )
 }
+
+

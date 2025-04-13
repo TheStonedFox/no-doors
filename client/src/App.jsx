@@ -16,6 +16,7 @@ import AuthPage from './pages/AuthPage/AuthPage'
 import ProductsPage from './pages/ProductsPage/ProductsPage'
 import ProductPage from './pages/ProductPage/ProductPage'
 import OrderPage from './pages/OrderPage/OrderPage'
+import PaymentPage from './pages/PaymentPage/PaymentPage'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { closeAll, closeBurger } from './features/uiSlice'
@@ -34,7 +35,6 @@ function App() {
       negative('/')
     if (e.key === 'token')
       setLocalToken(localStorage.getItem('token'))
-
   })
 
   useEffect(() => {
@@ -64,6 +64,7 @@ function App() {
             <Route path='/profile' element={<ProfilePage />}></Route>
             <Route path='/order' element={<OrderPage />}></Route>
             <Route path='/favorites' element={<FavoritesPage />}></Route>
+            <Route path='/payment' element={<PaymentPage />}></Route>
           </>}
           <Route path='/' element={<MainPage />}></Route>
           <Route path='/auth' element={<AuthPage />}></Route>

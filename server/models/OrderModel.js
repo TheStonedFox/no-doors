@@ -4,16 +4,40 @@ const UserData = new Schema({
     fio: String,
     phone: String,
     email: String,
-})
+}, { _id: false })
 
 const OrderModel = new Schema({
+    userId: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
     products: {
         required: true,
         type: Array
     },
-    deliveryType: {
+    sum: {
+        type: Number,
+        required: true
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'new', 'accepted', 'delivered', 'rejected'],
+        default: function () {
+            return this.paymentMethod === 'offline' ? 'new' : 'pending';
+        }
+    },
+    deliveryMethod: {
         type: String,
         enum: ['delivery', 'pickup'],
+        required: true
+    },
+    paymentMethod: {
+        type: String,
+        enum: ['online', 'offline'],
+        required: true
+    },
+    adress: {
+        type: String,
         required: true
     },
     userData: {

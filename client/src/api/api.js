@@ -162,3 +162,62 @@ export const updateCartItem = (userId, productId, quantity, next) => {
             console.error('Ошибка при обновлени товара:', error)
         })
 }
+
+
+export const makeOrder = async (fio, phone, email, userId, deliveryMethod, paymentMethod, adress, products, sum) => {
+    const res = await fetch(`http://${ip}:3001/order`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token')
+        },
+        body: JSON.stringify({
+            userId,
+            fio,
+            phone,
+            email,
+            deliveryMethod,
+            paymentMethod,
+            adress,
+            products,
+            sum,
+        })
+    })
+
+    const data = await res.json()
+    return data
+}
+
+
+export const createPayment = async (amount, orderId, next) => {
+    const res = await fetch(`http://${ip}:3001/create-payment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token')
+        },
+        body: JSON.stringify({ amount, orderId })
+    })
+
+    const json = await res.json()
+    next(json)
+}
+
+
+// export const createPayment = async (amount, orderId) => {
+//     const res = await fetch(`http://${ip}:3001/create-payment`, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': localStorage.getItem('token')
+//         },
+//         body: JSON.stringify({
+//             amount,
+//             orderId
+//         })
+//     })
+
+//     const data = await res.json()
+//     console.log(data)
+//     return data
+// }

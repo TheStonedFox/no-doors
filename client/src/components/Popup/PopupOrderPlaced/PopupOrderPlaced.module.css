@@ -1,0 +1,29 @@
+.order-placed {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    line-height: 150%;
+    align-items: center;
+}
+
+
+.order-placed__title {
+    font-weight: 500;
+    font-size: 22px;
+    text-align: center;
+    color: #000;
+}
+
+.order-placed__text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.order-placed__message {
+
+    font-weight: 400;
+    font-size: 14px;
+    text-align: center;
+    color: var(--typography---second);
+}

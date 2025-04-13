@@ -15,7 +15,6 @@ import { addFavoriteItem, removeFavoriteItem, addCartItem, removeCartItem } from
 import Spinner from '../Spinner/Spinner'
 import CartPopup from '../Popup/PopupCases/CartPopup'
 
-
 let favoriteProducts = localStorage.getItem('favoriteItems') ? JSON.parse(localStorage.getItem('favoriteItems')) : []
 let cartProducts = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : []
 
@@ -27,7 +26,6 @@ export default function ProductCard({ productData }) {
     const [imageLoading, setImageLoading] = useState(true)
 
     const userData = useSelector((state) => state.user.userData)
-
     const { favoriteItems = [], cartItems = [], _id } = userData || {}
     const { title, price, wholesalePrice, inStock, _id: productId, discount, createdAt } = productData || {}
 
