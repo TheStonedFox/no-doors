@@ -6,11 +6,13 @@ import Button from '../../components/Button/Button'
 import CartItem from '.././../components/CartItem/CartItem'
 import Spinner from '../../components/Spinner/Spinner'
 import Input from '../../components/Input/Input'
+import CartItems from '../../components/CartItems/CartItems'
 
 import styles from './CartPage.module.css'
 import { setUserData } from '../../features/userSlice'
 import { getProducts } from '../../api/api'
 import { useCart } from '../../hooks/useCart'
+
 
 export default function CartPage() {
     const negative = useNavigate()
@@ -21,7 +23,7 @@ export default function CartPage() {
     return (
         <div className={styles['cart-page']} >
             <h2 className={`${'section-title'} ${styles['cart-page__title']}`}>Ваша корзина</h2>
-
+            {/* 
             {!loadingStatus && userData.cartItems.length ? <div className={styles['cart-page__cart-items']}>
                 <p className={styles['cart-items__title']}>Название товара</p>
                 <p className={styles['cart-items__title']}>Цена (Розница)</p>
@@ -35,9 +37,8 @@ export default function CartPage() {
                     return item ? <CartItem key={item._id} productData={item} initialQuantityValue={cartItem.quantity}></CartItem> : null
                 })}
             </div> : <p>Ваша корзина пуста...</p>}
-            {loadingStatus && <Spinner />}
-            {/* {userData?.cartItems.length === 0 && !loadingStatus && <p>Ваша корзина пуста...</p>} */}
-
+            {loadingStatus && <Spinner />} */}
+            <CartItems />
             {userData?.cartItems.length ? <div className={styles['cart-page__result']}>
                 <div className={styles['result__promo-code']}>
                     <div className={styles['promo-code__box']}>

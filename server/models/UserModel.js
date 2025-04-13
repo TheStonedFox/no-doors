@@ -20,6 +20,7 @@ const UserSchema = new mongoose.Schema(
         },
         cartItems: [CartItemSchema],
         favoriteItems: [],
+        orders: [],
     },
     { timestamps: true }
 )

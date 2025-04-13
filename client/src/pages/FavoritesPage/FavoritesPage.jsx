@@ -14,7 +14,7 @@ export default function FavoritesPage() {
     const [loadedItemsCount, setLoadedItemsCount] = useState(4)
     const [loadingStatus, setLadingStatus] = useState(true)
     useEffect(() => {
-        fetch('http://192.168.1.104:3001/products')
+        fetch('http://192.168.1.105:3001/products')
             .then(res => res.json())
             .then(json => {
                 setProducts(json)

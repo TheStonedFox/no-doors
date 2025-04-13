@@ -15,25 +15,26 @@ import Gallery from '../../components/Gallery/gallery'
 import Button from '../../components/Button/Button'
 import Spinner from '../../components/Spinner/Spinner'
 
-// import * as api '../../api/api.js'
-
-import { useDispatch, useSelector } from 'react-redux'
 import { setUserData } from '../../features/userSlice'
 import { getProducts } from '../../api/api';
 
 export default function MainPage() {
     const [products, setProducts] = useState([])
-    const [loadingStatus, setLadingStatus] = useState(true)
-    const dispatch = useDispatch()
+    const [loadedItemsCount, setLoadedItemsCount] = useState(4)
+    const [loadingStatus, setLoadingStatus] = useState(true)
 
     const getData = async () => {
-        setProducts(await getProducts(() => setLadingStatus(false)))
+        try {
+            setProducts(await getProducts(() => setLoadingStatus(false)))
+        } catch (error) {
+            console.error(`не удалось загрузить товары! ${error}`)
+            setLoadingStatus(false)
+        }
     }
 
     useEffect(() => {
         getData()
     }, [])
-
 
     return (
         <div className={styles['main-page']}>
@@ -122,6 +123,5 @@ export default function MainPage() {
                 <Gallery />
             </section>
         </div>
-
     )
 }

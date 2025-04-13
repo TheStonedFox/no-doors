@@ -3,11 +3,25 @@ import { getProducts } from "../api/api"
 import { useSelector } from "react-redux"
 
 export const useCart = () => {
+
     const userData = useSelector((state) => state.user.userData)
 
     const [products, setProducts] = useState([])
     const [sum, setSum] = useState(0)
     const [loadingStatus, setLoadingStatus] = useState(true)
+
+    // const [order, setOrder] = useState()
+
+    // useEffect(() => {
+    //     if (orders) {
+    //         fetch(`http://localhost:3001/order/${orderId}`)
+    //             .then(res => res.json())
+    //             .then(order => setOrder(order))
+    //     }
+
+    // }, [])
+
+    // useEffect(() => getData(), [order])
 
     const getData = async () => {
         try {

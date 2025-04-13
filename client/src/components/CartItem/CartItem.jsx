@@ -39,10 +39,10 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                 <p>Артикул: 854236896ABC</p>
             </div>
             <div className={styles['cart-item__fields']}>
-                <Field tittle='Цена (Розница)' value={discount ? `${price - price / 100 * discount} ₴` : `${price} ₴`} />
-                <Field tittle='Цена (Опт от 5)' value={discount ? `${wholesalePrice - wholesalePrice / 100 * discount} ₴` : `${wholesalePrice} ₴`} />
-                <Field tittle='Остаток' value={`${inStock} шт.`} />
-                <Field tittle='Сумма' value={discount === 0 ?
+                <Field title='Цена (Розница)' value={discount ? `${price - price / 100 * discount} ₴` : `${price} ₴`} />
+                <Field title='Цена (Опт от 5)' value={discount ? `${wholesalePrice - wholesalePrice / 100 * discount} ₴` : `${wholesalePrice} ₴`} />
+                <Field title='Остаток' value={`${inStock} шт.`} />
+                <Field title='Сумма' value={discount === 0 ?
                     quantity < 5 ?
                         price * quantity : wholesalePrice * quantity
                     : quantity < 5 ?

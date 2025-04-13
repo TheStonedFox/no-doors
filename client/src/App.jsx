@@ -17,6 +17,7 @@ import ProductsPage from './pages/ProductsPage/ProductsPage'
 import ProductPage from './pages/ProductPage/ProductPage'
 import OrderPage from './pages/OrderPage/OrderPage'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
+import ViewedProductsPage from './pages/ViewedProductsPage/ViewedProductsPage'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { closeAll, closeBurger } from './features/uiSlice'
@@ -62,6 +63,7 @@ function App() {
         <Routes>
           {useSelector((state) => state.user.isTokenValid) && <>
             <Route path='/profile' element={<ProfilePage />}></Route>
+            <Route path='/profile/viewed-products' element={<ViewedProductsPage />}></Route>
             <Route path='/order' element={<OrderPage />}></Route>
             <Route path='/favorites' element={<FavoritesPage />}></Route>
             <Route path='/payment' element={<PaymentPage />}></Route>

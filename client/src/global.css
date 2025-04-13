@@ -57,10 +57,38 @@
   border: 1px solid transparent;
 }
 
+.page-title-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 50px 0;
+}
+
 .section-title {
   font-weight: 700;
   font-size: 40px;
   color: var(--typography---main);
+}
+
+.header-link {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  text-align: right;
+  color: var(--typography---second);
+  transform: 0.2s;
+}
+
+.header-link:hover {
+  text-decoration: underline;
+  transform: 0.2s;
+}
+
+
+.header-link:active {
+  color: var(--ui---red);
+  transform: 0.2s;
 }
 
 .about-section {

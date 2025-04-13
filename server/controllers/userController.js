@@ -1,4 +1,5 @@
 import UserModel from "../models/UserModel.js"
+import OrderModel from "../models/OrderModel.js"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -41,4 +42,15 @@ export const profile = async (req, res) => {
         return res.json({ msg: 'user not found' })
 
     res.json({ user })
+}
+
+
+export const orders = async (req, res) => {
+    const orders = await OrderModel.find(({ userId: req.id }))
+
+    if (!orders)
+        return res.json({ msg: 'заказов нет' })
+
+    return res.json(orders)
+
 }

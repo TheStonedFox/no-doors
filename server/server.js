@@ -40,6 +40,8 @@ app.post('/auth/login', userController.login)
 
 app.post('/profile', CheckAuth, userController.profile)
 
+// app.get('/orders', CheckAuth, userController.)
+
 app.get('/products', productController.getProducts)
 
 app.get('/products/:id', productController.getProduct)
@@ -55,7 +57,7 @@ app.post('/cart/:productId', cartController.add)
 app.delete('/cart/:productId', cartController.remove)
 app.patch('/cart/:id', cartController.update)
 
-app.post('/order', async (req, res) => {
+app.post('/order', CheckAuth, async (req, res) => {
 
     try {
         // const errors = validationResult(req)
@@ -64,7 +66,7 @@ app.post('/order', async (req, res) => {
         //     return res.json({ errors: errors.errors })
 
         const order = new OrderModel({
-            userId: req.body.userId,
+            userId: req.id,
             deliveryMethod: req.body.deliveryMethod,
             paymentMethod: req.body.paymentMethod,
             adress: req.body.adress,
@@ -73,13 +75,32 @@ app.post('/order', async (req, res) => {
             sum: req.body.sum,
         })
 
+        // res.json({ msg: 'item added!' })
+
         const doc = await order.save()
+
+        const user = await UserModel.findOneAndUpdate(
+            { _id: req.id }, // Условие поиска
+            { $push: { orders: doc._id } }, // Что обновляем
+        )
+
+        if (!user)
+            return res.json({ msg: 'user not found!' })
+
         res.json({ status: 'ok', order: doc })
     } catch (error) {
         res.json(error)
     }
 })
 
+app.get('/order/:id', async (req, res) => {
+    const order = await OrderModel.findById(req.params.id)
+
+    if (!order)
+        res.json({ mag: 'заказ не найден!' })
+
+    res.json(order)
+})
 
 app.post('/create-payment', async (req, res) => {
 
