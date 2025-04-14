@@ -3,54 +3,72 @@ import OrderModel from "../models/OrderModel.js"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-export const register = async (req, res) => {
-    const isUser = await UserModel.findOne({ email: req.body.email })
+export const userRegister = async (req, res) => {
+    try {
+        const isUser = await UserModel.findOne({ email: req.body.email })
 
-    if (isUser)
-        return res.json({ msg: 'email already used' })
+        if (isUser)
+            return res.status(409).json({ msg: 'email already used' })
 
-    const slat = await bcrypt.genSalt(10)
-    const psswordHash = await bcrypt.hash(req.body.password, slat)
+        const slat = await bcrypt.genSalt(10)
+        const psswordHash = await bcrypt.hash(req.body.password, slat)
 
-    const doc = await new UserModel({ email: req.body.email, password: psswordHash })
-    const user = await doc.save()
-    const token = await jwt.sign({ id: user._id }, process.env.JWT_WORD)
+        const doc = await new UserModel({ fio: req.body.fio, email: req.body.email, password: psswordHash })
+        const user = await doc.save()
+        const token = await jwt.sign({ id: user._id }, process.env.JWT_WORD)
 
-    res.json({ msg: 'succses!' })
+        res.status(200).json({ msg: 'succses!' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
 }
 
-export const login = async (req, res) => {
-    const user = await UserModel.findOne({ email: req.body.email })
+export const userLogin = async (req, res) => {
+    try {
+        const user = await UserModel.findOne({ email: req.body.email })
 
-    if (!user)
-        return res.json({ msg: 'invalid data' })
+        if (!user)
+            return res.status(400).json({ msg: 'Не верные данные' })
 
-    const isValidPassword = await bcrypt.compare(req.body.password, user.password)
+        const isValidPassword = await bcrypt.compare(req.body.password, user.password)
 
-    if (!isValidPassword)
-        return res.json({ msg: 'invalid data' })
+        if (!isValidPassword)
+            return res.status(400).json({ msg: 'Не верные данные!' })
 
-    const token = await jwt.sign({ id: user._id }, process.env.JWT_WORD)
+        const token = await jwt.sign({ id: user._id }, process.env.JWT_WORD)
 
-    res.json({ token })
+        res.json({ token })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
 }
 
 export const profile = async (req, res) => {
-    const user = await UserModel.findById({ _id: req.id })
+    try {
+        const user = await UserModel.findById({ _id: req.id })
 
-    if (!user)
-        return res.json({ msg: 'user not found' })
+        if (!user)
+            return res.json({ msg: 'user not found' })
 
-    res.json({ user })
+        res.json({ user })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
 }
 
 
 export const orders = async (req, res) => {
-    const orders = await OrderModel.find(({ userId: req.id }))
 
-    if (!orders)
-        return res.json({ msg: 'заказов нет' })
+    try {
+        const orders = await OrderModel.find(({ userId: req.id }))
 
-    return res.json(orders)
+        if (!orders)
+            return res.status(200).json({ msg: 'заказов нет' })
+
+        return res.status(200).json(orders)
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+
 
 }

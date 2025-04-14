@@ -21,7 +21,9 @@ export default function OrderCard({ orderId, orderNumber }) {
     const date = new Date(order?.createdAt)
 
     useEffect(() => {
-        fetch(`http://localhost:3001/orders/${orderId}`)
+        fetch(`http://localhost:3001/orders/${orderId}`, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        })
             .then(res => res.json())
             .then(order => setOrder(order))
 

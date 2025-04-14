@@ -1,13 +1,14 @@
 
 const ip = '192.168.1.105'
-export const register = (email, password, next) => {
+export const register = (data, next) => {
+
     fetch(`http://${ip}:3001/auth/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer your-token-here'
         },
-        body: JSON.stringify({ email: email, password: password })
+        body: JSON.stringify({ fio: data.fio, email: data.email, password: data.password })
     })
         .then(res => res.json())
         .then(json => {
@@ -111,7 +112,7 @@ export const removeFavoriteItem = async (userId, productId, next) => {
 }
 
 export const addCartItem = (userId, productId, quantity, next) => {
-    fetch(`http://${ip}:3001/cart/${productId}`, {
+    fetch(`http://${ip}:3001/cart-items/${productId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -127,7 +128,7 @@ export const addCartItem = (userId, productId, quantity, next) => {
 }
 
 export const removeCartItem = (userId, productId, next) => {
-    fetch(`http://${ip}:3001/cart/${productId}`, {
+    fetch(`http://${ip}:3001/cart-items/${productId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -146,7 +147,7 @@ export const removeCartItem = (userId, productId, next) => {
 }
 
 export const updateCartItem = (userId, productId, quantity, next) => {
-    fetch(`http://${ip}:3001/cart/${productId}`, {
+    fetch(`http://${ip}:3001/cart-items/${productId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',

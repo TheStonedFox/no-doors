@@ -15,7 +15,9 @@ export default function CartItems({ orderId }) {
 
     useEffect(() => {
         if (orderId) {
-            fetch(`http://localhost:3001/orders/${orderId}`)
+            fetch(`http://localhost:3001/orders/${orderId}`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            })
                 .then(res => res.json())
                 .then(order => setOrder(order))
         }

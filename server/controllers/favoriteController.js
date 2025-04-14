@@ -1,26 +1,37 @@
 import UserModel from '../models/UserModel.js'
 
-export const add = async (req, res) => {
-    const user = await UserModel.findOneAndUpdate(
-        { _id: req.body.id }, // Условие поиска
-        { $push: { favoriteItems: req.params.productId } }, // Что обновляем
-    )
+export const addFavoriteItem = async (req, res) => {
+    try {
+        const user = await UserModel.findOneAndUpdate(
+            { _id: req.body.id }, // Условие поиска
+            { $push: { favoriteItems: req.params.productId } }, // Что обновляем
+        )
 
-    if (!user)
-        return res.json({ msg: 'user not found!' })
+        if (!user)
+            return res.status(404).json({ msg: 'user not found!' })
 
-    res.json({ msg: 'item added!' })
+        res.status(200).json({ msg: 'item added!' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+
 }
 
-export const remove = async (req, res) => {
-    const user = await UserModel.findOneAndUpdate(
-        { _id: req.body.id }, // Условие поиска
-        { $pull: { favoriteItems: req.params.productId } }, // Что обновляем
-    )
+export const removeFavoriteItem = async (req, res) => {
 
-    if (!user)
-        return res.json({ msg: 'user not found!' })
+    try {
+        const user = await UserModel.findOneAndUpdate(
+            { _id: req.body.id }, // Условие поиска
+            { $pull: { favoriteItems: req.params.productId } }, // Что обновляем
+        )
 
-    res.json({ msg: 'item removed!' })
+        if (!user)
+            return res.staus(404).json({ msg: 'user not found!' })
+
+        res.staus(200).json({ msg: 'item removed!' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+
 }
 

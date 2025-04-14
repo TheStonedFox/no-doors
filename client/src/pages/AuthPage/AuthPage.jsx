@@ -15,7 +15,7 @@ export default function AuthPage() {
     const [mode, setMode] = useState('login')
     const [data, setData] = useState({})
 
-    useEffect(() => setData({ email: '', password: '', passwordCheck: '' }), [mode])
+    useEffect(() => setData({ email: '', password: '', passwordCheck: '', fio: '' }), [mode])
     return (
         <div className={styles['auth-page']}>
             <h2 className={`${'section-title'} ${styles['auth-page__title']}`}>Вход и регистрация</h2>
@@ -23,6 +23,10 @@ export default function AuthPage() {
                 <div className={styles['auth-page__auth-box']}>
                     <h3>Вход</h3>
 
+                    {mode === 'register' && <div className={styles['auth-box__input-box']}>
+                        <h5>ФИО:</h5>
+                        <Input placeholder='Иванов Иван Иванович' type='text' value={data.fio} onChange={(value) => setData(prev => ({ ...prev, fio: value }))} />
+                    </div>}
                     <div className={styles['auth-box__input-box']}>
                         <h5>Электронная почта:</h5>
                         <Input placeholder='example@mail.com' type='email' value={data.email} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />

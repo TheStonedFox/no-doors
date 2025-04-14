@@ -10,6 +10,10 @@ const CartItemSchema = new mongoose.Schema(
 
 const UserSchema = new mongoose.Schema(
     {
+        fio: {
+            type: String,
+            required: true,
+        },
         email: {
             type: String,
             required: true,

@@ -3,33 +3,39 @@ import ProductModel from "../models/ProductModel.js"
 export const getProducts = async (req, res) => {
     try {
         const products = await ProductModel.find()
-        return res.json(products)
+        return res.status(200).json(products)
     } catch (error) {
         res.json({ msg: error })
     }
 }
 
 export const getProduct = async (req, res) => {
-    const product = await ProductModel.findOne({ _id: req.params.id })
+    try {
+        const product = await ProductModel.findOne({ _id: req.params.id })
 
-    if (!product)
-        return res.json({ msg: 'product not found!' })
+        if (!product)
+            return res.status(404).json({ msg: 'product not found!' })
 
-    res.json(product)
-
+        res.status(200).json(product)
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
 }
 
 export const addProduct = async (req, res) => {
-    const doc = await ProductModel.create({
-        title: req.body.title,
-        price: req.body.price,
-        wholesalePrice: req.body.wholesalePrice,
-        inStock: req.body.inStock,
-        discount: req.body.discount,
-    })
+    try {
+        const doc = await ProductModel.create({
+            title: req.body.title,
+            price: req.body.price,
+            wholesalePrice: req.body.wholesalePrice,
+            inStock: req.body.inStock,
+            discount: req.body.discount,
+        })
 
-    const product = await doc.save()
+        const product = await doc.save()
+        res.status(200).json(product)
 
-    res.json(product)
-
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
 }

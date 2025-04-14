@@ -27,7 +27,9 @@ export default function OrderDetailsPopup({ orderId }) {
 
     useEffect(() => {
         if (orderId) {
-            fetch(`http://localhost:3001/orders/${orderId}`)
+            fetch(`http://localhost:3001/orders/${orderId}`, {
+                headers: { 'Authorization': localStorage.getItem('token') }
+            })
                 .then(res => res.json())
                 .then(order => setOrder(order))
         }
@@ -52,6 +54,7 @@ export default function OrderDetailsPopup({ orderId }) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
                 }
             })
                 .then(res => res.json())
@@ -59,7 +62,7 @@ export default function OrderDetailsPopup({ orderId }) {
                     if (data?.status === 'sandbox' | data?.status === 'success') {
                         fetch(`http://localhost:3001/orders/${orderId}`, {
                             method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
                             body: JSON.stringify({ status: 'paid' })
                         })
                     }
@@ -86,13 +89,15 @@ export default function OrderDetailsPopup({ orderId }) {
                 {order?.paymentMethod === 'online' && order.status === 'pending' && <form id='liqpay-form' action="https://www.liqpay.ua/api/3/checkout" target='_blank' method='POST'
                     onSubmit={async (event) => {
                         event.preventDefault(); // сначала всегда отменяем
-                        const res = await fetch(`http://localhost:3001/orders/${orderId}`);
+                        const res = await fetch(`http://localhost:3001/orders/${orderId}`, {
+                            headers: { 'Authorization': localStorage.getItem('token') }
+                        })
                         const actualOrder = await res.json();
                         setOrder(actualOrder);
 
                         if (actualOrder.status === 'paid') {
                             alert('Этот заказ уже оплачен');
-                            return;
+                            return
                         }
 
                         // если всё ок — сабмитим вручную
