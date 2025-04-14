@@ -8,11 +8,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setUserData } from '../../features/userSlice'
 
 import Spinner from '../Spinner/Spinner'
-import CartPopup from '../Popup/PopupCases/CartPopup'
+import CartPopup from '../Popup/PopupCases/CartPopup/CartPopup'
 
 import { togglePopup } from '../../features/uiSlice'
 
-export default function CartItem({ productData, initialQuantityValue, getTotalPriceValue }) {
+export default function CartItem({ productData, initialQuantityValue, getTotalPriceValue, viewOnly }) {
 
     const { title, price, wholesalePrice, inStock, _id, discount } = productData
 
@@ -53,13 +53,14 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
             <p>{discount > 0 ? `${wholesalePrice - wholesalePrice / 100 * discount}` : `${wholesalePrice}`} ₴</p>
             <p>{`${inStock} шт.`}</p>
             <div className={styles['cart-item__controls']}>
-                <Counter
+                {!viewOnly ? <Counter
                     className={styles['cart-item__counter']}
                     onCounterChange={(value) => {
                         setQuantity(value)
                         updateCartItem(userData._id, _id, value, () => dispatch(setUserData()))
                     }}
-                    initialValue={initialQuantityValue} />
+                    initialValue={initialQuantityValue} /> : <p>{quantity}</p>}
+
 
                 <p>{discount === 0 ?
                     quantity < 5 ?
@@ -68,7 +69,7 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                         (price - price / 100 * discount) * quantity :
                         (wholesalePrice - wholesalePrice / 100 * discount) * quantity} ₴
                 </p>
-                <svg
+                {!viewOnly && <svg
                     width="20"
                     height="20"
                     viewBox="0 0 20 20"
@@ -87,7 +88,7 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                             <rect width="20" height="20" fill="white" />
                         </clipPath>
                     </defs>
-                </svg>
+                </svg>}
             </div>
         </div >
     )

@@ -165,7 +165,7 @@ export const updateCartItem = (userId, productId, quantity, next) => {
 
 
 export const makeOrder = async (fio, phone, email, userId, deliveryMethod, paymentMethod, adress, products, sum) => {
-    const res = await fetch(`http://${ip}:3001/order`, {
+    const res = await fetch(`http://${ip}:3001/orders`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -200,7 +200,8 @@ export const createPayment = async (amount, orderId, next) => {
     })
 
     const json = await res.json()
-    next(json)
+    return json
+    // next(json)
 }
 
 

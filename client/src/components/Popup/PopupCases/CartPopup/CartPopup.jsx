@@ -1,17 +1,18 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import styles from './PopupOrderPlaced.module.css'
-import Button from '../../Button/Button'
+import Button from '../../../Button/Button'
+import BorderedButton from '../../../BorderedButton/BorderedButton'
+
+import { togglePopup } from '../../../../features/uiSlice'
+import style from './CartPopup.module.css'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { togglePopup } from '../../../features/uiSlice'
 
-
-export default function PopupOrderPlaced() {
+export default function CartPopup({ text }) {
+    const dispatch = useDispatch()
     const negative = useNavigate()
-    const dispactch = useDispatch()
     return (
-        <div className={styles['order-placed']}>
+        <div className={style['cart-popoup']}>
             <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_37_3024)">
                     <path d="M59.7487 10.2512C53.1381 3.64068 44.3488 0 35 0C25.651 0 16.8617 3.64068 10.2512 10.2512C3.64055 16.8618 0 25.6512 0 35C0 44.3488 3.64055 53.1381 10.2512 59.7487C16.8618 66.3593 25.651 70 35 70C44.3488 70 53.1381 66.3593 59.7487 59.7487C66.3593 53.1381 70 44.3488 70 35C70 25.6512 66.3593 16.8619 59.7487 10.2512ZM35 65.8984C17.9625 65.8984 4.10156 52.0375 4.10156 35C4.10156 17.9625 17.9625 4.10156 35 4.10156C52.0375 4.10156 65.8984 17.9625 65.8984 35C65.8984 52.0375 52.0375 65.8984 35 65.8984Z" fill="#399A3A" />
@@ -23,14 +24,17 @@ export default function PopupOrderPlaced() {
                     </clipPath>
                 </defs>
             </svg>
-            <div className={styles['order-placed__text']}>
-                <h3 className={styles['order-placed__title']}>Заказ оформлен!</h3>
-                <p className={styles['order-placed__message']}>Скоро с Вами свяжется наш менеджер.</p>
+            <p className={style['cart-popoup__text']}>{text}</p>
+            <div className={style['cart-popoup__buttons']}>
+                <Button
+                    title='Оформить заказ'
+                    onClick={() => {
+                        dispatch(togglePopup())
+                        negative('/cart')
+                    }}
+                />
+                <BorderedButton title='Продолжить покупки' onClick={() => dispatch(togglePopup())} />
             </div>
-            <Button title='Посмотреть заказ' onClick={() => {
-                dispactch(togglePopup())
-                negative('/profile')
-            }} />
         </div>
     )
 }

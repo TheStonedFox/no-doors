@@ -94,6 +94,11 @@
     cursor: pointer;
 }
 
+.header__middle-button:hover {
+    color: var(--ui---main);
+    transition: 0.2s;
+}
+
 .header__middle-button div {
     position: absolute;
     border-radius: 10px;

@@ -6,25 +6,19 @@ import Field from '../../components/Field/Field'
 import Button from '../../components/Button/Button'
 import RadioButtonGroup from '../../components/RadioButtonGroup/RadioButtonGroup'
 import Input from '../../components/Input/Input'
-import Popup from '../../components/Popup/Popup'
 
 
 import * as api from '../../api/api'
 
 import { useCart } from '../../hooks/useCart'
 import { togglePopup } from '../../features/uiSlice'
-import PaymentPage from '../PaymentPage/PaymentPage'
+import { setUserData } from '../../features/userSlice'
 import { useNavigate } from 'react-router-dom'
-import PopupOrderPlaced from '../../components/Popup/PopupOrderPlaced/PopupOrderPlaced'
 
+import getWordEnding from '../../utils/getWordEnding'
 
 export default function OrderPage() {
-    const getWordEnding = (value) => {
-        if (value % 100 >= 11 && value % 100 <= 14) return 'ов'
-        if (value % 10 === 1) return ''
-        if (value % 10 >= 2 && value % 10 <= 4) return 'а'
-        return "ов"
-    }
+
 
     const isPopuoOpen = useSelector((state) => state.ui.isPopuoOpen)
     const dispactch = useDispatch()
@@ -64,11 +58,11 @@ export default function OrderPage() {
                 <section className={styles['result']}>
                     <h2 className={`${'section-title'} ${styles['result__title']}`}>Итого</h2>
                     <div className={styles['result__fields']}>
-                        <Field tittle={`${userData?.cartItems.length} товар${getWordEnding(userData?.cartItems.length)} на суму`} value={`${sum} ₴`}></Field>
-                        <Field tittle='Ваша скидка' value='10%'></Field>
-                        <Field tittle='Стоимость доставки' value={`${selectedOptions.delivery === 0 ? '100 ₴' : '0 ₴'}`}></Field>
+                        <Field title={`${userData?.cartItems.length} товар${getWordEnding(userData?.cartItems.length)} на суму`} value={`${sum} ₴`}></Field>
+                        <Field title='Ваша скидка' value='10%'></Field>
+                        <Field title='Стоимость доставки' value={`${selectedOptions.delivery === 0 ? '100 ₴' : '0 ₴'}`}></Field>
                     </div>
-                    <Field tittle='Итого к оплате' value={`${selectedOptions.delivery === 0 ? sum : sum + 100} ₴`}></Field>
+                    <Field title='Итого к оплате' value={`${selectedOptions.delivery === 0 ? sum : sum + 100} ₴`}></Field>
                     <div className={styles['pay-methods']}>
                         <h3 className={styles['pay-methods__title']}>Способ оплаты</h3>
                         <RadioButtonGroup style={styles['pay-methods__radio-buttons']} options={['Оплата при получении', 'Онлайн оплата']}
@@ -94,8 +88,8 @@ export default function OrderPage() {
                                 userData.cartItems,
                                 sum
                             )
-
-                            dispactch(togglePopup(<PopupOrderPlaced />))
+                            dispactch(setUserData())
+                            dispactch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
 
                             console.log(orderData)
                             // if (orderData.status === 'ok' && orderData.order.paymentMethod === 'online') {

@@ -5,13 +5,17 @@ import { useNavigate } from 'react-router-dom'
 import style from './Popup.module.css'
 
 import { togglePopup } from '../../features/uiSlice'
+import CartPopup from './PopupCases/CartPopup/CartPopup'
+import OrderDetailsPopup from './PopupCases/OrderDetailsPopup/OrderDetailsPopup'
+import OrderPlacedPopup from './PopupCases/OrderPlacedPopup/OrderPlacedPopup'
 
 export default function Popup({ children }) {
     const isPopupOpen = useSelector((stete) => stete.ui.isPopuoOpen)
-    const popupContent = useSelector((stete) => stete.ui.popupContent)
+    const popup = useSelector(state => state.ui.popup)
     const dispatch = useDispatch()
     const negative = useNavigate()
     // useEffect(() => console.log(`popup ${isPopupOpen}`), [isPopupOpen])
+
 
     return (
         <div
@@ -42,8 +46,9 @@ export default function Popup({ children }) {
                         </clipPath>
                     </defs>
                 </svg>
-
-                {popupContent}
+                {popup?.type === 'product-card' && <CartPopup text={popup?.message} />}
+                {popup?.type === 'order-card' && <OrderDetailsPopup orderId={popup?.data} />}
+                {popup?.type === 'order-placed' && <OrderPlacedPopup data={popup?.data} />}
             </div>
         </div>
     )

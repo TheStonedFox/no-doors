@@ -4,7 +4,7 @@ const initialState = {
     isBurgerOpen: false,
     isCatalogOpen: false,
     isPopuoOpen: false,
-    popupContent: null,
+    popup: { type: '', message: '', data: '' },
     cartCounter: 0,
     favoriteCounter: 0,
 }
@@ -24,7 +24,7 @@ export const uiSlice = createSlice({
         },
         togglePopup: (state, action) => {
             state.isPopuoOpen = !state.isPopuoOpen
-            state.popupContent = action.payload
+            state.popup = action.payload
         },
         closeAll: (state) => {
             state.isBurgerOpen = false

@@ -40,8 +40,6 @@ app.post('/auth/login', userController.login)
 
 app.post('/profile', CheckAuth, userController.profile)
 
-// app.get('/orders', CheckAuth, userController.)
-
 app.get('/products', productController.getProducts)
 
 app.get('/products/:id', productController.getProduct)
@@ -57,7 +55,7 @@ app.post('/cart/:productId', cartController.add)
 app.delete('/cart/:productId', cartController.remove)
 app.patch('/cart/:id', cartController.update)
 
-app.post('/order', CheckAuth, async (req, res) => {
+app.post('/orders', CheckAuth, async (req, res) => {
 
     try {
         // const errors = validationResult(req)
@@ -93,13 +91,34 @@ app.post('/order', CheckAuth, async (req, res) => {
     }
 })
 
-app.get('/order/:id', async (req, res) => {
+app.get('/orders/:id', async (req, res) => {
     const order = await OrderModel.findById(req.params.id)
 
     if (!order)
         res.json({ mag: 'заказ не найден!' })
 
     res.json(order)
+})
+
+
+app.patch('/orders/:id', async (req, res) => {
+    try {
+        console.log('asdsadsassadass')
+
+        await OrderModel.findByIdAndUpdate(
+            req.params.id,
+            { status: req.body.status },
+            { new: true }
+        )
+
+        // if (!order)
+        //     return res.json({ message: 'Заказ не найден!' }).status(404)
+
+        res.json({ message: 'Статус обновлен!' }).status(200)
+
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка обновления статуса', details: error.message });
+    }
 })
 
 app.post('/create-payment', async (req, res) => {
@@ -115,7 +134,6 @@ app.post('/create-payment', async (req, res) => {
             sandbox: '1',
             public_key: process.env.LIQ_PAY_PUBLIC_API_KEY,
             // server_url: 'http://192.168.1.105:3001/payment-status'
-            server_url: 'https://f1a2-90-123-45-67.ngrok.io/payment-status'
         }
 
         const jsonData = JSON.stringify(orderData)
@@ -133,37 +151,43 @@ app.post('/create-payment', async (req, res) => {
 
 })
 
-app.post('/payment-status', express.urlencoded({ extended: false }), (req, res) => {
+app.post('/payment-status/:orderId', async (req, res) => {
     try {
-        const data = req.body.data;
-        const signature = req.body.signature;
+        const orderId = req.params.orderId;
 
-        // Проверка подписи
-        const expectedSignature = crypto
+        const data = {
+            public_key: process.env.LIQ_PAY_PUBLIC_API_KEY,
+            action: 'status',
+            version: '3',
+            order_id: orderId
+        };
+
+        const jsonData = JSON.stringify(data);
+        const dataEncoded = Buffer.from(jsonData).toString('base64');
+        const signature = crypto
             .createHash('sha1')
-            .update(process.env.LIQ_PAY_PRIVATE_API_KEY + data + process.env.LIQ_PAY_PRIVATE_API_KEY)
+            .update(process.env.LIQ_PAY_PRIVATE_API_KEY + dataEncoded + process.env.LIQ_PAY_PRIVATE_API_KEY)
             .digest('base64');
+        console.log(dataEncoded)
+        const response = await fetch('https://www.liqpay.ua/api/request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                data: dataEncoded,
+                signature: signature
+            })
+        });
 
-        if (signature !== expectedSignature) {
-            console.log('⚠️ Подпись не совпадает!');
-            return res.status(403).send('Invalid signature');
-        }
-
-        // Расшифровываем данные
-        const decodedData = JSON.parse(Buffer.from(data, 'base64').toString('utf8'));
-        console.log('✅ Получен callback от LiqPay:', decodedData);
-
-        // Тут можно:
-        // - обновить заказ в БД
-        // - отправить email
-        // - подтвердить доставку и т.д.
-
-        res.status(200).send('OK');
+        const result = await response.json();
+        res.status(200).json(result);
     } catch (error) {
-        console.error('Ошибка в callback:', error);
-        res.status(500).send('Server error');
+        res.status(500).json({ error: 'Ошибка получения статуса', details: error.message });
     }
 })
+
+
 
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
     console.log(`The server is running on port ${process.env.PORT || 5000}`);

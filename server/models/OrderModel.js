@@ -21,7 +21,7 @@ const OrderModel = new Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'new', 'accepted', 'delivered', 'rejected', 'completed'],
+        enum: ['pending', 'new', 'accepted', 'delivered', 'rejected', 'completed', 'paid'],
         default: function () {
             return this.paymentMethod === 'offline' ? 'new' : 'pending';
         }

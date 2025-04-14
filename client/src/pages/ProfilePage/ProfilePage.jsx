@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { getUser } from '../../api/api'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 import BorderedButton from '../../components/BorderedButton/BorderedButton'
@@ -10,22 +10,25 @@ import Input from '../../components/Input/Input'
 import OrderCard from '../../components/OrderCard/OrderCard'
 
 import styles from './ProfilePage.module.css'
+import { checkToken } from '../../features/userSlice'
+
 
 export default function ProfilePage() {
 
     const negative = useNavigate()
+    const dispactch = useDispatch()
 
     const userData = useSelector((state => state.user.userData))
-    // cons
     const [action, setAction] = useState('')
-
-    useEffect(() => console.log(userData?.orders), [userData])
 
     return (
         <div className={styles['profile-page']}>
             <section className='page-title-section'>
                 <h1 className='section-title'>Личный кабинет</h1>
-                <Link className='header-link' to='/logot'>Выйти из аккаунта</Link>
+                <Link className='header-link' onClick={() => {
+                    localStorage.removeItem('token')
+                    dispactch(checkToken())
+                }}>Выйти из аккаунта</Link>
             </section>
             <section className={styles['profile-page__layout']}>
                 <section className={styles['profile-page__actions']}>
@@ -82,7 +85,6 @@ export default function ProfilePage() {
                         <Link className={styles['orders-history__clear-link']}>Очистить историю заказов</Link>
                     </section>
                     <div className={styles['orders-history__list']}>
-                        {/* <OrderCard /> */}
                         {userData?.orders.map((order, index) => <OrderCard key={order} orderId={order} orderNumber={index + 1} />)}
                     </div>
                 </section>}

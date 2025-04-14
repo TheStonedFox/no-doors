@@ -41,8 +41,6 @@ function App() {
   useEffect(() => {
     dispatch(checkToken())
     tokenStatus && dispatch(setUserData())
-    // tokenStatus && dispatch(setCartItems())
-    console.log(`token stuts: ${tokenStatus}`)
 
     return () => dispatch(setUserData())
   }, [tokenStatus, localToken, dispatch])
@@ -67,14 +65,15 @@ function App() {
             <Route path='/order' element={<OrderPage />}></Route>
             <Route path='/favorites' element={<FavoritesPage />}></Route>
             <Route path='/payment' element={<PaymentPage />}></Route>
+            <Route path='/cart' element={<CartPage />}></Route>
           </>}
           <Route path='/' element={<MainPage />}></Route>
           <Route path='/auth' element={<AuthPage />}></Route>
+          <Route path='/cart' element={<AuthPage />}></Route>
           <Route path='/about' element={<AboutPage />}></Route>
           <Route path='/delivery-and-pay' element={<DeliveryPayPage />}></Route>
           <Route path='/guarantees' element={<GuaranteesPage />}></Route>
           <Route path='/contacts' element={<ContactsPage />}></Route>
-          <Route path='/cart' element={<CartPage />}></Route>
           <Route path='/products' element={<ProductsPage />}></Route>
           <Route path='/products/:id' element={<ProductPage />}></Route>
         </Routes>

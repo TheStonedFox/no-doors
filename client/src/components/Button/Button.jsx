@@ -1,8 +1,8 @@
 import React from 'react'
 import styles from './Button.module.css'
 
-export default function Button({ children, className, onClick, title }) {
+export default function Button({ children, className, onClick, title, type }) {
     return (
-        <button className={`${styles.button} ${className || ''}`} onClick={onClick}>{title}</button>
+        <button className={`${styles.button} ${className || ''}`} type={type} onClick={onClick}>{title}</button>
     )
 }

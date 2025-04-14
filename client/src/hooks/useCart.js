@@ -10,16 +10,9 @@ export const useCart = () => {
     const [sum, setSum] = useState(0)
     const [loadingStatus, setLoadingStatus] = useState(true)
 
-    // const [order, setOrder] = useState()
+    const [order, setOrder] = useState()
 
-    // useEffect(() => {
-    //     if (orders) {
-    //         fetch(`http://localhost:3001/order/${orderId}`)
-    //             .then(res => res.json())
-    //             .then(order => setOrder(order))
-    //     }
 
-    // }, [])
 
     // useEffect(() => getData(), [order])
 
