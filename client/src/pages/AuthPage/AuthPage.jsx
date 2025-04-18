@@ -70,7 +70,7 @@ export default function AuthPage() {
                                 if (data.passwordCheck !== data.password)
                                     return alert('пароли не совподают!')
 
-                                register(data.email, data.password, () => setMode('login'))
+                                register(data, () => setMode('login'))
                             }}
                         />}
                         {mode === 'register' && <BorderedButton onClick={() => setMode('login')} title='Войти' />}

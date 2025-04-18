@@ -86,9 +86,12 @@ export default function ProductCard({ productData }) {
 
 
                     if (!favoriteItems?.includes(productId) && tokenStatus) {
-                        await addFavoriteItem(_id, productId, () => dispatch(setUserData()))
-                        dispatch(updateFavoriteCounter(favoriteItems?.length + 1))
-                        dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в избранное!' }))
+                        await addFavoriteItem(_id, productId, () => {
+                            dispatch(setUserData())
+                            dispatch(updateFavoriteCounter(favoriteItems?.length + 1))
+                            dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в избранное!' }))
+                        })
+
                     } else {
                         await removeFavoriteItem(_id, productId, () => dispatch(setUserData()))
                         dispatch(updateFavoriteCounter(favoriteItems?.length - 1))

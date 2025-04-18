@@ -33,7 +33,7 @@ app.use(express.json())
 //#region user
 app.post('/auth/register', userController.userRegister)
 app.post('/auth/login', userController.userLogin)
-app.post('/profile', CheckAuth, userController.profile)
+app.get('/profile', CheckAuth, userController.profile)
 //#endregion
 
 //#region products

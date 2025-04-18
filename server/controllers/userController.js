@@ -33,7 +33,7 @@ export const userLogin = async (req, res) => {
         const isValidPassword = await bcrypt.compare(req.body.password, user.password)
 
         if (!isValidPassword)
-            return res.status(400).json({ msg: 'Не верные данные!' })
+            return res.status(400).json({ msg: 'Не верные данные' })
 
         const token = await jwt.sign({ id: user._id }, process.env.JWT_WORD)
 
@@ -48,9 +48,9 @@ export const profile = async (req, res) => {
         const user = await UserModel.findById({ _id: req.id })
 
         if (!user)
-            return res.json({ msg: 'user not found' })
+            return res.status(404).json({ msg: 'user not found' })
 
-        res.json({ user })
+        res.status(200).json({ user })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

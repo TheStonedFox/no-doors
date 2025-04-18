@@ -15,6 +15,7 @@ export const addFavoriteItem = async (req, res) => {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
 
+
 }
 
 export const removeFavoriteItem = async (req, res) => {
@@ -26,9 +27,9 @@ export const removeFavoriteItem = async (req, res) => {
         )
 
         if (!user)
-            return res.staus(404).json({ msg: 'user not found!' })
+            return res.status(404).json({ msg: 'user not found!' })
 
-        res.staus(200).json({ msg: 'item removed!' })
+        res.status(200).json({ msg: 'item removed!' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
