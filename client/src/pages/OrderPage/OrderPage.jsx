@@ -13,7 +13,7 @@ import * as api from '../../api/api'
 import { useCart } from '../../hooks/useCart'
 import { togglePopup } from '../../features/uiSlice'
 import { setUserData } from '../../features/userSlice'
-import { useNavigate } from 'react-router-dom'
+import { data, useNavigate } from 'react-router-dom'
 
 import getWordEnding from '../../utils/getWordEnding'
 
@@ -27,6 +27,7 @@ export default function OrderPage() {
 
     const [selectedOptions, setSelectedOptions] = useState({ deliveryMethod: 0, payMethod: 0 })
     const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null })
+    const [validationErrors, setValidationErrors] = useState([])
 
     const [, userData, sum,] = useCart()
 
@@ -39,15 +40,26 @@ export default function OrderPage() {
                     <h3 className={styles['contacts-data__title']}>Контактные данные</h3>
                     <div className={styles['contacts-data__input-box']}>
                         <h5 className={styles['contacts-data__input-title']}>ФИО:</h5>
-                        <Input id='fio' onChange={(value) => setUserInfo(prev => ({ ...prev, fio: value }))} placeholder='ФИО' type='text' />
+                        <Input
+                            id='fio'
+                            errorFrame={validationErrors.find(error => error.path === 'fio')}
+                            onChange={(value) => setUserInfo(prev => ({ ...prev, fio: value }))}
+                            placeholder='ФИО' type='text' />
                     </div>
                     <div className={styles['contacts-data__input-box']}>
                         <h5 className={styles['contacts-data__input-title']}>Телефон:</h5>
-                        <Input id='phone' onChange={(value) => setUserInfo(prev => ({ ...prev, phone: value }))} placeholder='Телефон' type='tel' />
+                        <Input
+                            id='phone'
+                            errorFrame={validationErrors.find(error => error.path === 'phone')}
+                            onChange={(value) => setUserInfo(prev => ({ ...prev, phone: value }))} placeholder='Телефон' type='tel' />
                     </div>
                     <div className={styles['contacts-data__input-box']}>
                         <h5 className={styles['contacts-data__input-title']}>Электронная почта:</h5>
-                        <Input id='email' onChange={(value) => setUserInfo(prev => ({ ...prev, email: value }))} placeholder='example@mail.com' type='email' />
+                        <Input
+                            id='email'
+                            errorFrame={validationErrors.find(error => error.path === 'email')}
+                            onChange={(value) => setUserInfo(prev => ({ ...prev, email: value }))}
+                            placeholder='example@mail.com' type='email' />
                     </div>
                     <div className={styles['contacts-data__delivery-method']}>
                         <h3 className={styles['delivery-method__title']}>Способ получения</h3>
@@ -69,18 +81,10 @@ export default function OrderPage() {
                             onSelect={(value) => setSelectedOptions(prev => ({ ...prev, payMethod: value }))} />
                         <Button title='Подтвердить заказ' onClick={async () => {
 
-                            // if (!fio || !/^(\s*\S+\s+\S+.*)$/.test(fio))
-                            //     alert('fio!!')
-
-                            // if (!phone || phone.length < 10)
-                            //     alert('тел!!')
-
-                            // if (!email || email.length < 5)
-                            //     alert('em!!')
                             const orderData = await api.makeOrder(
-                                'testFio',
-                                '380660355345',
-                                'testemail@mail.com',
+                                userInfo.fio,
+                                userInfo.phone,
+                                userInfo.email,
                                 userData._id,
                                 selectedOptions.deliveryMethod === 0 ? 'delivery' : 'pickup',
                                 selectedOptions.payMethod === 0 ? 'offline' : 'online',
@@ -88,14 +92,14 @@ export default function OrderPage() {
                                 userData.cartItems,
                                 sum
                             )
+
+                            if (orderData.validationErrors)
+                                return setValidationErrors(orderData.validationErrors)
+
+                            setValidationErrors([])
+
                             dispactch(setUserData())
                             dispactch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
-
-                            console.log(orderData)
-                            // if (orderData.status === 'ok' && orderData.order.paymentMethod === 'online') {
-                            //     api.createPayment(orderData.order.sum, orderData.order._id, (json) => {
-                            //         dispactch(togglePopup(<PaymentPage data={json.data} signature={json.signature}></PaymentPage>))
-                            //     })
                         }
                         } />
                         <p className={styles['pay-methods__policy']}>Нажимая на кнопку «Подтвердить заказ», Вы подтверждаете,

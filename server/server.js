@@ -2,7 +2,6 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { CheckAuth } from './middleware/CheckAuth.js'
-import { validationResult } from 'express-validator'
 import cors from 'cors'
 
 //#region controllers
@@ -56,7 +55,7 @@ app.patch('/cart-items/:id', cartController.updateCartItem)
 //#endregion
 
 //#region orders
-app.post('/orders', CheckAuth, orderController.createOrder)
+app.post('/orders', validations.orderValidation, CheckAuth, orderController.createOrder)
 
 app.get('/orders/:id', CheckAuth, orderController.getOrder)
 

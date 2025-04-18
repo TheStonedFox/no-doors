@@ -10,10 +10,9 @@ import BorderedButton from '../BorderedButton/BorderedButton'
 import styles from './ProductCard.module.css'
 
 import { togglePopup, updateCartCounter, updateFavoriteCounter } from '../../features/uiSlice'
-import { checkToken, setUserData } from '../../features/userSlice'
+import { setUserData } from '../../features/userSlice'
 import { addFavoriteItem, removeFavoriteItem, addCartItem, removeCartItem } from '../../api/api'
 import Spinner from '../Spinner/Spinner'
-import CartPopup from '../Popup/PopupCases/CartPopup/CartPopup'
 
 let favoriteProducts = localStorage.getItem('favoriteItems') ? JSON.parse(localStorage.getItem('favoriteItems')) : []
 let cartProducts = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : []
@@ -134,13 +133,19 @@ export default function ProductCard({ productData }) {
                                 return
 
                             if (!inCart) {
-                                await addCartItem(_id, productId, quantity, () => dispatch(setUserData()))
-                                dispatch(updateCartCounter(cartItems?.length + 1))
-                                dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в корзину!' }))
+                                await addCartItem(_id, productId, quantity, () => {
+                                    dispatch(setUserData())
+                                    dispatch(updateCartCounter(cartItems?.length + 1))
+                                    dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в корзину!' }))
+                                })
+
                             } else {
-                                await removeCartItem(_id, productId, () => dispatch(setUserData()))
-                                dispatch(updateCartCounter(cartItems?.length - 1))
-                                dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из корзины!' }))
+                                await removeCartItem(_id, productId, () => {
+                                    dispatch(setUserData())
+                                    dispatch(updateCartCounter(cartItems?.length - 1))
+                                    dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из корзины!' }))
+                                })
+
                             }
 
                         }} />

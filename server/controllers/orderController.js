@@ -1,12 +1,13 @@
+import { validationResult } from 'express-validator'
 import OrderModel from '../models/OrderModel.js'
 import UserModel from '../models/UserModel.js'
 
+
 export const createOrder = async (req, res) => {
     try {
-        // const errors = validationResult(req)
-
-        // if (!errors.isEmpty())
-        //     return res.json({ errors: errors.errors })
+        const errors = validationResult(req)
+        if (!errors.isEmpty())
+            return res.status(400).json({ validationErrors: errors.errors })
 
         const order = new OrderModel({
             userId: req.id,

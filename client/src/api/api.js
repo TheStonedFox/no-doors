@@ -198,7 +198,6 @@ export const updateCartItem = async (userId, productId, quantity, next) => {
 
 }
 
-
 export const makeOrder = async (fio, phone, email, userId, deliveryMethod, paymentMethod, adress, products, sum) => {
     try {
         const res = await fetch(`http://${ip}:3001/orders`, {
@@ -220,14 +219,17 @@ export const makeOrder = async (fio, phone, email, userId, deliveryMethod, payme
             })
         })
 
+        // if(!res.ok)
+
+
         const data = await res.json()
+
         return data
     } catch (error) {
         alert(`Произошла ошибка: ${error}`)
     }
 
 }
-
 
 export const createPayment = async (amount, orderId, next) => {
     try {

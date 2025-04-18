@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styles from './Input.module.css'
 
-export default function Input({ value, placeholder, type, onChange, id, className }) {
+export default function Input({ value, placeholder, type, onChange, id, className, errorFrame }) {
 
     const [active, setActive] = useState(false)
+    const [validationError, setValidationError] = useState(errorFrame || false)
+
+    useEffect(() => setValidationError(errorFrame), [errorFrame])
 
     return (
-        <input id={id}
+        <input id={id} style={{ borderColor: validationError ? 'red' : null }}
             className={`${styles['input']} ${className && className} ${active && styles['active']}`}
             value={value}
             placeholder={placeholder}
@@ -20,6 +23,9 @@ export default function Input({ value, placeholder, type, onChange, id, classNam
                 onChange(event.target.value)
             }}
             onBlur={() => setActive(false)}
-            onFocus={() => setActive(true)} />
+            onFocus={() => {
+                setActive(true)
+                setValidationError(false)
+            }} />
     )
 }
