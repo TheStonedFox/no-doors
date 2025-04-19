@@ -14,8 +14,9 @@ export default function AuthPage() {
 
     const [mode, setMode] = useState('login')
     const [data, setData] = useState({})
+    const [validationErrors, setValidationErrors] = useState([])
 
-    useEffect(() => setData({ email: '', password: '', passwordCheck: '', fio: '' }), [mode])
+    useEffect(() => setData({ email: '', password: '', passwordCheck: '', fio: '', phone: '' }), [mode])
     return (
         <div className={styles['auth-page']}>
             <h2 className={`${'section-title'} ${styles['auth-page__title']}`}>Вход и регистрация</h2>
@@ -25,15 +26,19 @@ export default function AuthPage() {
 
                     {mode === 'register' && <div className={styles['auth-box__input-box']}>
                         <h5>ФИО:</h5>
-                        <Input placeholder='Иванов Иван Иванович' type='text' value={data.fio} onChange={(value) => setData(prev => ({ ...prev, fio: value }))} />
+                        <Input placeholder='Иванов Иван Иванович' type='text' value={data.fio} errorFrame={validationErrors.find(error => error.path === 'fio')} onChange={(value) => setData(prev => ({ ...prev, fio: value }))} />
+                    </div>}
+                    {mode === 'register' && <div className={styles['auth-box__input-box']}>
+                        <h5>Телефон:</h5>
+                        <Input placeholder='0123456789' type='phone' value={data.phone} errorFrame={validationErrors.find(error => error.path === 'phone')} onChange={(value) => setData(prev => ({ ...prev, phone: value }))} />
                     </div>}
                     <div className={styles['auth-box__input-box']}>
                         <h5>Электронная почта:</h5>
-                        <Input placeholder='example@mail.com' type='email' value={data.email} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />
+                        <Input placeholder='example@mail.com' type='email' value={data.email} errorFrame={validationErrors.find(error => error.path === 'email')} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />
                     </div>
                     <div className={styles['auth-box__input-box']}>
                         <h5>Пароль:</h5>
-                        <Input placeholder='Введите пароль' type='password' value={data.password} onChange={(value) => setData(prev => ({ ...prev, password: value }))} />
+                        <Input placeholder='Введите пароль' type='password' value={data.password} errorFrame={validationErrors.find(error => error.path === 'password')} onChange={(value) => setData(prev => ({ ...prev, password: value }))} />
                     </div>
 
                     {mode === 'register' && <div className={styles['auth-box__input-box']}>
@@ -66,11 +71,14 @@ export default function AuthPage() {
                         />}
                         {mode === 'register' && <Button
                             title='Зарегистрироваться'
-                            onClick={() => {
+                            onClick={async () => {
                                 if (data.passwordCheck !== data.password)
                                     return alert('пароли не совподают!')
 
-                                register(data, () => setMode('login'))
+                                const res = await register(data, () => setMode('login'))
+
+                                if (res.validationErrors)
+                                    return setValidationErrors(res.validationErrors)
                             }}
                         />}
                         {mode === 'register' && <BorderedButton onClick={() => setMode('login')} title='Войти' />}

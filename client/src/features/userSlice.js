@@ -37,7 +37,6 @@ export const userSlice = createSlice({
             })
             .addCase(checkToken.rejected, (state, action) => {
                 state.isTokenValid = false
-                console.error('Token check failed:', action.payload) // Логируем ошибку
             })
             .addCase(setUserData.fulfilled, (state, action) => {
                 state.userData = action.payload

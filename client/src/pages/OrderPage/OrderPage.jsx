@@ -6,7 +6,7 @@ import Field from '../../components/Field/Field'
 import Button from '../../components/Button/Button'
 import RadioButtonGroup from '../../components/RadioButtonGroup/RadioButtonGroup'
 import Input from '../../components/Input/Input'
-
+import SuggestionInput from '../../components/SuggestionInput/SuggestionInput'
 
 import * as api from '../../api/api'
 
@@ -26,7 +26,7 @@ export default function OrderPage() {
 
 
     const [selectedOptions, setSelectedOptions] = useState({ deliveryMethod: 0, payMethod: 0 })
-    const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null })
+    const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null, postOfice: null })
     const [validationErrors, setValidationErrors] = useState([])
 
     const [, userData, sum,] = useCart()
@@ -61,6 +61,8 @@ export default function OrderPage() {
                             onChange={(value) => setUserInfo(prev => ({ ...prev, email: value }))}
                             placeholder='example@mail.com' type='email' />
                     </div>
+
+                    <SuggestionInput placeholder='Выбирете город' optionsList={['Киев', 'харьков', 'Полтава', 'Львов', 'Сумы', 'Виница1', 'Виница2', 'Виница4', 'Виница5', 'Виниц6а',]} />
                     <div className={styles['contacts-data__delivery-method']}>
                         <h3 className={styles['delivery-method__title']}>Способ получения</h3>
                         <RadioButtonGroup style={styles['delivery-method__radio-buttons']} options={['Доставка 100 ₴', 'Самовывоз бесплатно']}
@@ -88,7 +90,7 @@ export default function OrderPage() {
                                 userData._id,
                                 selectedOptions.deliveryMethod === 0 ? 'delivery' : 'pickup',
                                 selectedOptions.payMethod === 0 ? 'offline' : 'online',
-                                'TestAdress',
+                                userData.address,
                                 userData.cartItems,
                                 sum
                             )

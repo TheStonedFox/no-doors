@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import styles from './Input.module.css'
 
 export default function Input({ value, placeholder, type, onChange, id, className, errorFrame }) {
-
     const [active, setActive] = useState(false)
     const [validationError, setValidationError] = useState(errorFrame || false)
 
@@ -29,3 +28,4 @@ export default function Input({ value, placeholder, type, onChange, id, classNam
             }} />
     )
 }
+

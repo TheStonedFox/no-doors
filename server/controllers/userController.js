@@ -2,9 +2,16 @@ import UserModel from "../models/UserModel.js"
 import OrderModel from "../models/OrderModel.js"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { validationResult } from "express-validator"
+
 
 export const userRegister = async (req, res) => {
     try {
+        const errors = validationResult(req)
+
+        if (!errors.isEmpty())
+            return res.status(400).json({ validationErrors: errors.errors })
+
         const isUser = await UserModel.findOne({ email: req.body.email })
 
         if (isUser)
@@ -13,7 +20,7 @@ export const userRegister = async (req, res) => {
         const slat = await bcrypt.genSalt(10)
         const psswordHash = await bcrypt.hash(req.body.password, slat)
 
-        const doc = await new UserModel({ fio: req.body.fio, email: req.body.email, password: psswordHash })
+        const doc = await new UserModel({ fio: req.body.fio, phone: req.body.phone, email: req.body.email, password: psswordHash })
         const user = await doc.save()
         const token = await jwt.sign({ id: user._id }, process.env.JWT_WORD)
 

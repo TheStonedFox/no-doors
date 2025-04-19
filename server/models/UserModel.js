@@ -14,6 +14,10 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        phone: {
+            type: String,
+            required: true
+        },
         email: {
             type: String,
             required: true,
@@ -22,6 +26,8 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+
+        viewedProducts: [],
         cartItems: [CartItemSchema],
         favoriteItems: [],
         orders: [],

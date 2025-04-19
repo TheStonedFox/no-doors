@@ -30,7 +30,7 @@ app.use(express.json())
 //#region Routes
 
 //#region user
-app.post('/auth/register', userController.userRegister)
+app.post('/auth/register', validations.registerValidation, userController.userRegister)
 app.post('/auth/login', userController.userLogin)
 app.get('/profile', CheckAuth, userController.profile)
 //#endregion
@@ -55,7 +55,7 @@ app.patch('/cart-items/:id', cartController.updateCartItem)
 //#endregion
 
 //#region orders
-app.post('/orders', validations.orderValidation, CheckAuth, orderController.createOrder)
+app.post('/orders', CheckAuth, validations.orderValidation, orderController.createOrder)
 
 app.get('/orders/:id', CheckAuth, orderController.getOrder)
 

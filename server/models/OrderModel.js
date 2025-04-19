@@ -36,7 +36,7 @@ const OrderModel = new Schema({
         enum: ['online', 'offline'],
         required: true
     },
-    adress: {
+    address: {
         type: String,
         required: true
     },

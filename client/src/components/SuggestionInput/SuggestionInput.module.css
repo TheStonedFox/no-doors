@@ -1,0 +1,41 @@
+.suggestion-input {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.suggestion-input input {
+    border-radius: 5px 5px 0px 0px;
+}
+
+.suggestion-input__options-box {
+    position: absolute;
+    display: flex;
+    top: 56px;
+    width: 100%;
+    -webkit-box-shadow: -1px 2px 14px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: -1px 2px 14px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: -1px 2px 14px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 0px 0px 5px 5px;
+    background-color: #fff;
+    padding-right: 5px;
+}
+
+.suggestion-input__options {
+    display: flex;
+    flex-direction: column;
+    max-height: 150px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.suggestion-input__option {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    height: 32px;
+}
+
+.suggestion-input__option:hover {
+    background-color: var(--typography---label-non-active-text);
+}

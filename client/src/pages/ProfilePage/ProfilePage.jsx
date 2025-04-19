@@ -12,7 +12,6 @@ import OrderCard from '../../components/OrderCard/OrderCard'
 import styles from './ProfilePage.module.css'
 import { checkToken } from '../../features/userSlice'
 
-
 export default function ProfilePage() {
 
     const negative = useNavigate()
@@ -21,6 +20,7 @@ export default function ProfilePage() {
     const userData = useSelector((state => state.user.userData))
     const [action, setAction] = useState('')
 
+
     return (
         <div className={styles['profile-page']}>
             <section className='page-title-section'>
@@ -28,6 +28,7 @@ export default function ProfilePage() {
                 <Link className='header-link' onClick={() => {
                     localStorage.removeItem('token')
                     dispactch(checkToken())
+
                 }}>Выйти из аккаунта</Link>
             </section>
             <section className={styles['profile-page__layout']}>
@@ -47,7 +48,7 @@ export default function ProfilePage() {
                         </svg>
                     </div>
                     <div className={styles['actions__text']}>
-                        <p className={styles['actions__user-name']}>Лисов Антон Александрович</p>
+                        <p className={styles['actions__user-name']}>{userData?.fio}</p>
                         <p className={styles['actions__discount-value']}>Ваша скидка составляет: 10%</p>
                     </div>
                     {action === 'history' && <Button title='Вернуться в личный кабинет' onClick={() => setAction('profile')} />}
@@ -68,11 +69,11 @@ export default function ProfilePage() {
                 {action === 'edit' && <section className={styles['profile-page__edit-info']}>
                     <div className={styles['edit-info__field']}>
                         <p className={styles['edit-info__field-name']}>Телефон:</p>
-                        <Input className={styles['edit-info__input']} type='tel' placeholder='0000000000' />
+                        <Input className={styles['edit-info__input']} type='tel' placeholder='0123456789' value={userData?.phone} />
                     </div>
                     <div className={styles['edit-info__field']}>
                         <p className={styles['edit-info__field-name']}>Электронная почта:</p>
-                        <Input className={styles['edit-info__input']} type='tel' placeholder='example@mail.com' />
+                        <Input className={styles['edit-info__input']} type='tel' placeholder='example@mail.com' value={userData?.email} />
                     </div>
                     <div className={styles['edit-info__field']}>
                         <p className={styles['edit-info__field-name']}>Адрес доставки:</p>

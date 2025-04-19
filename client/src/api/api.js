@@ -10,7 +10,7 @@ export const register = async (data, next) => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer your-token-here'
             },
-            body: JSON.stringify({ fio: data.fio, email: data.email, password: data.password })
+            body: JSON.stringify({ fio: data.fio, phone: data.phone, email: data.email, password: data.password })
 
         })
 
@@ -18,7 +18,10 @@ export const register = async (data, next) => {
         if (json.msg === 'email already used')
             return alert(`Пользователь с таким email уже существует!`)
 
-        next()
+
+        if (res.ok)
+            next()
+        return json
 
     } catch (error) {
         alert(`Произошла ошибка: ${error}`)
@@ -87,7 +90,7 @@ export const getProducts = async (next) => {
     const products = await res.json()
 
     if (!res.ok)
-        return console.log('error')
+        return alert('Не удалось получить список товаров')
 
     next()
     return products
@@ -219,9 +222,6 @@ export const makeOrder = async (fio, phone, email, userId, deliveryMethod, payme
             })
         })
 
-        // if(!res.ok)
-
-
         const data = await res.json()
 
         return data
@@ -251,5 +251,7 @@ export const createPayment = async (amount, orderId, next) => {
         alert(`Произошла ошибка: ${error}`)
     }
 }
+
+
 
 
