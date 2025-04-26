@@ -38,7 +38,7 @@ const OrderModel = new Schema({
     },
     address: {
         type: String,
-        required: true
+        required: function () { return this.deliveryMethod === 'pickup' }
     },
     userData: {
         type: UserData,

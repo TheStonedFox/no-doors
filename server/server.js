@@ -5,12 +5,14 @@ import { CheckAuth } from './middleware/CheckAuth.js'
 import cors from 'cors'
 
 //#region controllers
+import * as authController from './controllers/authController.js'
 import * as userController from './controllers/userController.js'
 import * as productController from './controllers/productController.js'
 import * as favoriteController from './controllers/favoriteController.js'
 import * as cartController from './controllers/cartController.js'
 import * as paymentController from './controllers/paymentController.js'
 import * as orderController from './controllers/orderController.js'
+
 //#endregion
 
 import * as validations from './validations.js'
@@ -29,10 +31,15 @@ app.use(express.json())
 
 //#region Routes
 
-//#region user
-app.post('/auth/register', validations.registerValidation, userController.userRegister)
-app.post('/auth/login', userController.userLogin)
+//#region auth
+app.post('/auth/register', validations.registerValidation, authController.register)
+app.post('/auth/login', authController.login)
+//#endregion
+
+
+//#region  user
 app.get('/profile', CheckAuth, userController.profile)
+app.patch('/profile', CheckAuth, validations.profileInfoValidation, userController.update)
 //#endregion
 
 //#region products
@@ -71,6 +78,7 @@ app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
 //#region service
 app.post('/auth/check', CheckAuth, (req, res) => res.json({ msg: 'token valid' }))
 //#endregion
+
 
 //#endregion
 

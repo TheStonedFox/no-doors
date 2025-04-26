@@ -253,5 +253,20 @@ export const createPayment = async (amount, orderId, next) => {
 }
 
 
+export const updateUserInfo = async (data) => {
 
+    try {
+        const res = await fetch(`http://${ip}:3001/profile/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token')
+            },
+            body: JSON.stringify({ ...data })
+        })
+        return await res.json()
+    } catch (error) {
+        throw error instanceof Error ? error : new Error(String(error));
+    }
 
+}

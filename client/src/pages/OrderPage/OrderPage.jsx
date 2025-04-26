@@ -90,7 +90,7 @@ export default function OrderPage() {
                                 userData._id,
                                 selectedOptions.deliveryMethod === 0 ? 'delivery' : 'pickup',
                                 selectedOptions.payMethod === 0 ? 'offline' : 'online',
-                                userData.address,
+                                'adresrasad',
                                 userData.cartItems,
                                 sum
                             )

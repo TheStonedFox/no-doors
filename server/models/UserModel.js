@@ -22,11 +22,13 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        city: String,
+        postOffice: String,
         password: {
             type: String,
             required: true,
         },
-
+        postOffice: String,
         viewedProducts: [],
         cartItems: [CartItemSchema],
         favoriteItems: [],

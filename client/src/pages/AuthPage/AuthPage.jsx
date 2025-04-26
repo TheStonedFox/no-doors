@@ -30,7 +30,7 @@ export default function AuthPage() {
                     </div>}
                     {mode === 'register' && <div className={styles['auth-box__input-box']}>
                         <h5>Телефон:</h5>
-                        <Input placeholder='0123456789' type='phone' value={data.phone} errorFrame={validationErrors.find(error => error.path === 'phone')} onChange={(value) => setData(prev => ({ ...prev, phone: value }))} />
+                        <Input placeholder='0123456789' type='tel' value={data.phone} errorFrame={validationErrors.find(error => error.path === 'phone')} onChange={(value) => setData(prev => ({ ...prev, phone: value }))} />
                     </div>}
                     <div className={styles['auth-box__input-box']}>
                         <h5>Электронная почта:</h5>

@@ -4,9 +4,7 @@
     position: relative;
 }
 
-.suggestion-input input {
-    border-radius: 5px 5px 0px 0px;
-}
+.suggestion-input input {}
 
 .suggestion-input__options-box {
     position: absolute;
@@ -17,25 +15,36 @@
     -moz-box-shadow: -1px 2px 14px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -1px 2px 14px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 5px 5px;
-    background-color: #fff;
-    padding-right: 5px;
+    /* padding-right: 5px; */
 }
 
 .suggestion-input__options {
+    position: relative;
     display: flex;
     flex-direction: column;
     max-height: 150px;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: scroll;
+    z-index: 2;
+    border-radius: 0 0 5px 5px;
+    background-color: #fff;
+
 }
 
 .suggestion-input__option {
     display: flex;
     align-items: center;
     padding: 5px 10px;
-    height: 32px;
+    /* height: 32px; */
 }
 
 .suggestion-input__option:hover {
     background-color: var(--typography---label-non-active-text);
+    background-color: var(--ui---main);
+    color: #fff;
+}
+
+.border {
+    border-radius: 5px 5px 0px 0px;
+
 }
