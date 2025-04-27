@@ -13,13 +13,11 @@ export const createOrder = async (req, res) => {
             userId: req.id,
             deliveryMethod: req.body.deliveryMethod,
             paymentMethod: req.body.paymentMethod,
-            adress: req.body.adress,
+            address: req.body.address,
             products: req.body.products,
             userData: { fio: req.body.fio, phone: req.body.phone, email: req.body.email },
             sum: req.body.sum,
         })
-
-        // res.json({ msg: 'item added!' })
 
         const doc = await order.save()
 

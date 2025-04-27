@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './SuggestionInput.module.css'
 import Input from '../Input/Input'
 
-export default function SuggestionInput({ placeholder, optionsList, onChange, value }) {
+export default function SuggestionInput({ placeholder, optionsList, onChange, value, errorFrame }) {
     const [inputValue, setInputValue] = useState('')
     const [isFocus, setIsFocus] = useState(false)
 
@@ -25,7 +25,7 @@ export default function SuggestionInput({ placeholder, optionsList, onChange, va
             onBlur={() => setIsFocus(false)}
             onChange={() => inputValue}
         >
-            <Input onChange={handleChange} placeholder={placeholder} value={inputValue}
+            <Input onChange={handleChange} errorFrame={errorFrame} placeholder={placeholder} value={inputValue || value}
                 style={{ backgroundColor: 'red' }}
                 className={isFocus && optionsList?.length && !optionsList?.includes(inputValue) && `${styles['border']}`}
             />

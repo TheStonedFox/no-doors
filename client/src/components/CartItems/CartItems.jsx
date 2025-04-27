@@ -44,7 +44,7 @@ export default function CartItems({ orderId }) {
                     return item ? <CartItem key={item._id} productData={item} initialQuantityValue={orderProduct.quantity} viewOnly={true}></CartItem> : null
                 })}
 
-            </div> : <p>Ваша корзина пуста...</p>}
+            </div> : <p>Ваша корзина пуста.</p>}
             {loadingStatus && <Spinner />}
         </div>
     )

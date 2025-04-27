@@ -10,7 +10,7 @@ import OrderDetailsPopup from './PopupCases/OrderDetailsPopup/OrderDetailsPopup'
 import OrderPlacedPopup from './PopupCases/OrderPlacedPopup/OrderPlacedPopup'
 
 export default function Popup({ children }) {
-    const isPopupOpen = useSelector((stete) => stete.ui.isPopuoOpen)
+    const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
     const popup = useSelector(state => state.ui.popup)
     const dispatch = useDispatch()
     const negative = useNavigate()

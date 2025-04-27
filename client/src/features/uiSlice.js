@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
     isBurgerOpen: false,
     isCatalogOpen: false,
-    isPopuoOpen: false,
+    isPopupOpen: false,
     popup: { type: '', message: '', data: '' },
     cartCounter: 0,
     favoriteCounter: 0,
@@ -23,7 +23,7 @@ export const uiSlice = createSlice({
             state.isBurgerOpen = false
         },
         togglePopup: (state, action) => {
-            state.isPopuoOpen = !state.isPopuoOpen
+            state.isPopupOpen = !state.isPopupOpen
             state.popup = action.payload
         },
         closeAll: (state) => {

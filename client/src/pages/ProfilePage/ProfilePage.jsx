@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { getUser, updateUserInfo } from '../../api/api'
+import { updateUserInfo } from '../../api/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -13,6 +13,7 @@ import styles from './ProfilePage.module.css'
 import { checkToken, setUserData } from '../../features/userSlice'
 import { togglePopup } from '../../features/uiSlice'
 import SuggestionInput from '../../components/SuggestionInput/SuggestionInput'
+import { usePostInfo } from '../../hooks/usePostInfo'
 
 
 export default function ProfilePage() {
@@ -21,23 +22,21 @@ export default function ProfilePage() {
     const dispatch = useDispatch()
 
     const userData = useSelector((state => state.user.userData))
+
     const [action, setAction] = useState('info')
-
-    const [postOfficeData, setPostOfficeData] = useState({ city: null, departments: [] })
-
-    const [cities, setCities] = useState([{ cityRef: null, title: null }])
-
     const [userInfo, setUserInfo] = useState({ phone: null, email: null, city: null, postOffice: null })
-
     const [validationErrors, setValidationErrors] = useState([])
+
+    const [postOfficeData, cities] = usePostInfo({ selectedCity: userInfo.city })
 
     const cityRegExp = new RegExp(`^${userInfo.city?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*`, 'i')
     const onSaveChangesButtonClick = async () => {
         try {
             setValidationErrors([])
-            const oldUserInfo = { phone: userData?.phone, email: userData.email, city: userData?.city, postOffice: userData?.postOffice }
+            const { phone, email, city, fio, postOffice } = userData || {}
+            const oldUserInfo = { fio, phone, email, city, postOffice }
 
-            if (JSON.stringify(oldUserInfo) === JSON.stringify(userInfo)) return alert('Данные не менялись!')
+            if (JSON.stringify(userInfo) === JSON.stringify(oldUserInfo)) return alert('Данные не менялись!')
 
             const res = await updateUserInfo(userInfo)
 
@@ -53,47 +52,15 @@ export default function ProfilePage() {
     }
 
     useEffect(() => {
-
-        fetch("https://api.novaposhta.ua/v2.0/json/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                apiKey: import.meta.env.VITE_NOVA_POSHTA_API_KEY,
-                modelName: "Address",
-                calledMethod: "getCities",
-            })
-        })
-            .then(res => res.json())
-            .then(data => {
-                const citiesData = data.data?.filter(city => city.SettlementTypeDescription === 'місто').map(city => {
-                    return { cityRef: city.Ref, title: city.Description }
-                })
-                setCities(citiesData)
-            })
-    }, [])
-
-    useEffect(() => {
-        setUserInfo({ city: userData?.city, email: userData?.email, phone: userData?.phone, postOffice: userData?.postOffice })
+        const { fio, phone, email, city, postOffice } = userData || {}
+        setUserInfo({ fio, phone, email, city, postOffice })
     }, [userData])
 
     useEffect(() => {
-        fetch("https://api.novaposhta.ua/v2.0/json/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                apiKey: "3fcb585d64813ce9b5c65697c4d22bac",
-                modelName: "Address",
-                calledMethod: "getWarehouses",
-            })
-        })
-            .then(res => res.json())
-            .then(json => {
-                const departments = json.data.
-                    filter(department => department.CityRef === cities.find(city => city.title === userInfo.city)?.cityRef &&
-                        department.CategoryOfWarehouse === 'Branch').map(department => department.Description)
-                setPostOfficeData(prev => ({ ...prev, departments: departments }))
-            })
-    }, [userInfo.city])
+        if (userInfo.city !== userData?.city)
+            return setUserInfo(prev => ({ ...prev, postOffice: null }))
+        setUserInfo(prev => ({ ...prev, postOffice: userData?.postOffice }))
+    }, [userInfo.city, userData])
 
 
     return (
@@ -103,7 +70,6 @@ export default function ProfilePage() {
                 <Link className='header-link' onClick={() => {
                     localStorage.removeItem('token')
                     dispatch(checkToken())
-
                 }}>Выйти из аккаунта</Link>
             </section>
             <section className={styles['profile-page__layout']}>
@@ -208,7 +174,7 @@ export default function ProfilePage() {
                         <Link className={styles['orders-history__clear-link']}>Очистить историю заказов</Link>
                     </section>
                     <div className={styles['orders-history__list']}>
-                        {!userData?.length && <p>Список заказов пуст!</p>}
+                        {!userData?.orders.length && <p>Список заказов пуст!</p>}
                         {userData?.orders.map((order, index) => <OrderCard key={order} orderId={order} orderNumber={index + 1} />)}
                     </div>
                 </section>}

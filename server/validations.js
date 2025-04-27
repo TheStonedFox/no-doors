@@ -6,7 +6,7 @@ export const orderValidation = [
     body('phone', 'invalid phone').isMobilePhone().isLength({ min: 10 }),
     body('fio', 'invalid fio').matches(/^\s*(\S+\s+){2}\S+\s*$/, 'i'),
     body('address')
-        .if((value, { req }) => req.body.deliveryMethod === 'delivery') // Условие
+        .if((value, { req }) => req.body.deliveryMethod === 'pickup') // Условие
         .isLength({ min: 5 }).withMessage('invalid address') // Если условие выполнено — валидируем
 ]
 

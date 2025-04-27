@@ -1,11 +1,9 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Slider from '../../components/Slider/Slider'
 import styles from './MainPage.module.css'
 
 import { Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-
-import gsmarena from 'gsmarena-api'
 
 import 'swiper/css/bundle'
 
@@ -19,7 +17,6 @@ import Spinner from '../../components/Spinner/Spinner'
 
 import { setUserData } from '../../features/userSlice'
 import { getChooseStepsOptions, getProducts } from '../../api/api'
-import { data } from 'react-router-dom'
 
 import { categoryImages } from '../../utils/categoryImages'
 import { brandsImages } from '../../utils/brandsImages'
@@ -55,8 +52,6 @@ export default function MainPage() {
         getData()
         getChooseOptions()
     }, [])
-
-    useEffect(() => { console.log(chooseOptions) }, [chooseOptions])
 
     return (
         <div className={styles['main-page']}>

@@ -113,6 +113,8 @@
     flex-direction: column;
     gap: 10px;
     width: 100%;
+
+    justify-content: space-between;
 }
 
 .promo-code__input-box {

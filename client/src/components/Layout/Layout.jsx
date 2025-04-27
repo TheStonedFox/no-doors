@@ -8,7 +8,7 @@ import Footer from '../Footer/Footer'
 import Popup from '../Popup/Popup'
 
 export default function Layout({ children }) {
-    const isPopuoOpen = useSelector((state) => state.ui.isPopuoOpen)
+    const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
     const isCatalogOpen = useSelector((state) => state.ui.isCatalogOpen)
 
     return (

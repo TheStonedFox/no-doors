@@ -24,7 +24,7 @@ export const register = async (data, next) => {
         return json
 
     } catch (error) {
-        alert(`Произошла ошибка: ${error}`)
+        throw error instanceof Error ? error : new Error(String(error))
     }
 
 }
@@ -48,7 +48,7 @@ export const login = async (email, password) => {
         localStorage.setItem('token', json.token)
         window.location.href = '/profile'
     } catch (error) {
-        alert(`Произошла ошибка: ${error}`)
+        throw error instanceof Error ? error : new Error(String(error))
     }
 }
 
@@ -61,7 +61,9 @@ export const updateFavoritesAndCartItems = (localCartList, localFavoriteList) =>
         },
         body: JSON.stringify({ cartItems: localCartList, favoriteItems: localFavoriteList })
     })
-        .catch(error => alert(`Не удалось обновить список избранных товаров! ${error}`))
+        .catch(error => {
+            throw error instanceof Error ? error : new Error(String(error))
+        })
 }
 
 export const getUser = async () => {
@@ -79,9 +81,8 @@ export const getUser = async () => {
         const json = await res.json()
         return json.user
     } catch (error) {
-        alert(`Произошла ошибка: ${error}`)
+        throw error instanceof Error ? error : new Error(String(error))
     }
-
 }
 
 export const getProducts = async (next) => {
@@ -183,7 +184,7 @@ export const removeCartItem = async (userId, productId, next) => {
 
 export const updateCartItem = async (userId, productId, quantity, next) => {
     try {
-        const res = await fetch(`http://${ip}:3001/cart-items/${productId}`, {
+        const res = await fetch(`http://localhost:3001/cart-items/${productId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -196,12 +197,12 @@ export const updateCartItem = async (userId, productId, quantity, next) => {
 
         next()
     } catch (error) {
-        alert(`Произошла ошибка: ${error}`)
+        throw error instanceof Error ? error : new Error(String(error))
     }
 
 }
 
-export const makeOrder = async (fio, phone, email, userId, deliveryMethod, paymentMethod, adress, products, sum) => {
+export const makeOrder = async (orderData) => {
     try {
         const res = await fetch(`http://${ip}:3001/orders`, {
             method: 'POST',
@@ -209,24 +210,13 @@ export const makeOrder = async (fio, phone, email, userId, deliveryMethod, payme
                 'Content-Type': 'application/json',
                 'Authorization': localStorage.getItem('token')
             },
-            body: JSON.stringify({
-                userId,
-                fio,
-                phone,
-                email,
-                deliveryMethod,
-                paymentMethod,
-                adress,
-                products,
-                sum,
-            })
+            body: JSON.stringify({ ...orderData })
         })
 
         const data = await res.json()
-
         return data
     } catch (error) {
-        alert(`Произошла ошибка: ${error}`)
+        throw error instanceof Error ? error : new Error(String(error))
     }
 
 }
@@ -248,7 +238,7 @@ export const createPayment = async (amount, orderId, next) => {
         const json = await res.json()
         return json
     } catch (error) {
-        alert(`Произошла ошибка: ${error}`)
+        throw error instanceof Error ? error : new Error(String(error))
     }
 }
 
@@ -274,7 +264,7 @@ export const updateUserInfo = async (data) => {
 
 export const getChooseStepsOptions = async () => {
     try {
-        const res = await fetch('http://localhost:3001/chooses-steps-options')
+        const res = await fetch('http://localhost:3001/chooses-steps')
         return await res.json()
     } catch (error) {
         throw error instanceof Error ? error : new Error(String(error))

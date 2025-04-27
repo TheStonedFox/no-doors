@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import styles from './OrderPage.module.css'
@@ -13,25 +13,40 @@ import * as api from '../../api/api'
 import { useCart } from '../../hooks/useCart'
 import { togglePopup } from '../../features/uiSlice'
 import { setUserData } from '../../features/userSlice'
-import { data, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import getWordEnding from '../../utils/getWordEnding'
+import { usePostInfo } from '../../hooks/usePostInfo'
+
+
 
 export default function OrderPage() {
 
-
-    const isPopuoOpen = useSelector((state) => state.ui.isPopuoOpen)
-    const dispactch = useDispatch()
+    const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
+    const dispatch = useDispatch()
     const negative = useNavigate()
 
 
     const [selectedOptions, setSelectedOptions] = useState({ deliveryMethod: 0, payMethod: 0 })
-    const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null, postOfice: null })
+    const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null, city: null, postOffice: null, address: null })
     const [validationErrors, setValidationErrors] = useState([])
 
-    const [, userData, sum,] = useCart()
+    const cityRegExp = new RegExp(`^${userInfo.city?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*`, 'i')
 
-    // useEffect(() => console.log(userInfo), [userInfo])
+    const [, userData, sum,] = useCart()
+    const [postOfficeData, cities] = usePostInfo({ selectedCity: userInfo.city })
+
+    useEffect(() => {
+        const { fio, phone, email, city, postOffice } = userData || {}
+        setUserInfo(prev => ({ ...prev, fio, phone, email, city, postOffice }))
+    }, [userData])
+
+    useEffect(() => {
+        if (selectedOptions.deliveryMethod === 0)
+            setUserInfo(prev => ({ ...prev, address: null }))
+    }, [selectedOptions])
+
+    // useEffect(() => { console.log(userInfo) }, [userInfo])
     return (
         <div className={styles['order-page']}>
             <h2 className={`${'section-title'} ${styles['order-page__title']}`}>Оформление заказа</h2>
@@ -44,6 +59,7 @@ export default function OrderPage() {
                             id='fio'
                             errorFrame={validationErrors.find(error => error.path === 'fio')}
                             onChange={(value) => setUserInfo(prev => ({ ...prev, fio: value }))}
+                            value={userInfo.fio ? userInfo.fio : userData?.fio}
                             placeholder='ФИО' type='text' />
                     </div>
                     <div className={styles['contacts-data__input-box']}>
@@ -51,6 +67,7 @@ export default function OrderPage() {
                         <Input
                             id='phone'
                             errorFrame={validationErrors.find(error => error.path === 'phone')}
+                            value={userInfo.phone ? userInfo.phone : userData?.phone}
                             onChange={(value) => setUserInfo(prev => ({ ...prev, phone: value }))} placeholder='Телефон' type='tel' />
                     </div>
                     <div className={styles['contacts-data__input-box']}>
@@ -59,15 +76,44 @@ export default function OrderPage() {
                             id='email'
                             errorFrame={validationErrors.find(error => error.path === 'email')}
                             onChange={(value) => setUserInfo(prev => ({ ...prev, email: value }))}
+                            value={userInfo.email ? userInfo.email : userData?.email}
                             placeholder='example@mail.com' type='email' />
                     </div>
-
-                    <SuggestionInput placeholder='Выбирете город' optionsList={['Киев', 'харьков', 'Полтава', 'Львов', 'Сумы', 'Виница1', 'Виница2', 'Виница4', 'Виница5', 'Виниц6а',]} />
                     <div className={styles['contacts-data__delivery-method']}>
                         <h3 className={styles['delivery-method__title']}>Способ получения</h3>
                         <RadioButtonGroup style={styles['delivery-method__radio-buttons']} options={['Доставка 100 ₴', 'Самовывоз бесплатно']}
                             onSelect={(value) => setSelectedOptions(prev => ({ ...prev, deliveryMethod: value }))} />
                     </div>
+                    {selectedOptions.deliveryMethod === 0 &&
+                        <div className={styles['contacts-data__field']}>
+                            <div className={styles['contacts-data__input-box']}>
+                                <h5 className={styles['contacts-data__input-title']}>Город: </h5>
+                                <SuggestionInput
+                                    className={styles['contacts-data__input']}
+                                    type='text'
+                                    value={userInfo.city}
+                                    placeholder='Город'
+                                    optionsList={cities?.filter(city => cityRegExp.test(city.title) && city.title !== userInfo.city).map(city => city.title)}
+                                    onChange={(value) => setUserInfo(prev => ({ ...prev, city: value }))}
+                                />
+                            </div>
+
+                            {userInfo.city && selectedOptions.deliveryMethod === 0 && <div className={styles['contacts-data__input-box']}>
+                                <h5 className={styles['contacts-data__input-title']}>Отделение почты:</h5>
+                                <SuggestionInput
+                                    className={styles['contacts-data__input']}
+                                    type='text'
+                                    placeholder='Отделение №1, адрес'
+                                    value={userInfo.postOffice}
+                                    onChange={(value) => setUserInfo(prev => ({ ...prev, postOffice: value }))}
+                                    optionsList={userInfo.postOffice ? postOfficeData?.departments.filter(department => department.includes(userInfo.postOffice)) : postOfficeData.departments}
+                                />
+                            </div>}
+                        </div>}
+                    {selectedOptions.deliveryMethod === 1 &&
+                        <SuggestionInput placeholder='Выберете точку самовывоза' optionsList={['ул. Саксаганского, 53', 'проспект Победы, 67']} onChange={(value) => setUserInfo(prev => ({ ...prev, address: value }))}
+                            errorFrame={validationErrors.find(error => error.path === 'address')}
+                        />}
                 </section>
                 <section className={styles['result']}>
                     <h2 className={`${'section-title'} ${styles['result__title']}`}>Итого</h2>
@@ -83,25 +129,34 @@ export default function OrderPage() {
                             onSelect={(value) => setSelectedOptions(prev => ({ ...prev, payMethod: value }))} />
                         <Button title='Подтвердить заказ' onClick={async () => {
 
-                            const orderData = await api.makeOrder(
-                                userInfo.fio,
-                                userInfo.phone,
-                                userInfo.email,
-                                userData._id,
-                                selectedOptions.deliveryMethod === 0 ? 'delivery' : 'pickup',
-                                selectedOptions.payMethod === 0 ? 'offline' : 'online',
-                                'adresrasad',
-                                userData.cartItems,
-                                sum
-                            )
+                            const orderData = {
+                                ...userInfo,
+                                id: userData._id,
+                                products: userData.cartItems,
+                                sum,
+                                deliveryMethod: selectedOptions.deliveryMethod === 0 ? 'delivery' : 'pickup',
+                                paymentMethod: selectedOptions.payMethod === 0 ? 'offline' : 'online',
+                                address: userInfo.address || '',
+                            }
 
-                            if (orderData.validationErrors)
-                                return setValidationErrors(orderData.validationErrors)
+                            const orderResponse = await api.makeOrder(orderData)
+
+                            if (orderResponse.validationErrors) {
+                                console.log('val err')
+                                console.log(orderResponse.validationErrors)
+                                // console.log(orderResponse.validationErrors.length)
+                                // if (orderResponse.validationErrors.find(error => error.path === 'address') && orderResponse.validationErrors.length === 1 && selectedOptions.deliveryMethod === 0)
+                                //     return
+                                return setValidationErrors(orderResponse.validationErrors)
+
+                            }
+
+                            // alert('test')
 
                             setValidationErrors([])
 
-                            dispactch(setUserData())
-                            dispactch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
+                            dispatch(setUserData())
+                            dispatch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
                         }
                         } />
                         <p className={styles['pay-methods__policy']}>Нажимая на кнопку «Подтвердить заказ», Вы подтверждаете,

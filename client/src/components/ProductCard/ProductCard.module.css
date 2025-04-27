@@ -16,11 +16,12 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+
 }
 
 .product-card:hover {
     /* margin-top: 20px; */
-    width: 102%;
+    width: 101%;
     -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
@@ -46,10 +47,13 @@
     text-align: center;
     color: #fff;
     border-radius: 99px;
+    cursor: pointer;
 }
+
 
 .product-card__new-tag {
     background: var(--ui---blue);
+
 }
 
 .product-card__popular-tag {

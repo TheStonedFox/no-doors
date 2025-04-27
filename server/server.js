@@ -64,15 +64,12 @@ app.patch('/cart-items/:id', cartController.updateCartItem)
 
 //#region orders
 app.post('/orders', CheckAuth, validations.orderValidation, orderController.createOrder)
-
 app.get('/orders/:id', CheckAuth, orderController.getOrder)
-
 app.patch('/orders/:id', CheckAuth, orderController.updateOrderStatus)
 //#endregion
 
 //#region liqpay
 app.post('/create-payment', CheckAuth, paymentController.create)
-
 app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
 //#endregion
 
@@ -80,66 +77,21 @@ app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
 app.post('/auth/check', CheckAuth, (req, res) => res.json({ msg: 'token valid' }))
 //#endregion
 
-
-app.post('/add-brand', async (req, res) => {
-    const doc = await new UtilityListsModel({
-        brands: req.body.brands,
-        categories: ['Дисплеи', 'Аккумуляторы', 'Шлейфы', 'Камеры', 'Динамики', 'Чехлы', 'Защитные стекла', 'Разное'],
-
-    })
-    const result = await doc.save()
-    res.json({ result })
-
-})
-
-
-app.get('/brands', async (req, res) => {
-    const doc = await UtilityListsModel.findOne()
-
-    if (!doc)
-        return res.status(404).json({ msg: 'Не удалось получить данные!' })
-
-    res.json({ brands: doc.brands })
-})
-
-app.get('models/:brand', async (req, res) => {
-    const doc = await UtilityListsModel.findOne()
-
-    if (!doc)
-        return res.status(404).json({ msg: 'Не удалось получить данные!' })
-
-    const brand = doc.brands.find(b => b.title.toLowerCase() === req.params.brand.toLowerCase())
-
-    if (!brand)
-        return res.status(404).json({ msg: 'Бренд не найден!' })
-
-    res.json({ models: brand.models })
-})
-
-app.get('/categories', async (req, res) => {
-    const doc = await UtilityListsModel.findOne()
-
-    if (!doc)
-        return res.status(404).json({ msg: 'Не удалось получить данные!' })
-
-    res.json({ categories: doc.categories })
-})
-
-
-
-app.get('/chooses-steps-options', async (req, res) => {
-    const doc = await UtilityListsModel.findOne()
-
-    if (!doc)
-        return res.status(404).json({ msg: 'Не удалось получить данные!' })
-
-    res.json({ options: doc })
-})
-
-
-app.get('/models', (req, res) => { })
-app.get('/categories', (req, res) => { })
 //#endregion
+
+app.get('/chooses-steps', async (req, res) => {
+    try {
+        const doc = await UtilityListsModel.findOne()
+
+        if (!doc)
+            return res.status(404).json({ msg: 'Не удалось получить данные!' })
+
+        res.status(200).json({ options: doc })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+
+})
 
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
     console.log(`The server is running on port ${process.env.PORT || 5000}`)

@@ -1,4 +1,4 @@
-.card{
+.card {
     display: flex;
     position: relative;
     flex-direction: column;
@@ -13,7 +13,8 @@
     text-align: center;
 }
 
-.card img{
+
+.card img {
     height: 165px;
     object-fit: contain;
 }
@@ -23,13 +24,13 @@
     transition: 0.2s ease-in-out;
 }
 
-.title{
+.title {
     position: absolute;
     bottom: 0px;
     display: flex;
     gap: 13px;
 }
 
-.title h3{
+.title h3 {
     transition: 0.2s ease-in-out;
 }
