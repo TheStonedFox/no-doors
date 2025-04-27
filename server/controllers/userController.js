@@ -32,11 +32,24 @@ export const orders = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
+        const user = await UserModel.findById({ _id: req.id })
+
+        if (req.body.productId) {
+            if (!user.viewedProducts.some(product => product.productId === req.body.productId)) {
+                await user.updateOne({ $push: { viewedProducts: { productId: req.body.productId } } })
+                return res.status(200).json({ msg: 'Данные обновлены', user })
+            }
+
+            await user.updateOne({ $pull: { viewedProducts: { productId: req.body.productId } } })
+            await user.updateOne({ $push: { viewedProducts: { productId: req.body.productId } } })
+
+            return res.status(200).json({ msg: 'Данные обновлены', user })
+        }
+
         const errors = validationResult(req)
         if (!errors.isEmpty())
             return res.status(400).json({ validationErrors: errors.errors })
 
-        const user = await UserModel.findById({ _id: req.id })
 
         if (!user)
             return res.status(404).json({ msg: 'Пользователь не найден' })

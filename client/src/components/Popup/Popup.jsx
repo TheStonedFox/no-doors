@@ -49,6 +49,7 @@ export default function Popup({ children }) {
                 {popup?.type === 'product-card' && <CartPopup text={popup?.message} />}
                 {popup?.type === 'order-card' && <OrderDetailsPopup orderId={popup?.data} />}
                 {popup?.type === 'order-placed' && <OrderPlacedPopup data={popup?.data} />}
+                {popup?.type === 'remove-cart-item' && <CartPopup text={popup?.message} />}
             </div>
         </div>
     )

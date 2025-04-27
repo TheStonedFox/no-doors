@@ -2,8 +2,10 @@ import React, { useEffect, useReducer, useState } from 'react'
 import Slider from '../../components/Slider/Slider'
 import styles from './MainPage.module.css'
 
-import { Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
+import gsmarena from 'gsmarena-api'
 
 import 'swiper/css/bundle'
 
@@ -16,12 +18,24 @@ import Button from '../../components/Button/Button'
 import Spinner from '../../components/Spinner/Spinner'
 
 import { setUserData } from '../../features/userSlice'
-import { getProducts } from '../../api/api';
+import { getChooseStepsOptions, getProducts } from '../../api/api'
+import { data } from 'react-router-dom'
+
+import { categoryImages } from '../../utils/categoryImages'
+import { brandsImages } from '../../utils/brandsImages'
 
 export default function MainPage() {
     const [products, setProducts] = useState([])
     const [loadedItemsCount, setLoadedItemsCount] = useState(4)
     const [loadingStatus, setLoadingStatus] = useState(true)
+
+    const [choosesStep, setChoosesStep] = useState('brand')
+    const [choosesValues, setChoosesValues] = useState({ brand: null, model: null, category: null })
+
+    const [chooseOptions, setChooseOptions] = useState({ brands: null, categories: null })
+
+    const [filterValue, setFilterValue] = useState('phones')
+
 
     const getData = async () => {
         try {
@@ -32,9 +46,17 @@ export default function MainPage() {
         }
     }
 
+    const getChooseOptions = async () => {
+        const data = await getChooseStepsOptions()
+        setChooseOptions({ brands: data.options?.brands.map(brand => brand), categories: data.options.categories })
+    }
+
     useEffect(() => {
         getData()
+        getChooseOptions()
     }, [])
+
+    useEffect(() => { console.log(chooseOptions) }, [chooseOptions])
 
     return (
         <div className={styles['main-page']}>
@@ -97,20 +119,54 @@ export default function MainPage() {
                 </div>
             </section>
             <section className={styles['main-page__find-item-section']}>
-                <h2 className='section-title'>Выберите бренд</h2>
+                <section className={styles['find-item__header']}>
+                    <h2 className='section-title'>{choosesStep === 'brand' ? 'Выберите бренд' : choosesStep === 'model' ? 'Выберите модель' : choosesStep === 'category' ? 'Выберите категорию' : `${choosesValues.category} для ${choosesValues.model}`}</h2>
+                    {choosesStep === 'category' && <div className={styles['find-item__header-path']}>
+                        <p onClick={() => setChoosesStep('brand')}>Главная</p>
+                        /
+                        <p onClick={() => {
+                            setChoosesStep('model')
+                        }}>{choosesValues.brand}</p>
+                        /
+                        <p>{choosesValues.model}</p>
+                    </div>}
+                    {choosesStep === 'model' && <ul className={styles['find-item__header-filters']}>
+                        <li className={`${styles['find-item__header-filter']} ${filterValue === 'phones' && styles['active']}`}
+                            onClick={() => setFilterValue('phones')}>Смартфоны</li>
+
+                        <li className={`${styles['find-item__header-filter']} ${filterValue === 'tablet' && styles['active']}`}
+                            onClick={() => setFilterValue('tablet')}>Планшеты</li>
+
+                        <li className={`${styles['find-item__header-filter']} ${filterValue === 'watches' && styles['active']}`}
+                            onClick={() => setFilterValue('watches')}>Часы</li>
+                    </ul>}
+
+                </section>
+
                 <ItemsList className={styles['find-item__categories']}>
-                    <ChooseCard title='Apple' picture={'../../../public/images/brands/01.png'} />
-                    <ChooseCard title='Huawei' picture={'../../../public/images/brands/02.png'} />
-                    <ChooseCard title='Xiaomi' picture={'../../../public/images/brands/03.png'} />
-                    <ChooseCard title='Samsung' picture={'../../../public/images/brands/04.png'} />
+                    {choosesStep === 'brand' && chooseOptions.brands?.map(brand => <ChooseCard title={brand.title} key={brand.title} picture={`../../../public/images/brands/${brandsImages[brand.title]}`} onClick={async () => {
+                        setChoosesValues(prev => ({ ...prev, brand: brand.title }))
+                        setChoosesStep('model')
+                    }} />)}
+
+                    {choosesStep === 'model' && chooseOptions.brands.find(brand => brand.title === choosesValues.brand).models.map(model => <ChooseCard key={model.title} title={model.title} picture={model?.imageUrl} onClick={() => {
+                        setChoosesValues(prev => ({ ...prev, model: model.title }))
+                        setChoosesStep('category')
+                    }} />)}
+
+                    {choosesStep === 'category' && chooseOptions.categories.map(category => <ChooseCard title={category} key={category} picture={`../../../public/images/categories/${categoryImages[category]}`} onClick={() => {
+                        setChoosesStep('result')
+                        setChoosesValues(prev => ({ ...prev, category: category }))
+                    }} />)}
+                    {choosesStep === 'result' && products?.map(product => <ProductCard productData={product} key={product._id} />)}
                 </ItemsList>
             </section >
-            <section className={styles['main-page__popular-products-section']}>
+            {choosesStep !== 'result' && <section className={styles['main-page__popular-products-section']}>
                 <h2 className='section-title'>Популярные товары</h2>
                 {!loadingStatus ? <ItemsList>
-                    {products?.map((product, index) => index < 20 && < ProductCard productData={product} key={product._id} />)}
+                    {products?.map((product, index) => index < 4 && < ProductCard productData={product} key={product._id} />)}
                 </ItemsList> : <Spinner />}
-            </section>
+            </section>}
             <section className={styles['main-page__advantages-section']}>
                 <Advantages />
             </section>

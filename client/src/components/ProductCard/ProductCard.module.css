@@ -6,9 +6,7 @@
     min-width: 220px;
     gap: 15px;
     padding-bottom: 20px;
-    transition: 0.2s;
-    cursor: pointer;
-    transition: 0.2s;
+    transition: 0.2s ease-out;
     width: 100%;
     align-self: center;
     justify-self: center;
@@ -22,12 +20,11 @@
 
 .product-card:hover {
     /* margin-top: 20px; */
-    width: 110%;
+    width: 102%;
     -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
-    transition: 0.2s;
-
+    transition: 0.2s ease-in;
 }
 
 .product-card__tags {
@@ -75,6 +72,8 @@
     justify-content: center;
     width: 100%;
     aspect-ratio: 6/4.5;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .product-card__image img {}

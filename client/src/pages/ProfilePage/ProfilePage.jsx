@@ -32,7 +32,25 @@ export default function ProfilePage() {
     const [validationErrors, setValidationErrors] = useState([])
 
     const cityRegExp = new RegExp(`^${userInfo.city?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*`, 'i')
+    const onSaveChangesButtonClick = async () => {
+        try {
+            setValidationErrors([])
+            const oldUserInfo = { phone: userData?.phone, email: userData.email, city: userData?.city, postOffice: userData?.postOffice }
 
+            if (JSON.stringify(oldUserInfo) === JSON.stringify(userInfo)) return alert('Данные не менялись!')
+
+            const res = await updateUserInfo(userInfo)
+
+            if (res.validationErrors) return setValidationErrors(res.validationErrors)
+            else if (res.msg === 'Пользователь не найден') return alert('Произошла ошибка')
+
+            setAction('info')
+            dispatch(togglePopup({ type: 'product-card', message: 'Данные сохранены!' }))
+            dispatch(setUserData(res.user))
+        } catch (error) {
+            alert(error)
+        }
+    }
 
     useEffect(() => {
 
@@ -43,7 +61,6 @@ export default function ProfilePage() {
                 apiKey: import.meta.env.VITE_NOVA_POSHTA_API_KEY,
                 modelName: "Address",
                 calledMethod: "getCities",
-                methodProperties: {}
             })
         })
             .then(res => res.json())
@@ -52,13 +69,11 @@ export default function ProfilePage() {
                     return { cityRef: city.Ref, title: city.Description }
                 })
                 setCities(citiesData)
-
             })
     }, [])
 
     useEffect(() => {
         setUserInfo({ city: userData?.city, email: userData?.email, phone: userData?.phone, postOffice: userData?.postOffice })
-        console.log(userInfo)
     }, [userData])
 
     useEffect(() => {
@@ -79,6 +94,7 @@ export default function ProfilePage() {
                 setPostOfficeData(prev => ({ ...prev, departments: departments }))
             })
     }, [userInfo.city])
+
 
     return (
         <div className={styles['profile-page']}>
@@ -122,46 +138,25 @@ export default function ProfilePage() {
                             setAction('products')
                             negative('/profile/viewed-products')
                         }} />}
-                        {action !== 'edit' && action !== 'history' && < BorderedButton className={styles['actions__action-button']} title='История заказов' onClick={() => {
-                            setAction('history')
-
-                        }} />}
+                        {action !== 'edit' && action !== 'history' && < BorderedButton className={styles['actions__action-button']} title='История заказов' onClick={() => setAction('history')} />}
                         {action === 'edit' && < div className={styles['action__edit-mode-buttons']}>
-                            <Button title='Сохранить изменения' onClick={async () => {
-                                try {
-                                    setValidationErrors([])
-                                    const oldUserInfo = { phone: userData?.phone, email: userData.email, city: userData?.city, postOffice: userData?.postOffice }
-
-                                    if (JSON.stringify(oldUserInfo) === JSON.stringify(userInfo)) return alert('Данные не менялись!')
-
-                                    const res = await updateUserInfo(userInfo)
-
-                                    if (res.validationErrors) return setValidationErrors(res.validationErrors)
-                                    else if (res.msg === 'Пользователь не найден') return alert('Произошла ошибка')
-
-                                    setAction('info')
-                                    dispatch(togglePopup({ type: 'product-card', message: 'Данные сохранены!' }))
-                                    dispatch(setUserData(res.user))
-                                } catch (error) {
-                                    alert(error)
-                                }
-                            }} />
+                            <Button title='Сохранить изменения' onClick={onSaveChangesButtonClick} />
                             <BorderedButton className={styles['actions__action-button']} title='Отменить редактирование' onClick={() => setAction('info')} />
                         </div>}
                     </div>
                 </section>
                 {action === 'info' && <section className={styles['profile-page__info']}>
                     <h3 className={styles['info__title']}>Мои данные:</h3>
-                    <div className={styles['info__filelds']}>
-                        <div className={styles['info__fileld']}>
+                    <div className={styles['info__field']}>
+                        <div className={styles['info__field']}>
                             <h5>Телефон:</h5>
                             <p>{userData?.phone}</p>
                         </div>
-                        <div className={styles['info__fileld']}>
+                        <div className={styles['info__field']}>
                             <h5>Электронная почта:</h5>
                             <p>{userData?.email}</p>
                         </div>
-                        <div className={styles['info__fileld']}>
+                        <div className={styles['info__field']}>
                             <h5>Отделение почты:</h5>
                             <p>{userData?.postOffice}</p>
                         </div>

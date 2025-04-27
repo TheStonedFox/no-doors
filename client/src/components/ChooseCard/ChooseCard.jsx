@@ -6,7 +6,7 @@ export default function ChooseCard({ picture, title, onClick }) {
     return (
         <div className={onClick}>
             <div
-className={styles.card}
+                className={styles.card}
                 onMouseEnter={(e) => {
                     e.currentTarget.querySelector('h3').style = 'color: var(--ui---main);'
                     e.currentTarget.querySelector('svg').style = 'width: 24px'
@@ -15,6 +15,7 @@ className={styles.card}
                     e.currentTarget.querySelector('h3').style = ''
                     e.currentTarget.querySelector('svg').style = 'width: 0px'
                 }}
+                onClick={onClick}
             >
                 <img src={picture} alt="choose-card-image" />
                 <div className={styles.title}>

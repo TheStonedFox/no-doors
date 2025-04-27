@@ -11,7 +11,8 @@ import { togglePopup } from '../../../../features/uiSlice'
 
 export default function OrderPlacedPopup({ data }) {
     const negative = useNavigate()
-    const dispactch = useDispatch()
+    const dispatch = useDispatch()
+
     return (
         <div className={styles['order-placed']}>
             <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +31,7 @@ export default function OrderPlacedPopup({ data }) {
                 <p className={styles['order-placed__message']}>Скоро с Вами свяжется наш менеджер.</p>
             </div>
             <Button title='Посмотреть заказ' onClick={() => {
-                dispactch(togglePopup())
+                dispatch(togglePopup())
                 negative('/profile')
             }} />
         </div>

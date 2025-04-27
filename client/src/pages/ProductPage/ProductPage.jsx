@@ -7,6 +7,7 @@ import ProductCard from '../../components/ProductCard/ProductCard'
 
 import styles from './ProductPage.module.css'
 import { useParams } from 'react-router-dom'
+import { updateUserInfo } from '../../api/api'
 
 
 export default function ProductPage() {
@@ -27,9 +28,12 @@ export default function ProductPage() {
                 setLadingStatus(false)
             })
 
+        updateUserInfo({ productId: id })
+
     }, [dispatch])
 
     useEffect(() => setProduct(products?.find(product => product?._id === id)), [products, id])
+
 
     return (
         <div className={styles['product-page']}>

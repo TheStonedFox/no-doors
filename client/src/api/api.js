@@ -266,7 +266,18 @@ export const updateUserInfo = async (data) => {
         })
         return await res.json()
     } catch (error) {
-        throw error instanceof Error ? error : new Error(String(error));
+        throw error instanceof Error ? error : new Error(String(error))
+    }
+
+}
+
+
+export const getChooseStepsOptions = async () => {
+    try {
+        const res = await fetch('http://localhost:3001/chooses-steps-options')
+        return await res.json()
+    } catch (error) {
+        throw error instanceof Error ? error : new Error(String(error))
     }
 
 }

@@ -117,13 +117,7 @@
     color: var(--typography---main);
 }
 
-.info__filelds {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.info__fileld {
+.info__field {
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -131,13 +125,13 @@
 
 }
 
-.info__fileld>h5 {
+.info__field>h5 {
     font-size: 14px;
     line-height: 150%;
     color: var(--typography---second);
 }
 
-.info__fileld>p {
+.info__field>p {
     line-height: 150%;
     color: var(--typography---main);
 }
