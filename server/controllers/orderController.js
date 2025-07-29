@@ -7,7 +7,7 @@ export const createOrder = async (req, res) => {
     try {
         const errors = validationResult(req)
         if (!errors.isEmpty())
-            return res.status(400).json({ validationErrors: errors.errors })
+            return res.status(400).json({ message: 'Ошибка валидации, проверьте указанные поля.', code: 400, validationErrors: errors.errors })
 
         const order = new OrderModel({
             userId: req.id,
@@ -27,9 +27,9 @@ export const createOrder = async (req, res) => {
         )
 
         if (!user)
-            return res.json({ msg: 'user not found!' })
+            return res.status(404).json({ message: 'Не удалось создать заказ.', code: 404 })
 
-        res.json({ status: 'ok', order: doc })
+        res.status(200).json({ message: 'Заказ создан.', status: 200, order: doc })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -40,7 +40,7 @@ export const updateOrderStatus = async (req, res) => {
     try {
         const order = await OrderModel.findById({ _id: req.params.id })
         if (!order)
-            return res.status(404).json({ mag: 'Заказ не найден!' })
+            return res.status(404).json({ message: 'Заказ не найден.', code: 404 })
 
         await OrderModel.findByIdAndUpdate(
             req.params.id,
@@ -48,7 +48,7 @@ export const updateOrderStatus = async (req, res) => {
             { new: true }
         )
 
-        res.status(200).json({ msg: 'Статус обновлен!' })
+        res.status(200).json({ message: 'Статус обновлен.', code: 200 })
 
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
@@ -60,9 +60,9 @@ export const getOrder = async (req, res) => {
         const order = await OrderModel.findById(req.params.id)
 
         if (!order)
-            return res.status(404).json({ mag: 'Заказ не найден!' })
+            return res.status(404).json({ message: 'Заказ не найден.', code: 404 })
 
-        res.json(order)
+        res.status(200).json({ order, code: 200 })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

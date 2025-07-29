@@ -20,7 +20,7 @@
     min-width: 16px;
     min-height: 16px;
     border-radius: 2px;
-    background: #fff;
+    background: var(--ui---bg-second);
     transition: 0.2s;
     border: 1px solid var(--typography---label-non-active-text);
 

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import styles from './Header.module.css'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import SearchInput from '../SearchInput/SearchInput'
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown'
@@ -8,33 +8,48 @@ import CatalogMenu from '../CatalogMenu/CatalogMenu'
 import BurgerMenu from '../BurgerMenu/BurgerMenu'
 import Logo from '../../SvgIcons/Logo'
 import PhoneIcon from '../../SvgIcons/PhoneIcon'
-import SearchIcon from '../../SvgIcons/SearchIcon'
+import SearchIcon from '../../svgIcons/SearchIcon'
 
-
-import { toggleBurger, toggleCatalog } from '../../features/uiSlice'
+import { toggleBurger, toggleCatalog, toggleSearchResults } from '../../features/uiSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserData } from '../../features/userSlice'
-import FavoriteIcon from './FavoriteIcon'
+
+import FavoriteIcon from './HeaderFavoriteIcon'
 import CartIcon from './CartIcon'
-import MoreArrowIcon from './MoreArrowIcon'
+import MoreArrowIcon from '../../svgIcons/MoreArrowIcon'
+import SearchResult from '../SearchResult/SearchResult'
+import { getProducts, getStepChoices } from '../../api/api'
+import useSearchResults from '../../hooks/useSearchResults'
+import useProducts from '../../hooks/useProducts'
+import ThemeToggle from '../ThemeToggle/ThemeToggle'
+import DropDownMenu from '../DropDownMenu/DropDownMenu'
 
 export default function Header() {
     const dispatch = useDispatch()
+
     const isCatalogOpen = useSelector((state) => state.ui.isCatalogOpen)
     const isBurgerOpen = useSelector((state) => state.ui.isBurgerOpen)
-
-    const [isInputActive, setIsInputActive] = useState(false)
-    const [fixedMobileInput, setFixedMobileInput] = useState(false)
-
-    // const cartCaunter = useSelector((state) => state.user.userData?.cartItems.length) || 0
-    // const favoriteCounter = useSelector((state) => state.user.userData?.favoriteItems.length) || 0
-
+    const isSearchResultsOpen = useSelector((state) => state.ui.isSearchResultsOpen)
     const userData = useSelector((state) => state.user.userData)
+
+    const [fixedMobileInput, setFixedMobileInput] = useState(false)
+    const [searchValue, setSearchValue] = useState('')
+
+    const [dropDownMenuItems, setDropDownMenuItems] = useState()
+
+    const [searchList, isLoading, error] = useSearchResults(searchValue)
 
     const cartCounter = userData?.cartItems.length || 0
     const favoriteCounter = userData?.favoriteItems.length || 0
 
     const scrollHandler = () => setFixedMobileInput(window.scrollY > 160 ? true : false)
+
+    // useEffect(() => { error && window.innerWidth > 992 && isSearchResultsOpen && alert(`Не удалось загрузить товары. ${error}`) }, [error, searchValue, isSearchResultsOpen])
+    useEffect(() => {
+        getStepChoices()
+            .then(res => setDropDownMenuItems(res.options.brands))
+            .catch(error => alert(error))
+    }, [])
 
     useEffect(() => {
         dispatch(setUserData())
@@ -54,12 +69,12 @@ export default function Header() {
                 </ul>
                 <div className={styles['header__top-buttons']}>
                     <div className={styles['header__phone-number']}>
-                        <PhoneIcon color='#181818' />
+                        <PhoneIcon color='var(--typography---main)' />
                         <a href="tel:+79652374449">{'+380 (965) 237-44-49'}</a>
                     </div>
-                    <LanguageDropdown />
-                    <Link
-                        to={useSelector((state) => state.user.isTokenValid) ? '/profile' : '/auth'}>Личный кабинет</Link>
+                    {/* <LanguageDropdown /> */}
+                    <ThemeToggle theme='light' />
+                    <Link to={useSelector((state) => state.user.isTokenValid) ? '/profile' : '/auth'}>Личный кабинет</Link>
                 </div>
             </div>
             <div className={styles['header__middle-content']}>
@@ -72,10 +87,9 @@ export default function Header() {
                     <h3>Меню</h3>
                 </button>
                 <Link to="/" className={styles['header__logo']}>
-                    <Logo color='#080707' />
+                    <Logo color='var(--typography---main)' />
                 </Link>
-                <SearchInput className={styles['header__search-input']} />
-
+                <SearchInput className={styles['header__search-input']} value={searchValue} onChange={(value) => setSearchValue(value)} />
                 <div className={styles['header__middle-buttons']}>
                     <Link to="/favorites" className={styles['header__middle-button']}>
                         <FavoriteIcon />
@@ -96,7 +110,8 @@ export default function Header() {
             <div className={styles['header__bottom-content']}>
                 <ul className={styles['header__brands-list']}>
                     <li>
-                        <p>Apple</p>
+                        {/* <p>Apple</p> */}
+                        <DropDownMenu title='Apple1' list={(dropDownMenuItems || [])[0] || []} />
                         <MoreArrowIcon />
                     </li>
                     <li>
@@ -119,31 +134,26 @@ export default function Header() {
                 </ul>
             </div>
             <div className={styles['header__mobile-input']} style={{ position: fixedMobileInput ? 'fixed' : 'static' }}>
-                <button
-                    className={styles.burger}
-                    style={{ zIndex: 9 }}
+                <button className={`${styles.burger} ${isSearchResultsOpen ? styles['hide-burger'] : ''}`}
                     type="button"
-                    onClick={() => dispatch(toggleCatalog())}
-                >
+                    onClick={() => dispatch(toggleCatalog())} >
                     <div className={styles.lines}>
-                        <span
-                            className={`${styles.line} ${isCatalogOpen ? styles['line_active'] : ''}`}
-                            style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
+                        <span className={`${styles.line} ${isCatalogOpen ? styles['line_active'] : ''}`} style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
                         ></span>
-                        <span
-                            className={`${styles.line} ${isCatalogOpen ? styles.hide : ''}`}
-                            style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
+                        <span className={`${styles.line} ${isCatalogOpen ? styles.hide : ''}`} style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
                         ></span>
-                        <span
-                            className={`${styles.line} ${isCatalogOpen ? styles['line_active'] : ''}`}
-                            style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
+                        <span className={`${styles.line} ${isCatalogOpen ? styles['line_active'] : ''}`} style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
                         ></span>
                     </div>
-                    <h3 style={{ color: isCatalogOpen ? '#000' : '#fff' }}>Католог</h3>
+                    <h3 style={{ color: isCatalogOpen ? '#000' : '#fff' }}>Каталог</h3>
                 </button>
-                <div className={styles['input-container']}>
+                <div className={styles['input-container']} style={{ paddingLeft: isSearchResultsOpen ? '0' : '18px', border: isSearchResultsOpen ? '0' : '' }}>
                     <SearchIcon />
-                    <input type="text" placeholder="Поиск товара" onFocus={() => setIsInputActive(true)} />
+                    <input id='search-input' type="text" placeholder="Поиск товара" autoComplete='off' value={searchValue}
+                        onChange={(event) => setSearchValue(event.target.value)}
+                        onFocus={() => searchValue && dispatch(toggleSearchResults(true))} />
+                    {<SearchResult className={styles['mobile-input__search-result']}
+                        itemsList={searchValue && isSearchResultsOpen ? searchList : []} />}
                 </div>
                 <CatalogMenu />
             </div>

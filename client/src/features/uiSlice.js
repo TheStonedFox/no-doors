@@ -4,6 +4,7 @@ const initialState = {
     isBurgerOpen: false,
     isCatalogOpen: false,
     isPopupOpen: false,
+    isSearchResultsOpen: false,
     popup: { type: '', message: '', data: '' },
     cartCounter: 0,
     favoriteCounter: 0,
@@ -26,6 +27,9 @@ export const uiSlice = createSlice({
             state.isPopupOpen = !state.isPopupOpen
             state.popup = action.payload
         },
+        toggleSearchResults: (state, action) => {
+            state.isSearchResultsOpen = action.payload
+        },
         closeAll: (state) => {
             state.isBurgerOpen = false
             state.isCatalogOpen = false
@@ -45,4 +49,4 @@ export const uiSlice = createSlice({
 
 
 
-export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger } = uiSlice.actions
+export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults } = uiSlice.actions

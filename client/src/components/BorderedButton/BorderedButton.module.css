@@ -1,8 +1,7 @@
-.button{
+.button {
     border-radius: 4px;
     border: 1px solid var(--ui---main);
     border-radius: 4px;
-    padding: 16px;
     background: none;
     cursor: pointer;
     font-weight: 500;
@@ -11,9 +10,10 @@
     color: var(--ui---main);
     line-height: 100%;
     text-wrap: nowrap;
+    height: 53px;
 }
 
-.button:hover{
+.button:hover {
     transition: 0.2s;
     background: var(--ui---main);
     color: #fff;

@@ -1,4 +1,6 @@
 .button {
+    display: flex;
+    flex-direction: column;
     border-radius: 4px;
     padding: 16px 32px;
     background: var(--ui---main);

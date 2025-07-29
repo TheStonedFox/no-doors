@@ -13,11 +13,12 @@ import { togglePopup } from '../../features/uiSlice'
 import { statusColors, statusTitles } from '../../utils/orderStatus'
 export default function OrderCard({ orderId, orderNumber }) {
     // const [status, sum, date] = orderInfo
-    const dispactch = useDispatch()
+    const dispatch = useDispatch()
 
     const [order, setOrder] = useState()
 
     const [paymentStatus, setPaymentStatus] = useState('')
+
     const date = new Date(order?.createdAt)
 
     useEffect(() => {
@@ -25,14 +26,14 @@ export default function OrderCard({ orderId, orderNumber }) {
             headers: { 'Authorization': localStorage.getItem('token') }
         })
             .then(res => res.json())
-            .then(order => setOrder(order))
+            .then(json => setOrder(json.order))
 
     }, [])
 
+    useEffect(() => { console.log(orderId) }, [orderId])
+
     return (
-        <div className={styles['order-card']} onClick={() => {
-            dispactch(togglePopup({ type: 'order-card', data: orderId }))
-        }}>
+        <div className={styles['order-card']} onClick={() => dispatch(togglePopup({ type: 'order-card', data: orderId }))}>
             <section className={styles['order-card__top-section']}>
                 <div>
                     <Link className={styles['order-card__order-id']}>{`Заказ #${orderNumber}`}</Link>
@@ -42,9 +43,9 @@ export default function OrderCard({ orderId, orderNumber }) {
                 <p className={styles['order-card__order-date']}>{date.toLocaleDateString('ru-RU')}</p>
             </section>
             <section className={styles['order-card__order-info']}>
-                <Field title='Описание' value={`${order?.products.length} товар${getWordEnding(order?.products.length)} на сумму ${order?.sum} ₴`} />
+                <Field title='Описание' value={`${order?.products?.length} товар${getWordEnding(order?.products.length)} на сумму ${order?.sum} ₴`} />
                 <Field title='Скидка' value='10%' />
-                <Field title={<p className={styles['rder-info__bold-p']}>Итого к оплате:</p>} value={<p className={styles['rder-info__bold-p']}>{order?.deliveryMethod === 'delivery' ? order?.sum + 100 : order?.sum} ₴</p>} />
+                <Field title={<span className={styles['order-info__bold-p']}>Итого к оплате:</span>} value={<span className={styles['order-info__bold-p']}>{order?.deliveryMethod === 'delivery' ? order?.sum + 100 : order?.sum} ₴</span>} />
             </section>
         </div>
     )

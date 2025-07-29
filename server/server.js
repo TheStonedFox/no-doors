@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { query } from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { CheckAuth } from './middleware/CheckAuth.js'
@@ -17,6 +17,7 @@ import * as orderController from './controllers/orderController.js'
 
 import * as validations from './validations.js'
 import UtilityListsModel from './models/UtilityListsModel.js'
+import ProductModel from './models/ProductModel.js'
 
 
 dotenv.config()
@@ -51,6 +52,54 @@ app.get('/products/:id', productController.getProduct)
 app.post('/products', productController.addProduct)
 //#endregion
 
+app.get('/search', async (req, res) => {
+
+    const filters = {
+        brand: req.query.brand || '',
+        model: req.query.model || '',
+        category: req.query.category || '',
+        word: req.query.word || '',
+        minPrice: Number(req.query.minPrice) || 0,
+        maxPrice: Number(req.query.maxPrice) || 10000
+    }
+
+    const query = {}
+
+    if (filters.category) query.category = filters.category
+    if (filters.brand) query.brand = filters.brand
+    if (filters.model) query.model = filters.model
+
+
+    const list = await ProductModel.find(query)
+    if (!list.length)
+        return res.status(404).json({ message: 'Не найдено ни одного товара.', filters, code: 404 })
+
+    const finalList =
+        list.filter(item => {
+            if (filters.word)
+                return item.price > filters.minPrice && item.price <= filters.maxPrice && item.title.includes(filters.word)
+
+            return item.price > filters.minPrice && item.price <= filters.maxPrice
+        }).sort((a, b) => {
+            const aFinal = a.price - (a.discount ? (a.price * a.discount) / 100 : 0)
+            const bFinal = b.price - (b.discount ? (b.price * b.discount) / 100 : 0)
+            if (req.query.sortType === 'increasingPrice') return aFinal - bFinal
+            if (req.query.sortType === 'decreasingPrice') return bFinal - aFinal
+            if (req.query.sortType === 'increasingBrand') return a.brand.localeCompare(b.brand)
+            if (req.query.sortType === 'decreasingBrand') return b.brand.localeCompare(a.brand)
+            if (req.query.sortType === 'increasingDiscount') return a.discount - b.discount
+            if (req.query.sortType === 'decreasingDiscount') return b.discount - a.discount
+
+            // if (req.query.sortType === 'increasingDate') a.createdAt
+            // if (req.query.sortType === 'decreasingDate') b.brand.localeCompare(a.brand)
+        })
+
+    if (!finalList.length)
+        return res.status(404).json({ message: 'Не найдено ни одного товара.1', filters, code: 404 })
+
+    res.status(200).json({ filters, products: finalList, message: 'Товары найдены.', code: 200 })
+})
+
 //#region favorites
 app.post('/favorites/:productId', CheckAuth, favoriteController.addFavoriteItem)
 app.delete('/favorites/:productId', CheckAuth, favoriteController.removeFavoriteItem)
@@ -84,7 +133,7 @@ app.get('/chooses-steps', async (req, res) => {
         const doc = await UtilityListsModel.findOne()
 
         if (!doc)
-            return res.status(404).json({ msg: 'Не удалось получить данные!' })
+            return res.status(404).json({ message: 'Не удалось получить данные.', code: 404 })
 
         res.status(200).json({ options: doc })
     } catch (error) {

@@ -13,6 +13,7 @@
     overflow: hidden;
     user-select: none;
     padding: 0px var(--safe-padding);
+    color: var(--typography---main);
 }
 
 .popup__content {
@@ -21,10 +22,11 @@
     position: relative;
     background-color: transparent;
     flex-direction: column;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 4px;
+    padding: 20px;
+    background-color: var(--ui---bg-main);
+    border-radius: 8px;
     gap: 20px;
+    max-width: 90%;
 }
 
 .popup__close-button {

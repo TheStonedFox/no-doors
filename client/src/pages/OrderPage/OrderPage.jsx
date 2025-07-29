@@ -139,24 +139,33 @@ export default function OrderPage() {
                                 address: userInfo.address || '',
                             }
 
-                            const orderResponse = await api.makeOrder(orderData)
+                            api.makeOrder(orderData)
+                                .then(() => {
+                                    setValidationErrors([])
+                                    dispatch(setUserData())
+                                    dispatch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
+                                    console.log(orderData)
+                                })
+                                .catch(error => {
+                                    setValidationErrors(error.data.validationErrors || '')
+                                    alert(error)
+                                })
 
-                            if (orderResponse.validationErrors) {
-                                console.log('val err')
-                                console.log(orderResponse.validationErrors)
-                                // console.log(orderResponse.validationErrors.length)
-                                // if (orderResponse.validationErrors.find(error => error.path === 'address') && orderResponse.validationErrors.length === 1 && selectedOptions.deliveryMethod === 0)
-                                //     return
-                                return setValidationErrors(orderResponse.validationErrors)
+                            // if (orderResponse.validationErrors) {
+                            //     console.log(orderResponse.validationErrors)
+                            //     // console.log(orderResponse.validationErrors.length)
+                            //     // if (orderResponse.validationErrors.find(error => error.path === 'address') && orderResponse.validationErrors.length === 1 && selectedOptions.deliveryMethod === 0)
+                            //     //     return
+                            //     return setValidationErrors(orderResponse.validationErrors)
 
-                            }
+                            // }
 
                             // alert('test')
 
-                            setValidationErrors([])
+                            // setValidationErrors([])
 
-                            dispatch(setUserData())
-                            dispatch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
+                            // dispatch(setUserData())
+                            // dispatch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
                         }
                         } />
                         <p className={styles['pay-methods__policy']}>Нажимая на кнопку «Подтвердить заказ», Вы подтверждаете,

@@ -1,0 +1,50 @@
+.search-result {
+    position: absolute;
+    left: 0;
+    padding-top: 65px;
+    display: flex;
+    gap: 25px;
+    max-height: 400px;
+    width: 100%;
+    border-radius: 8px;
+    /* background-color: #ffffffe8; */
+    background-color: var(--ui---bg-main);
+    backdrop-filter: blur(100px);
+    z-index: 5;
+    padding-bottom: 7px;
+    transition: 0.2s;
+
+    -webkit-box-shadow: 0px 6px 7px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 6px 7px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 6px 7px 0px rgba(0, 0, 0, 0.2);
+    border: 1px solid #00000044;
+
+
+
+}
+
+
+
+.search-result__items {
+    display: flex;
+    width: 100%;
+    gap: 25px;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
+    color: var(--typography---main);
+}
+
+/* WebKit-браузеры (Chrome, Edge, Safari) */
+.search-result__items::-webkit-scrollbar {
+    width: 4px;
+}
+
+.search-result__items::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.search-result__items::-webkit-scrollbar-thumb {
+    background-color: #c75e5e;
+    border-radius: 4px;
+}

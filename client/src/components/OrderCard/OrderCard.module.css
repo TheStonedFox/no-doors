@@ -4,6 +4,7 @@
     padding: 15px;
     cursor: pointer;
     border-radius: 10px;
+    border: 2px solid transparent;
 }
 
 .order-card:hover {
@@ -11,6 +12,7 @@
     -webkit-box-shadow: 0px 2px 25px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 2px 25px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 2px 25px 0px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--ui---main);
 }
 
 .order-card__top-section {
@@ -56,7 +58,7 @@
     gap: 10px;
 }
 
-.rder-info__bold-p {
+.order-info__bold-p {
     font-weight: 500;
     font-size: 16px;
     line-height: 150%;

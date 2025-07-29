@@ -4,11 +4,11 @@
     /* z-index: 9; */
     z-index: 1000;
     height: 100vh;
-    background-color: #fff;
+    background-color: var(--ui---bg-main);
     transition: 0.2s;
-    -webkit-box-shadow: 7px -2px 7px 0px rgba(34, 60, 80, 0.2);
-    -moz-box-shadow: 7px -2px 7px 0px rgba(34, 60, 80, 0.2);
-    box-shadow: 7px -2px 7px 0px rgba(34, 60, 80, 0.2);
+    -webkit-box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     padding: 50px;
 }
@@ -35,8 +35,13 @@
     color: var(--typography---main);
 }
 
-.burger-menu__language {
+.burger-menu__theme-toggle {
     position: absolute;
     right: 20px;
-    top: 82px;
+}
+
+@media(min-width: 920px) {
+    .burger-menu {
+        display: none;
+    }
 }

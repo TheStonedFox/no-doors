@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import Counter from '../Counter/Counter'
 import Field from '../Field/Field'
 import styles from './CartItem.module.css'
@@ -18,6 +20,8 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
 
     const { title, price, wholesalePrice, inStock, _id, discount } = productData
 
+    const negative = useNavigate()
+
     const [quantity, setQuantity] = useState(initialQuantityValue)
     const [imageLoading, setImageLoading] = useState(true)
 
@@ -25,8 +29,13 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
     const dispatch = useDispatch()
 
     const onRemoveButtonClick = async () => {
-        await removeCartItem(userData?._id, _id, () => dispatch(setUserData()))
-        dispatch(togglePopup({ type: 'remove-cart-item', message: 'Товар удален из корзины!' }))
+        removeCartItem(userData?._id, _id)
+            .then(res => {
+                dispatch(togglePopup({ type: 'remove-cart-item', message: res.message }))
+                dispatch(setUserData())
+            })
+            .catch(error => alert(error))
+
     }
 
     useEffect(() => {
@@ -37,11 +46,11 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
     return (
         <div className={styles['cart-item']} >
             <div className={styles['cart-item__img']}>
-                <img style={{ display: imageLoading ? 'none' : 'flex' }} src="../../../public/images/product-img.png" alt="product image" onLoad={() => setImageLoading(false)} />
+                <img style={{ display: imageLoading ? 'none' : 'flex' }} src="../../../public/images/categories/03.png" width='80%' alt="product image" onLoad={() => setImageLoading(false)} />
                 {imageLoading && <Spinner />}
             </div>
 
-            <div className={styles['cart-item__title']}>
+            <div className={styles['cart-item__title']} onClick={() => negative(`/products/${_id}`)}>
                 <h4>{title}</h4>
                 <p>Артикул: 854236896ABC</p>
             </div>
@@ -64,7 +73,9 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                     className={styles['cart-item__counter']}
                     onCounterChange={(value) => {
                         setQuantity(value)
-                        updateCartItem(userData._id, _id, value, () => dispatch(setUserData()))
+                        updateCartItem(userData._id, _id, value)
+                            .then(() => dispatch(setUserData()))
+                            .catch(error => alert(error))
                     }}
                     initialValue={initialQuantityValue} /> : <p>{quantity}</p>}
                 <p>{discount === 0 ?

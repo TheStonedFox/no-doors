@@ -7,9 +7,9 @@ export const profile = async (req, res) => {
         const user = await UserModel.findById({ _id: req.id })
 
         if (!user)
-            return res.status(404).json({ msg: 'user not found' })
+            return res.status(404).json({ message: 'Пользователь не найден!', code: 404 })
 
-        res.status(200).json({ user })
+        res.status(200).json({ user, code: 200 })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -22,7 +22,7 @@ export const orders = async (req, res) => {
         const orders = await OrderModel.find(({ userId: req.id }))
 
         if (!orders)
-            return res.status(200).json({ msg: 'заказов нет' })
+            return res.status(200).json({ message: 'Заказов нет.' })
 
         return res.status(200).json(orders)
     } catch (error) {
@@ -37,22 +37,23 @@ export const update = async (req, res) => {
         if (req.body.productId) {
             if (!user.viewedProducts.some(product => product.productId === req.body.productId)) {
                 await user.updateOne({ $push: { viewedProducts: { productId: req.body.productId } } })
-                return res.status(200).json({ msg: 'Данные обновлены', user })
+                return res.status(200).json({ message: 'Данные обновлены', code: 200, user })
             }
 
             await user.updateOne({ $pull: { viewedProducts: { productId: req.body.productId } } })
             await user.updateOne({ $push: { viewedProducts: { productId: req.body.productId } } })
 
-            return res.status(200).json({ msg: 'Данные обновлены', user })
+            return res.status(200).json({ message: 'Данные обновлены', code: 200, user })
         }
 
         const errors = validationResult(req)
+
         if (!errors.isEmpty())
             return res.status(400).json({ validationErrors: errors.errors })
 
 
         if (!user)
-            return res.status(404).json({ msg: 'Пользователь не найден' })
+            return res.status(404).json({ message: 'Пользователь не найден', code: 404 })
 
         user.phone = req.body.phone || user.phone
         user.email = req.body.email || user.email
@@ -61,7 +62,7 @@ export const update = async (req, res) => {
 
         await user.save()
 
-        return res.status(200).json({ msg: 'Данные обновлены', user })
+        return res.status(200).json({ message: 'Данные обновлены', code: 200, user })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

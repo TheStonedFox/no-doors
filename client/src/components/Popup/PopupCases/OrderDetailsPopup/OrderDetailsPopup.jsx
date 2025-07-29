@@ -14,29 +14,27 @@ import { togglePopup } from '../../../../features/uiSlice'
 
 export default function OrderDetailsPopup({ orderId }) {
 
-    const dispactch = useDispatch()
-
+    const dispatch = useDispatch()
     const userData = useSelector(state => state.user.userData)
     const [order, setOrder] = useState()
     const [payData, setPayData] = useState()
-
-    const [paymentStatus, setPaymentStatus] = useState()
     const date = new Date(order?.createdAt)
 
-
+    const [paymentStatus, setPaymentStatus] = useState()
 
     useEffect(() => {
         if (orderId) {
-            fetch(`http://localhost:3001/orders/${orderId}`, {
+            fetch(`${import.meta.env.VITE_API_URL}/orders/${orderId}`, {
                 headers: { 'Authorization': localStorage.getItem('token') }
             })
                 .then(res => res.json())
-                .then(order => setOrder(order))
+                .then(order => setOrder(order.order))
         }
-    }, [])
+    }, [orderId])
+
 
     useEffect(() => {
-        fetch(`http://192.168.1.105:3001/create-payment`, {
+        fetch(`${import.meta.env.VITE_API_URL}/create-payment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,7 +48,7 @@ export default function OrderDetailsPopup({ orderId }) {
 
         if (order?.paymentMethod === 'online') {
 
-            fetch(`http://localhost:3001/payment-status/${orderId}`, {
+            fetch(`${import.meta.env.VITE_API_URL}/payment-status/${orderId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,7 +58,7 @@ export default function OrderDetailsPopup({ orderId }) {
                 .then(res => res.json())
                 .then(data => {
                     if (data?.status === 'sandbox' | data?.status === 'success') {
-                        fetch(`http://localhost:3001/orders/${orderId}`, {
+                        fetch(`${import.meta.env.VITE_API_URL}/orders/${orderId}`, {
                             method: 'PATCH',
                             headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
                             body: JSON.stringify({ status: 'paid' })
@@ -68,7 +66,6 @@ export default function OrderDetailsPopup({ orderId }) {
                     }
                 })
         }
-
     }, [order])
 
     return (
@@ -86,30 +83,29 @@ export default function OrderDetailsPopup({ orderId }) {
                 <Field title='Общая скидка:' value={<p className={styles['field-value']}>10%</p>} />
                 <Field title='Итого:' value={<p className={styles['field-value']}>{order?.sum} ₴</p>} />
 
-                {order?.paymentMethod === 'online' && order.status === 'pending' && <form id='liqpay-form' action="https://www.liqpay.ua/api/3/checkout" target='_blank' method='POST'
+                {order?.paymentMethod === 'online' && order?.status === 'pending' && <form id='liqpay-form' action="https://www.liqpay.ua/api/3/checkout" target='_blank' method='POST'
                     onSubmit={async (event) => {
-                        event.preventDefault(); // сначала всегда отменяем
+                        event.preventDefault() // сначала всегда отменяем
                         const res = await fetch(`http://localhost:3001/orders/${orderId}`, {
                             headers: { 'Authorization': localStorage.getItem('token') }
                         })
-                        const actualOrder = await res.json();
-                        setOrder(actualOrder);
+                        const actualOrder = await res.json()
+                        setOrder(actualOrder.order)
+                        console.log(actualOrder)
 
                         if (actualOrder.status === 'paid') {
-                            alert('Этот заказ уже оплачен');
+                            alert('Этот заказ уже оплачен')
                             return
                         }
 
                         // если всё ок — сабмитим вручную
                         event.target.submit()
-                        dispactch(togglePopup())
+                        dispatch(togglePopup())
                     }}>
                     <input type="hidden" name="data" value={payData?.data} />
                     <input type="hidden" name="signature" value={payData?.signature} />
                     <Button title='Оплатить' />
                 </form>}
-
-
             </section>
         </div>
     )

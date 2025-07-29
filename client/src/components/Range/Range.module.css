@@ -1,0 +1,78 @@
+.range {
+    display: flex;
+    flex-direction: column;
+    max-width: 250px;
+    min-width: 150px;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+.range__top-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.range__main-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 20px;
+}
+
+.range__input {
+    text-align: center;
+    max-height: 40px;
+    max-width: 70px;
+}
+
+.range__button {
+    padding: 0;
+    height: 40px;
+}
+
+.range__line {
+    position: absolute;
+    background-color: var(--typography---second);
+    height: 2px;
+    width: 100%;
+    top: 10px;
+}
+
+.range__selected-range {
+    position: absolute;
+    background-color: var(--ui---main);
+    width: 100%;
+    height: 2px;
+    top: 10px;
+    left: 0;
+}
+
+.range__controller {
+    display: flex;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: var(--ui---main);
+    transition: 0.2s background-color transform;
+}
+
+.range__controller:hover {
+    background-color: var(--ui---main-hover);
+}
+
+.range__controller:active {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+.range__min-controller {
+    left: 0;
+}
+
+.range__max-controller {
+    /* right: 0; */
+    left: 100%;
+}

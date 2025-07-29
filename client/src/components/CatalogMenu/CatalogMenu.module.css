@@ -4,11 +4,11 @@
     left: 0px;
     z-index: 8;
     height: 100vh;
-    background-color: #fff;
+    background-color: var(--ui---bg-main);
     transition: 0.2s;
-    -webkit-box-shadow: 7px -2px 7px 0px rgba(34, 60, 80, 0.2);
-    -moz-box-shadow: 7px -2px 7px 0px rgba(34, 60, 80, 0.2);
-    box-shadow: 7px -2px 7px 0px rgba(34, 60, 80, 0.2);
+    -webkit-box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     overflow-y: auto;
     /* padding: 50px; */

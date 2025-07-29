@@ -8,7 +8,7 @@ import Field from '../Field/Field'
 import Counter from '../Counter/Counter'
 import BorderedButton from '../BorderedButton/BorderedButton'
 
-import FavoriteIcon from './FavoriteIcon'
+import FavoriteIcon from '../../SvgIcons/FavoriteIcon'
 
 import styles from './ProductCard.module.css'
 
@@ -41,32 +41,33 @@ export default function ProductCard({ productData }) {
     const onFavoriteButtonClick = async () => {
         setInFavorite(!inFavorite)
 
-        if (!tokenStatus) {
-            if (!favoriteProducts?.length)
-                localStorage.setItem('favoriteItems', [])
+        // if (!tokenStatus) {
+        //     if (!favoriteProducts?.length)
+        //         localStorage.setItem('favoriteItems', [])
 
-            if (!favoriteProducts?.includes(productId))
-                favoriteProducts.push(productId)
-            else
-                favoriteProducts.splice(favoriteProducts.findIndex(i => i === productId), 1)
+        //     if (!favoriteProducts?.includes(productId))
+        //         favoriteProducts.push(productId)
+        //     else
+        //         favoriteProducts.splice(favoriteProducts.findIndex(i => i === productId), 1)
 
-            localStorage.setItem('favoriteItems', JSON.stringify(favoriteProducts))
-        }
-
+        //     localStorage.setItem('favoriteItems', JSON.stringify(favoriteProducts))
+        // }
 
         if (!favoriteItems?.includes(productId) && tokenStatus) {
-            await addFavoriteItem(_id, productId, () => {
+            await addFavoriteItem(_id, productId).then(() => {
                 dispatch(setUserData())
                 dispatch(updateFavoriteCounter(favoriteItems?.length + 1))
                 dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в избранное!' }))
             })
+                .catch(error => console.log(error))
 
         } else {
-            await removeFavoriteItem(_id, productId, () => dispatch(setUserData()))
-            dispatch(updateFavoriteCounter(favoriteItems?.length - 1))
-            dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из избранного!' }))
+            await removeFavoriteItem(_id, productId).then(() => {
+                dispatch(setUserData())
+                dispatch(updateFavoriteCounter(favoriteItems?.length - 1))
+                dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из избранного!' }))
+            })
         }
-
     }
 
     const onAddToCartButtonClick = async () => {
@@ -88,28 +89,28 @@ export default function ProductCard({ productData }) {
             return
 
         if (!inCart) {
-            await addCartItem(_id, productId, quantity, () => {
+            await addCartItem(_id, productId, quantity).then(res => {
                 dispatch(setUserData())
                 dispatch(updateCartCounter(cartItems?.length + 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в корзину!' }))
-            })
+                dispatch(togglePopup({ type: 'product-card', message: res.message }))
+            }).catch(error => alert(error))
 
         } else {
-            await removeCartItem(_id, productId, () => {
+            await removeCartItem(_id, productId).then(res => {
                 dispatch(setUserData())
                 dispatch(updateCartCounter(cartItems?.length - 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из корзины!' }))
-            })
-
+                dispatch(togglePopup({ type: 'product-card', message: res.message }))
+            }).catch(error => alert(error))
         }
 
     }
+
     useEffect(() => {
         if (!tokenStatus) {
-            if (favoriteItems?.length && JSON.parse(localStorage.getItem('favoriteItems').includes(productId)))
+            if (favoriteItems?.length && JSON.parse(localStorage.getItem('favoriteItems')?.includes(productId)))
                 setInFavorite(true)
 
-            if (cartItems?.length && JSON.parse(localStorage.getItem('cartItems').includes(productId)))
+            if (cartItems?.length && JSON.parse(localStorage.getItem('cartItems')?.includes(productId)))
                 setInCart(true)
         }
 
@@ -124,19 +125,19 @@ export default function ProductCard({ productData }) {
     return (
         <div className={styles['product-card']}>
             <div className={styles['product-card__tags']}>
-                {discount !== 0 && <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${discount}%`}</div>}
+                {discount ? <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${discount}%`}</div> : null}
                 <div className={`${styles['product-card__tag']} ${styles['product-card__popular-tag']}`}>Популярное</div>
                 {new Date().getUTCDate() - date.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
             </div>
+            <FavoriteIcon className={styles['product-card__fav-button']} onClick={onFavoriteButtonClick} inFavorite={inFavorite} />
             <Link to={`/products/${productId}`}>
                 <div className={styles['product-card__image']}>
                     {imageLoading && <Spinner />}
                     <img style={imageLoading ? { display: 'none' } : { display: 'flex' }}
-                        src="../../../public/images/categories/03.png" alt="product image"
+                        src="/images/categories/03.png" alt="product image"
                         onLoad={() => setImageLoading(false)} />
                 </div>
             </Link>
-            <FavoriteIcon className={styles['product-card__fav-button']} onClick={onFavoriteButtonClick} inFavorite={inFavorite} />
             <div className={styles['product-card__bottom-box']}>
                 <Link className={styles['product-card__title']} to={`/products/${productId}`}>{title}</Link>
                 <div className={styles['product-card__fields']}>

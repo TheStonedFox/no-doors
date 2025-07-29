@@ -8,7 +8,7 @@ const initialState = {
 
 
 export const checkToken = createAsyncThunk('user/checkToken', async () => {
-    const res = await fetch('http://192.168.1.105:3001/auth/check', {
+    const res = await fetch('http://192.168.1.104:3001/auth/check', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -21,8 +21,13 @@ export const checkToken = createAsyncThunk('user/checkToken', async () => {
 })
 
 export const setUserData = createAsyncThunk('user/setUserData', async () => {
-    const res = await getUser()
-    return res
+    try {
+        const res = await getUser()
+        return res.user
+    } catch (error) {
+        alert(error)
+    }
+
 })
 
 export const userSlice = createSlice({
@@ -35,7 +40,7 @@ export const userSlice = createSlice({
             .addCase(checkToken.fulfilled, (state, payload) => {
                 state.isTokenValid = payload.payload === 'token valid'
             })
-            .addCase(checkToken.rejected, (state, action) => {
+            .addCase(checkToken.rejected, (state) => {
                 state.isTokenValid = false
             })
             .addCase(setUserData.fulfilled, (state, action) => {

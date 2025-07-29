@@ -1,8 +1,6 @@
 .profile-page {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
-    max-width: var(--container-width);
 }
 
 .profile-page__header {}
@@ -87,6 +85,7 @@
 .actions__buttons {
     display: flex;
     width: 100%;
+    /* max-width: 350px; */
     flex-direction: column;
     gap: 10px;
     justify-content: space-between;
@@ -140,6 +139,7 @@
     display: flex;
     flex-direction: column;
     max-width: 50%;
+    padding-bottom: 20px;
 }
 
 .edit-info__field {
@@ -201,4 +201,22 @@
     flex-direction: column;
     padding: 15px;
 
+}
+
+@media(max-width: 992px) {
+
+    .profile-page__info,
+    .profile-page__actions {
+        padding: 20px;
+    }
+
+    .profile-page__edit-info {
+        max-width: 100%;
+    }
+}
+
+@media(max-width: 700px) {
+    .profile-page__layout {
+        grid-template-columns: 1fr;
+    }
 }

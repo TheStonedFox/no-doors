@@ -11,10 +11,10 @@ import Spinner from '../../components/Spinner/Spinner'
 export default function FavoritesPage() {
     const userData = useSelector((state) => state.user.userData)
     const [products, setProducts] = useState([])
-    const [loadedItemsCount, setLoadedItemsCount] = useState(4)
+    const [loadedItemsCount, setLoadedItemsCount] = useState(0)
     const [loadingStatus, setLadingStatus] = useState(true)
     useEffect(() => {
-        fetch('http://192.168.1.105:3001/products')
+        fetch(`${import.meta.env.VITE_API_URL}/products`)
             .then(res => res.json())
             .then(json => {
                 setProducts(json)
@@ -25,24 +25,24 @@ export default function FavoritesPage() {
             })
     }, [])
 
-
     return (
-        <div className={styles['favorites-page']}>
+        <div className={`${styles['favorites-page']} container`}>
             <h2 className={`${'section-title'} ${styles['favorites-page__title']}`}>Избранное</h2>
-            {!userData?.favoriteItems && <div>Загруpка...</div>}
+            {!userData?.favoriteItems && <div>Загрузка...</div>}
             {userData?.favoriteItems.length === 0 && <div>Ваш список избранного пока пуст.</div>}
-            {!loadingStatus ? <ItemsList className={styles['favorites-page__items-list']}>
+            {!loadingStatus ? <ItemsList className={styles['favorites-page__items-list']}
+                moreButton={true} dataLength={userData?.favoriteItems.length}>
                 {
                     products?.filter(product => userData.favoriteItems.includes(product._id))
                         .filter((favoriteItem, index) => index < loadedItemsCount + 4 && favoriteItem)
                         .map(favoriteItem => <ProductCard productData={favoriteItem} key={favoriteItem._id} />)
                 }
-            </ItemsList> : <Spinner />}
+            </ItemsList> : <Spinner />
+            }
             {userData?.favoriteItems.length > 8 && <Button
                 className={styles['favorites-page__more-button']}
                 title={loadedItemsCount !== userData.favoriteItems.length ? 'Показать еще' : 'Показать меньше'}
                 onClick={() => {
-
                     if (loadedItemsCount !== userData.favoriteItems.length)
                         setLoadedItemsCount(prev => prev + 4 <= userData.favoriteItems.length - 4 ? prev + 4 : userData.favoriteItems.length)
                     else
@@ -50,6 +50,6 @@ export default function FavoritesPage() {
                 }
                 }
             />}
-        </div>
+        </div >
     )
 }

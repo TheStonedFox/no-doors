@@ -1,12 +1,11 @@
 .spinner {
     display: flex;
-    align-self: center;
-    justify-self: center;
     width: 48px;
     height: 48px;
     border-radius: 50%;
     position: relative;
-    animation: rotate 1s linear infinite
+    animation: rotate 1s linear infinite;
+    margin: auto;
 }
 
 .spinner::before {

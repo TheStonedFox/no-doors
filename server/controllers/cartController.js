@@ -8,9 +8,9 @@ export const addCartItem = async (req, res) => {
         )
 
         if (!user)
-            return res.status(404).json({ msg: 'user not found!' })
+            return res.status(404).json({ message: 'Не удалось обновить данные.', code: 404 })
 
-        res.status(200).json({ msg: 'item added!', ID: req.params.productId })
+        res.status(200).json({ message: 'Товар добавлен в корзину.', code: 200, ID: req.params.productId })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -25,9 +25,9 @@ export const removeCartItem = async (req, res) => {
         )
 
         if (!user)
-            return res.status(404).json({ msg: 'user not found!' })
+            return res.status(404).json({ message: 'Не удалось обновить данные.', code: 404 })
 
-        res.status(200).json({ msg: 'item removed!' })
+        res.status(200).json({ message: 'Товар удален из корзины.', code: 200 })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

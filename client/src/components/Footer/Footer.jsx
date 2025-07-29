@@ -44,9 +44,9 @@ export default function Footer() {
             <div className={styles['footer__pay-methods']}>
                 <h3>Способы оплаты</h3>
                 <div className={styles['footer__pay-icons']}>
-                    <img src="../../../public/images/footer/logo-visa.png" alt="visa" />
-                    <img src="../../../public/images/footer/logo-mastercard.png" alt="mastercard" />
-                    <img src="../../../public/images/footer/logo-maestro.png" alt="mastercard" />
+                    <img src="/images/footer/logo-visa.png" alt="visa" />
+                    <img src="/images/footer/logo-mastercard.png" alt="mastercard" />
+                    <img src="/images/footer/logo-maestro.png" alt="mastercard" />
                 </div>
             </div>
             <div className={styles.footer__policy}>

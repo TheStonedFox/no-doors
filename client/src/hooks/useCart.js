@@ -18,7 +18,7 @@ export const useCart = () => {
 
     const getData = async () => {
         try {
-            setProducts(await getProducts(() => setLoadingStatus(false)))
+            setProducts(await getProducts().finally(() => setLoadingStatus(false)))
         } catch (error) {
             console.error(`не удалось загрузить товары! ${error}`)
             setLoadingStatus(false)

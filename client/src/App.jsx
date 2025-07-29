@@ -18,11 +18,13 @@ import ProductPage from './pages/ProductPage/ProductPage'
 import OrderPage from './pages/OrderPage/OrderPage'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
 import ViewedProductsPage from './pages/ViewedProductsPage/ViewedProductsPage'
+import SearchPage from './pages/SearchPage/SearchPage'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { closeAll, closeBurger } from './features/uiSlice'
 import { checkToken, setUserData } from './features/userSlice'
 import { useEffect, useState } from 'react'
+import { getProducts } from './api/api'
 
 function App() {
 
@@ -54,19 +56,19 @@ function App() {
     }
   }, [])
 
-
+  const isTokenValid = useSelector((state) => state.user.isTokenValid)
   return (
     <>
       <Layout >
         <Routes>
-          {useSelector((state) => state.user.isTokenValid) && <>
+          {isTokenValid ? <>
             <Route path='/profile' element={<ProfilePage />}></Route>
             <Route path='/profile/viewed-products' element={<ViewedProductsPage />}></Route>
             <Route path='/order' element={<OrderPage />}></Route>
             <Route path='/favorites' element={<FavoritesPage />}></Route>
             <Route path='/payment' element={<PaymentPage />}></Route>
             <Route path='/cart' element={<CartPage />}></Route>
-          </>}
+          </> : null}
           <Route path='/' element={<MainPage />}></Route>
           <Route path='/auth' element={<AuthPage />}></Route>
           <Route path='/cart' element={<AuthPage />}></Route>
@@ -76,6 +78,7 @@ function App() {
           <Route path='/contacts' element={<ContactsPage />}></Route>
           <Route path='/products' element={<ProductsPage />}></Route>
           <Route path='/products/:id' element={<ProductPage />}></Route>
+          <Route path='/search' element={<SearchPage />}></Route>
         </Routes>
       </Layout >
     </ >

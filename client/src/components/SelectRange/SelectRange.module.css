@@ -1,0 +1,80 @@
+.select-range {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    gap: 20px;
+    user-select: none;
+    background-color: rebeccapurple;
+}
+
+.select-range__main-section {
+    position: relative;
+    display: flex;
+}
+
+.main-section__full-range {
+    height: 2px;
+    width: 100%;
+    background-color: var(--typography---second);
+}
+
+.main-section__selected-range {
+    position: absolute;
+    height: 2px;
+    /* width: 100%; */
+    background-color: var(--ui---main);
+}
+
+.main-section__controller {
+    position: absolute;
+    top: -10px;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: var(--ui---main);
+    transition: transform 0.2s ease-in;
+}
+
+.main-section__controller:active {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in;
+}
+
+.main-section__min-controller {
+    left: 0;
+}
+
+.main-section__max-controller {
+    right: 0px;
+}
+
+.select-range__values-section {
+    display: grid;
+    grid-template-columns: 25% 25% 50%;
+    gap: 10px;
+}
+
+.select-range__values-section>div {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.select-range__values-section input {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    text-align: center;
+}
+
+.values-section__input {
+    height: 40px;
+    text-align: center;
+}
+
+.values-section__button {
+    height: 40px;
+    padding: 0;
+}

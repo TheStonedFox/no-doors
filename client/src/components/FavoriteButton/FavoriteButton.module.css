@@ -1,0 +1,33 @@
+.favorite-button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 130%;
+    color: var(--typography---second);
+    transition: 0.2s;
+    cursor: pointer;
+    text-align: center;
+    text-wrap: none;
+    padding: 0px 15px;
+}
+
+.favorite-button>p {
+    display: flex;
+    text-align: left;
+
+}
+
+.favorite-button>svg {
+    width: 18px;
+    min-width: 18px;
+}
+
+.favorite-button:hover {
+    color: var(--ui---red);
+    transition: 0.2s;
+}

@@ -37,14 +37,14 @@ export const create = async (req, res) => {
 
 export const status = async (req, res) => {
     try {
-        const orderId = req.params.orderId;
+        const orderId = req.params.orderId
 
         const data = {
             public_key: process.env.LIQ_PAY_PUBLIC_API_KEY,
             action: 'status',
             version: '3',
             order_id: orderId
-        };
+        }
 
         const jsonData = JSON.stringify(data)
         const dataEncoded = Buffer.from(jsonData).toString('base64')
@@ -62,7 +62,7 @@ export const status = async (req, res) => {
                 data: dataEncoded,
                 signature: signature
             })
-        });
+        })
 
         const result = await response.json()
         res.status(200).json(result)

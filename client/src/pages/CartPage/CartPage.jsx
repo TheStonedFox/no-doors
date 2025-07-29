@@ -19,7 +19,7 @@ export default function CartPage() {
     const [, userData, sum,] = useCart()
 
     return (
-        <div className={styles['cart-page']} >
+        <div className={`${styles['cart-page']} container`} >
             <h2 className={`${'section-title'} ${styles['cart-page__title']}`}>Ваша корзина</h2>
             <CartItems />
             {userData?.cartItems.length ? <div className={styles['cart-page__result']}>
@@ -37,7 +37,7 @@ export default function CartPage() {
                     <p>Итого:<strong>{sum} грн.</strong></p>
                     <Button title='Оформить заказ' onClick={() => negative('/order')} />
                 </div>
-            </div> : null}
+            </div> : <p>Ваша корзина пуста.</p>}
         </div>
     )
 }

@@ -10,6 +10,8 @@
     /* max-height: 100%; */
     overflow-y: auto;
     max-height: 300px;
+    align-self: flex-start;
+    min-height: 30px;
 }
 
 .cart-items__title {
@@ -19,6 +21,7 @@
     line-height: 100%;
     color: var(--typography---second);
     justify-self: center;
+    align-self: flex-start;
 }
 
 .cart-items__title:nth-child(1) {

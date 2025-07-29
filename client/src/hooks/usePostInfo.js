@@ -29,7 +29,6 @@ export const usePostInfo = ({ selectedCity }) => {
         if (!cities.find(city => city.title === selectedCity))
             return
 
-
         fetch("https://api.novaposhta.ua/v2.0/json/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

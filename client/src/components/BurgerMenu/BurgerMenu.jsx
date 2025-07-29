@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import BorderedButton from '../BorderedButton/BorderedButton'
-import LanguageDropdown from '../LanguageDropdown/LanguageDropdown'
+import ThemeToggle from '../ThemeToggle/ThemeToggle'
 import { toggleBurger } from '../../features/uiSlice'
 import { useDispatch } from 'react-redux'
 
@@ -14,7 +14,7 @@ export default function BurgerMenu() {
     const isOpen = useSelector((state) => state.ui.isBurgerOpen)
     return (
         <div style={isOpen ? { width: '320px', padding: '50px' } : { width: '0', padding: '50px 0px' }} className={styles['burger-menu']} >
-            <LanguageDropdown className={styles['burger-menu__language']} />
+            {/* <ThemeToggle className={styles['burger-menu__theme-toggle']} /> */}
             <div className={styles.box}>
                 <ul className={styles.links}>
                     <Link
@@ -33,8 +33,12 @@ export default function BurgerMenu() {
                         to='/contacts'
                         onClick={() => dispatch(toggleBurger())}
                     >Контакты</Link>
+                    <Link
+                        to='/profile'
+                        onClick={() => dispatch(toggleBurger())}
+                    >Личный кабинет</Link>
                 </ul>
-                <BorderedButton title='+7 (965) 237-44-49' />
+                <BorderedButton title='+380 (965) 237-44-49' />
             </div>
 
         </div >

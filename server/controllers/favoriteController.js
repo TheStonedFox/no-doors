@@ -8,9 +8,9 @@ export const addFavoriteItem = async (req, res) => {
         )
 
         if (!user)
-            return res.status(404).json({ msg: 'user not found!' })
+            return res.status(404).json({ message: 'Не удалось обновить данные.', code: 404 })
 
-        res.status(200).json({ msg: 'item added!' })
+        res.status(200).json({ message: 'Товар добавлен.', code: 200 })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -27,9 +27,9 @@ export const removeFavoriteItem = async (req, res) => {
         )
 
         if (!user)
-            return res.status(404).json({ msg: 'user not found!' })
+            return res.status(404).json({ message: 'Не удалось обновить данные.', code: 404 })
 
-        res.status(200).json({ msg: 'item removed!' })
+        res.status(200).json({ msg: 'Товар удален.', code: 200 })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
