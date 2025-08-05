@@ -1,17 +1,23 @@
 .order-details-popup {
     /* display: flex;
     flex-direction: column; */
-    display: grid;
-    grid-template-rows: 0.1fr 0.7fr auto;
+    display: flex;
+    flex-direction: column;
+    /* grid-template-rows: 50px minmax(100px, 300px) 53px; */
     /* max-height: 500px; */
     height: 400px;
+    /* background-color: rebeccapurple; */
+    overflow: hidden;
 }
+
+
 
 .order-details-popup__header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 30px;
     align-self: flex-start;
+    width: 100%;
 }
 
 .order-details-popup__header>div {
@@ -47,7 +53,8 @@
     line-height: 100%;
     font-weight: 400;
     font-size: 20px;
-    align-self: flex-end;
+    /* align-self: flex-end; */
+    margin-top: auto;
 }
 
 .field-value {

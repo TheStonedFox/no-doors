@@ -5,6 +5,8 @@ const initialState = {
     isCatalogOpen: false,
     isPopupOpen: false,
     isSearchResultsOpen: false,
+    isFiltersPanelOpen: false,
+    theme: localStorage.getItem('theme') || 'light',
     popup: { type: '', message: '', data: '' },
     cartCounter: 0,
     favoriteCounter: 0,
@@ -22,6 +24,10 @@ export const uiSlice = createSlice({
         toggleCatalog: (state) => {
             state.isCatalogOpen = !state.isCatalogOpen
             state.isBurgerOpen = false
+        },
+        toggleFiltersPanel: (state) => {
+            state.isFiltersPanelOpen = !state.isFiltersPanelOpen
+            // state.isBurgerOpen = false
         },
         togglePopup: (state, action) => {
             state.isPopupOpen = !state.isPopupOpen
@@ -42,6 +48,9 @@ export const uiSlice = createSlice({
         },
         updateFavoriteCounter: (state, payload) => {
             state.favoriteCounter = payload.payload
+        },
+        setTheme: (state, payload) => {
+            state.theme = payload.payload
         }
     }
 })
@@ -49,4 +58,4 @@ export const uiSlice = createSlice({
 
 
 
-export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults } = uiSlice.actions
+export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme } = uiSlice.actions

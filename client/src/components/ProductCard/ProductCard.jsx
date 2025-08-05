@@ -106,13 +106,13 @@ export default function ProductCard({ productData }) {
     }
 
     useEffect(() => {
-        if (!tokenStatus) {
-            if (favoriteItems?.length && JSON.parse(localStorage.getItem('favoriteItems')?.includes(productId)))
-                setInFavorite(true)
+        // if (!tokenStatus) {
+        //     if (favoriteItems?.length && JSON.parse(localStorage.getItem('favoriteItems')?.includes(productId)))
+        //         setInFavorite(true)
 
-            if (cartItems?.length && JSON.parse(localStorage.getItem('cartItems')?.includes(productId)))
-                setInCart(true)
-        }
+        //     if (cartItems?.length && JSON.parse(localStorage.getItem('cartItems')?.includes(productId)))
+        //         setInCart(true)
+        // }
 
         if (tokenStatus) {
             setInFavorite(favoriteItems?.includes(productId))

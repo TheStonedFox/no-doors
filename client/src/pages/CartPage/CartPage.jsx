@@ -13,6 +13,7 @@ import { useCart } from '../../hooks/useCart'
 
 
 export default function CartPage() {
+    document.querySelector('title').innerHTML = 'Корзина'
     const negative = useNavigate()
     const [promocode, setPromocode] = useState('')
 

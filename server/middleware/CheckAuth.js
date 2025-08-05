@@ -14,6 +14,6 @@ export const CheckAuth = async (req, res, next) => {
 
         next()
     } catch (error) {
-        res.json({ msg: 'invalid token!', token })
+        res.status(404).json({ message: 'invalid token!', code: 404, token })
     }
 }

@@ -12,11 +12,11 @@ import * as favoriteController from './controllers/favoriteController.js'
 import * as cartController from './controllers/cartController.js'
 import * as paymentController from './controllers/paymentController.js'
 import * as orderController from './controllers/orderController.js'
+import * as sharedController from './controllers/sharedController.js'
 
 //#endregion
 
 import * as validations from './validations.js'
-import UtilityListsModel from './models/UtilityListsModel.js'
 import ProductModel from './models/ProductModel.js'
 
 
@@ -123,24 +123,12 @@ app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
 //#endregion
 
 //#region service
-app.post('/auth/check', CheckAuth, (req, res) => res.json({ msg: 'token valid' }))
+app.post('/auth/check', CheckAuth, (req, res) => res.status(200).json({ message: 'token valid', code: 200 }))
 //#endregion
 
 //#endregion
 
-app.get('/chooses-steps', async (req, res) => {
-    try {
-        const doc = await UtilityListsModel.findOne()
-
-        if (!doc)
-            return res.status(404).json({ message: 'Не удалось получить данные.', code: 404 })
-
-        res.status(200).json({ options: doc })
-    } catch (error) {
-        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
-    }
-
-})
+app.get('/chooses-steps', sharedController.getChooseSteps)
 
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
     console.log(`The server is running on port ${process.env.PORT || 5000}`)

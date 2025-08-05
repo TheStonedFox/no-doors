@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"extract-jsx-classes.moduleCSSVariable": "styles"
+	}
+}

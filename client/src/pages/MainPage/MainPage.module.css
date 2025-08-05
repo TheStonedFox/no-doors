@@ -2,21 +2,24 @@
     display: flex;
     flex-direction: column;
     user-select: none;
-    padding-top: 45px;
+    padding-top: 25px;
     padding-bottom: 150px;
     background-color: var(--ui---bg-main);
 }
 
 .main-page__intro-section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 30px;
 }
 
 .intro-section__slider {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 230px;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.377);
+    background-color: transparent;
+    border-radius: 8px;
 }
 
 .slide {
@@ -24,7 +27,7 @@
     gap: 20px;
     flex-direction: column;
     position: relative;
-    padding: 20px;
+    padding: 15px;
     background: var(--ui---main);
     border-radius: 4px;
     overflow: hidden;
@@ -32,9 +35,11 @@
 
 .slide img {
     /* display: none; */
-    position: relative;
-    bottom: 130px;
-    left: 205px;
+    position: absolute;
+    /* width: 250px; */
+    top: -8%;
+    right: -120px;
+    width: 500px;
 }
 
 /*  Оформляем пагинацию (добавляем через JS) */
@@ -43,16 +48,17 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    bottom: 40px;
-    left: 20px;
+    bottom: -10px;
+    left: -10px;
+    /* left: 50%; */
     text-align: center;
     padding: 20px;
 }
 
 /*  Делаем глобальную стилизацию кнопок пагинации */
 :global(.swiper-pagination-bullet) {
-    width: 30px;
-    height: 5px;
+    width: 20px;
+    height: 4px;
     /* Цвет кнопки */
     background: #fff;
     opacity: 0.4;
@@ -74,14 +80,23 @@
 
 .slide h2 {
     font-weight: 700;
-    font-size: 36px;
+    font-size: 30px;
     line-height: 130%;
     color: #fff;
+    width: 75%;
+    font-size: 36px;
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
 
 .slide .slide__button {
     background-color: #fff;
     color: var(--ui---main);
+    width: fit-content;
+    font-weight: bold;
 }
 
 .slide .slide__button:hover {
@@ -89,7 +104,7 @@
 }
 
 .into-section__products {
-    display: flex;
+    display: none;
     width: 100%;
     gap: 7px;
     flex-direction: column;
@@ -104,13 +119,7 @@
     padding: 20px;
 }
 
-.into-section__product h2 {
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 130%;
-    color: var(--typography---main);
-    width: 60%;
-}
+
 
 .into-section__product img {
     position: absolute;

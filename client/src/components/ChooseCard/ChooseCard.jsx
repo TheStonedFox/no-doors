@@ -4,15 +4,15 @@ import styles from './ChooseCard.module.css'
 import ArrowIcon from './ArrowIcon'
 export default function ChooseCard({ picture, title, onClick }) {
     return (
-        <div
+        <div title={title}
             className={styles.card}
             onMouseEnter={(e) => {
                 e.currentTarget.querySelector('h3').style = 'color: var(--ui---main);'
-                e.currentTarget.querySelector('svg').style = 'width: 24px'
+                e.currentTarget.querySelector('svg').style = 'min-width: 24px'
             }}
             onMouseLeave={(e) => {
                 e.currentTarget.querySelector('h3').style = ''
-                e.currentTarget.querySelector('svg').style = 'width: 0px'
+                e.currentTarget.querySelector('svg').style = 'min-width: 0px'
             }}
             onClick={onClick}
         >

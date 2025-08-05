@@ -93,9 +93,18 @@
     cursor: pointer;
 }
 
-.header__middle-button:hover {
-    color: var(--ui---main);
-    transition: 0.2s;
+@media(hover: hover) {
+    .header__middle-button:hover {
+        color: var(--ui---main);
+        transition: 0.2s;
+    }
+}
+
+@media(hover: none) {
+    .header__middle-button:active {
+        color: var(--ui---main);
+        transition: 0.2s;
+    }
 }
 
 .header__middle-button div {
@@ -185,17 +194,26 @@
 }
 
 .header__brands-list {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr) 100px;
+    /* display: flex;
+    align-items: center; */
     align-items: center;
+    text-wrap: nowrap;
     width: 100%;
     justify-content: space-between;
     gap: 20px;
+    max-height: 40px;
 }
 
 .header__brands-list li {
+    position: relative;
     display: flex;
     gap: 6px;
     cursor: pointer;
+    height: 20px;
+    /* width: 100%; */
+    max-width: 100px;
 }
 
 .header__bottom-list {

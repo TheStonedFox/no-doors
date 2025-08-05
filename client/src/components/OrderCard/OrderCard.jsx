@@ -11,6 +11,7 @@ import getWordEnding from '../../utils/getWordEnding'
 import { togglePopup } from '../../features/uiSlice'
 
 import { statusColors, statusTitles } from '../../utils/orderStatus'
+import { getOrder } from '../../api/api'
 export default function OrderCard({ orderId, orderNumber }) {
     // const [status, sum, date] = orderInfo
     const dispatch = useDispatch()
@@ -22,15 +23,11 @@ export default function OrderCard({ orderId, orderNumber }) {
     const date = new Date(order?.createdAt)
 
     useEffect(() => {
-        fetch(`http://localhost:3001/orders/${orderId}`, {
-            headers: { 'Authorization': localStorage.getItem('token') }
-        })
-            .then(res => res.json())
-            .then(json => setOrder(json.order))
 
+        getOrder(orderId)
+            .then(res => setOrder(res.order))
+            .catch(error => alert(error))
     }, [])
-
-    useEffect(() => { console.log(orderId) }, [orderId])
 
     return (
         <div className={styles['order-card']} onClick={() => dispatch(togglePopup({ type: 'order-card', data: orderId }))}>

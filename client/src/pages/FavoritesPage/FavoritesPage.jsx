@@ -9,6 +9,9 @@ import styles from './FavoritesPage.module.css'
 import Spinner from '../../components/Spinner/Spinner'
 
 export default function FavoritesPage() {
+
+    document.querySelector('title').innerHTML = 'Избранные товары'
+
     const userData = useSelector((state) => state.user.userData)
     const [products, setProducts] = useState([])
     const [loadedItemsCount, setLoadedItemsCount] = useState(0)

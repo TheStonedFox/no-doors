@@ -4,7 +4,49 @@
     cursor: pointer;
     align-items: center;
     user-select: none;
+    color: var(--typography---main);
 }
+
+
+
+
+@media(hover: hover) {
+    .check-box:hover .check-box__indicator {
+        transition: 0.2s;
+        border: 1px solid var(--typography---second);
+    }
+
+    .check-box:hover .check-box__indicator.active {
+        transition: 0.2s;
+        border: 1px solid var(--ui---main);
+    }
+
+    .check-box:hover {
+        transition: 0.2s;
+        color: var(--typography---second);
+    }
+
+
+}
+
+@media(hover: none) {
+    .check-box:active .check-box__indicator {
+        transition: 0.2s;
+        border: 1px solid var(--typography---second);
+    }
+
+    .check-box:active .check-box__indicator.active {
+        transition: 0.2s;
+        border: 1px solid var(--ui---main);
+    }
+
+    .check-box:active {
+        transition: 0.2s;
+        color: var(--typography---second);
+    }
+}
+
+
 
 .check-box input {
     position: absolute;

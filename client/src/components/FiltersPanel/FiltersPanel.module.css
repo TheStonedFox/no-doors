@@ -1,0 +1,147 @@
+.filters-panel {
+    display: flex;
+    position: relative;
+    padding-top: 15px;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--ui---bg-main);
+    overflow-y: auto;
+    min-width: 250px;
+    height: 90vh;
+    padding-right: 6px;
+    transition: 0.2s transform;
+}
+
+.open {
+    transform: translateX(0px);
+    transition: 0.2 ease;
+}
+
+.filters-panel__close-button {
+    display: none;
+    margin-top: auto;
+}
+
+
+.filter {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+}
+
+.filter>div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.filter__title {
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+.filters-panel__sort-dropdown {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: var(--ui---main);
+    color: #fff;
+    text-wrap: nowrap;
+}
+
+.filter__sort-options {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 0px;
+    width: 100%;
+    z-index: 2000;
+    top: 66px;
+    background-color: var(--ui---bg-main);
+    border-radius: 0 0 4px 4px;
+    box-shadow: -3px 7px 14px 0px rgba(0, 0, 0, 0.2);
+}
+
+.sort__option {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+.sort__option:active {
+    background-color: var(--ui---main);
+    transition: 0.2s;
+}
+
+
+@media(hover: hover) {
+
+    .sort__option:hover,
+    .filters-panel__sort-dropdown:hover {
+        background-color: var(--ui---main-hover);
+        transition: 0.2s;
+        color: #fff;
+    }
+}
+
+@media(hover: none) {
+
+    .sort__option:active,
+    .filters-panel__sort-dropdown:active {
+        background-color: var(--ui---main-hover);
+        transition: 0.2s;
+        color: #fff;
+    }
+}
+
+.filter__price {
+    padding-bottom: 20px;
+}
+
+@media(max-width: 550px) {
+    .filters-panel {
+        /* display: none; */
+        position: fixed;
+        min-width: 0px;
+        left: 0px;
+        height: 100vh;
+        box-shadow: 4px -2px 8px 0px rgba(0, 0, 0, 0.2);
+        top: 0px;
+        z-index: 3000;
+        width: 50%;
+        transform: translateX(-102%);
+        transition: 0.2;
+        padding: 10px;
+    }
+
+    .open {
+        transform: translateX(0px);
+        transition: 0.2 ease;
+    }
+
+
+    .filters-panel__close-button {
+        display: flex;
+    }
+
+}
+
+@media(max-width: 480px) {
+    .filters-panel {
+        width: 65%;
+    }
+
+}
+
+@media(max-width: 360px) {
+    .filters-panel {
+        width: 100%;
+    }
+
+}

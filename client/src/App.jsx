@@ -22,9 +22,10 @@ import SearchPage from './pages/SearchPage/SearchPage'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { closeAll, closeBurger } from './features/uiSlice'
-import { checkToken, setUserData } from './features/userSlice'
+import { checkTokenThunk, setUserData } from './features/userSlice'
 import { useEffect, useState } from 'react'
 import { getProducts } from './api/api'
+import { getChooseValues } from './features/sharedSlice'
 
 function App() {
 
@@ -41,13 +42,15 @@ function App() {
   })
 
   useEffect(() => {
-    dispatch(checkToken())
+    dispatch(checkTokenThunk())
+
     tokenStatus && dispatch(setUserData())
 
     return () => dispatch(setUserData())
   }, [tokenStatus, localToken, dispatch])
 
   useEffect(() => {
+    dispatch(getChooseValues())
     const handleScroll = () => dispatch(closeBurger())
     window.addEventListener('scroll', handleScroll)
 

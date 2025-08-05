@@ -23,7 +23,7 @@ const OrderModel = new Schema({
         type: String,
         enum: ['pending', 'new', 'accepted', 'delivered', 'rejected', 'completed', 'paid'],
         default: function () {
-            return this.paymentMethod === 'offline' ? 'new' : 'pending';
+            return this.paymentMethod === 'offline' ? 'new' : 'pending'
         }
     },
     deliveryMethod: {

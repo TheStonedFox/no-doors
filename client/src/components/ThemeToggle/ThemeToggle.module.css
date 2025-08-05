@@ -8,9 +8,30 @@
     transition: 0.3s;
 }
 
-.theme-toggle:hover {
-    border: 1px solid var(--ui---main);
-    box-shadow: 0px -20px 54px 20px rgba(57, 154, 59, 0.13);
+
+
+@media(hover: hover) {
+    .theme-toggle:hover {
+        border: 1px solid var(--ui---main);
+        box-shadow: 0px -20px 54px 20px rgba(57, 154, 59, 0.13);
+    }
+
+    .theme-toggle__controller:hover {
+        background-color: var(--ui---main-hover);
+        transition: 0.2s;
+    }
+}
+
+@media(hover: none) {
+    .theme-toggle:active {
+        border: 1px solid var(--ui---main);
+        box-shadow: 0px -20px 54px 20px rgba(57, 154, 59, 0.13);
+    }
+
+    .theme-toggle__controller:active {
+        background-color: var(--ui---main-hover);
+        transition: 0.2s;
+    }
 }
 
 .theme-toggle__controller {
@@ -23,10 +44,5 @@
     width: 20px;
     border-radius: 10px;
     cursor: pointer;
-    transition: 0.2s;
-}
-
-.theme-toggle__controller:hover {
-    background-color: var(--ui---main-hover);
     transition: 0.2s;
 }

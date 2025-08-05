@@ -1,7 +1,7 @@
 // import { apiRequest } from "../utils/apiHelper.js"
 
 
-export class ApiError extends Error {
+class ApiError extends Error {
     constructor(message, code, data) {
         super(message)
         this.name = 'ApiError'
@@ -10,13 +10,13 @@ export class ApiError extends Error {
     }
 }
 
-export const apiRequest = async (url, method, body, headers) => {
+const apiRequest = async (url, method, body, headers) => {
     try {
         if (method === 'GET') {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/${url}`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
+                    'Authorization': localStorage.getItem('token') || null,
                     ...headers
                 },
             })
@@ -31,7 +31,7 @@ export const apiRequest = async (url, method, body, headers) => {
 
         const res = await fetch(`${import.meta.env.VITE_API_URL}/${url}`, {
             method,
-            body: body ? JSON.stringify(body) : {},
+            body: method !== 'GET' && body ? JSON.stringify(body) : null,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': localStorage.getItem('token'),
@@ -73,11 +73,22 @@ export const updateCartItem = async (userId, productId, quantity) => apiRequest(
 
 export const makeOrder = async (orderData) => apiRequest('orders', 'POST', orderData)
 
+export const getOrder = async (orderId) => apiRequest(`orders/${orderId}`, 'GET')
+
 export const createPayment = async (amount, orderId) => apiRequest('create-payment', 'POST', { amount, orderId })
+
+export const getPaymentStatus = async (orderId) => apiRequest(`payment-status/${orderId}`, 'POST')
+
+export const updatePaymentStatus = async (orderId, body) => apiRequest(`orders/${orderId}`, 'PATCH', body)
+
 
 export const getStepChoices = async () => apiRequest('chooses-steps', 'GET')
 
 export const searchProducts = async (query) => apiRequest(`search?${query}`, 'GET')
+
+export const checkToken = async () => apiRequest('auth/check', 'POST')
+
+
 
 // export const createPayment = async (amount, orderId, next) => {
 //     try {

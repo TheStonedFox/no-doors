@@ -6,6 +6,7 @@ import Spinner from '../Spinner/Spinner'
 import CartItem from '../CartItem/CartItem'
 
 import styles from './CartItems.module.css'
+import { getOrder } from '../../api/api'
 
 export default function CartItems({ orderId }) {
 
@@ -14,14 +15,7 @@ export default function CartItems({ orderId }) {
     const [order, setOrder] = useState()
 
     useEffect(() => {
-
-        if (orderId) {
-            fetch(`http://localhost:3001/orders/${orderId}`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
-            })
-                .then(res => res.json())
-                .then(order => setOrder(order.order))
-        }
+        orderId && getOrder(orderId).then(res => setOrder(res.order)).catch(error => alert(error))
     }, [orderId])
 
     return (

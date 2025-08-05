@@ -11,6 +11,7 @@
     box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     padding: 50px;
+    width: 320px;
 }
 
 .box {
@@ -38,10 +39,18 @@
 .burger-menu__theme-toggle {
     position: absolute;
     right: 20px;
+    top: 55px;
 }
 
 @media(min-width: 920px) {
     .burger-menu {
         display: none;
+    }
+}
+
+@media(min-width: 767px) {
+
+    .burger-menu__theme-toggle {
+        top: 55px;
     }
 }

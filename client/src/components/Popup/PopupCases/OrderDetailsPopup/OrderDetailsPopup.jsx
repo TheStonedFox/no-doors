@@ -9,7 +9,7 @@ import styles from './OrderDetailsPopup.module.css'
 import { statusColors, statusTitles } from '../../../../utils/orderStatus'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { createPayment } from '../../../../api/api'
+import { createPayment, getOrder, getPaymentStatus, updatePaymentStatus } from '../../../../api/api'
 import { togglePopup } from '../../../../features/uiSlice'
 
 export default function OrderDetailsPopup({ orderId }) {
@@ -23,49 +23,32 @@ export default function OrderDetailsPopup({ orderId }) {
     const [paymentStatus, setPaymentStatus] = useState()
 
     useEffect(() => {
-        if (orderId) {
-            fetch(`${import.meta.env.VITE_API_URL}/orders/${orderId}`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
-            })
-                .then(res => res.json())
-                .then(order => setOrder(order.order))
-        }
+        getOrder(orderId)
+            .then(res => setOrder(res.order))
+            .catch(error => alert(error))
     }, [orderId])
 
 
+
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/create-payment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token')
-            },
-            body: JSON.stringify({ amount: order?.sum, orderId: order?._id })
-        })
-            .then(res => res.json())
-            .then(data => setPayData(data))
+        createPayment(order?.sum, order?._id)
+            .then(res => setPayData(res))
+            .catch(error => alert(error))
 
 
         if (order?.paymentMethod === 'online') {
-
-            fetch(`${import.meta.env.VITE_API_URL}/payment-status/${orderId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token')
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data?.status === 'sandbox' | data?.status === 'success') {
-                        fetch(`${import.meta.env.VITE_API_URL}/orders/${orderId}`, {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
-                            body: JSON.stringify({ status: 'paid' })
-                        })
+            getPaymentStatus(orderId)
+                .then(res => {
+                    if (res?.status === 'sandbox' | res?.status === 'success') {
+                        updatePaymentStatus(orderId, { status: 'paid' })
+                            .then(() => setPaymentStatus('paid'))
+                            .catch(error => alert(error))
                     }
-                })
+                }).catch(error => alert(error))
         }
+
+        setPaymentStatus(order?.status)
+
     }, [order])
 
     return (
@@ -74,7 +57,7 @@ export default function OrderDetailsPopup({ orderId }) {
                 <div>
                     <h3 className={styles['order-details-popup__id']}>{`Заказ #${userData?.orders.findIndex(order => order === orderId) + 1}`}</h3>
                     ·
-                    <p className={styles['order-details-popup__status']} style={{ color: statusColors[order?.status] }}>{statusTitles[order?.status]}</p>
+                    <p className={styles['order-details-popup__status']} style={{ color: statusColors[paymentStatus] }}>{statusTitles[paymentStatus]}</p>
                 </div>
                 <p className={styles['order-details-popup__date']}>{`Заказ от ${date.toLocaleDateString('ru-RU')}`}</p>
             </section>
@@ -83,7 +66,7 @@ export default function OrderDetailsPopup({ orderId }) {
                 <Field title='Общая скидка:' value={<p className={styles['field-value']}>10%</p>} />
                 <Field title='Итого:' value={<p className={styles['field-value']}>{order?.sum} ₴</p>} />
 
-                {order?.paymentMethod === 'online' && order?.status === 'pending' && <form id='liqpay-form' action="https://www.liqpay.ua/api/3/checkout" target='_blank' method='POST'
+                {order?.paymentMethod === 'online' && paymentStatus === 'pending' && <form id='liqpay-form' action="https://www.liqpay.ua/api/3/checkout" target='_blank' method='POST'
                     onSubmit={async (event) => {
                         event.preventDefault() // сначала всегда отменяем
                         const res = await fetch(`http://localhost:3001/orders/${orderId}`, {

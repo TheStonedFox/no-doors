@@ -3,8 +3,6 @@ import dotenv from 'dotenv'
 import LiqPay from 'liqpay'
 
 dotenv.config()
-// const liqpay = new LiqPay('sandbox_i4566136611', 'sandbox_xHLpL84eHlF04Z0B9mF5FvIJgF87c1TVM4B7sRkk')
-
 
 export const create = async (req, res) => {
 

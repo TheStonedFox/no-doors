@@ -10,14 +10,15 @@ import Input from '../../components/Input/Input'
 import OrderCard from '../../components/OrderCard/OrderCard'
 import AvatarIcon from './AvatarIcon'
 
-
 import styles from './ProfilePage.module.css'
-import { checkToken, setUserData } from '../../features/userSlice'
+import { checkTokenThunk, setUserData } from '../../features/userSlice'
 import { togglePopup } from '../../features/uiSlice'
 import SuggestionInput from '../../components/SuggestionInput/SuggestionInput'
 import { usePostInfo } from '../../hooks/usePostInfo'
 
 export default function ProfilePage() {
+
+    document.querySelector('title').innerHTML = 'Личный кабинет'
 
     const negative = useNavigate()
     const dispatch = useDispatch()
@@ -69,9 +70,9 @@ export default function ProfilePage() {
         <div className={`${styles['profile-page']} container`}>
             <section className='page-title-section'>
                 <h1 className='section-title'>Личный кабинет</h1>
-                <Link className='header-link' onClick={() => {
+                <Link className='header-link' to='/auth' onClick={() => {
                     localStorage.removeItem('token')
-                    dispatch(checkToken())
+                    dispatch(checkTokenThunk())
                 }}>Выйти из аккаунта</Link>
             </section>
             <section className={styles['profile-page__layout']}>
@@ -103,6 +104,7 @@ export default function ProfilePage() {
                         </div>}
                     </div>
                 </section>
+
                 {action === 'info' && <section className={styles['profile-page__info']}>
                     <h3 className={styles['info__title']}>Мои данные:</h3>
                     <div className={styles['info__field']}>
@@ -120,6 +122,7 @@ export default function ProfilePage() {
                         </div>
                     </div>
                 </section>}
+
                 {action === 'edit' && <section className={styles['profile-page__edit-info']}>
                     <div className={styles['edit-info__field']}>
                         <p className={styles['edit-info__field-name']}>Телефон:</p>
@@ -160,6 +163,7 @@ export default function ProfilePage() {
                         />}
                     </div>
                 </section>}
+
                 {action === 'history' && <section className={styles['profile-page__orders-history']}>
                     <section className={styles['orders-history__header']}>
                         <h3 className={styles['orders-history__header-title']}>История заказов:</h3>

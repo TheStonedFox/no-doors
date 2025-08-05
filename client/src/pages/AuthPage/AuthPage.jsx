@@ -7,7 +7,6 @@ import Checkbox from '../../components/Checkbox/Checkbox'
 import Input from '../../components/Input/Input'
 
 
-
 import { useState, useEffect } from 'react'
 import { login, register } from '../../api/api'
 
@@ -17,7 +16,6 @@ export default function AuthPage() {
     const [mode, setMode] = useState('login')
     const [data, setData] = useState({})
     const [validationErrors, setValidationErrors] = useState([])
-    useEffect(() => { console.log(validationErrors) }, [validationErrors])
 
     useEffect(() => setData({ email: '', password: '', passwordCheck: '', fio: '', phone: '' }), [mode])
     return (

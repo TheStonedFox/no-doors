@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Slider from '../../components/Slider/Slider'
 import styles from './MainPage.module.css'
+import 'swiper/css/bundle'
 
 import { Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import 'swiper/css/bundle'
 
 import ChooseCard from '../../components/ChooseCard/ChooseCard'
 import ItemsList from '../../components/ItemsList/ItemsList'
@@ -14,17 +14,16 @@ import Advantages from '../../components/Advantages/Advantages'
 import Gallery from '../../components/Gallery/gallery'
 import Button from '../../components/Button/Button'
 import Spinner from '../../components/Spinner/Spinner'
-import Range from '../../components/Range/Range'
-
-import { setUserData } from '../../features/userSlice'
-import { getStepChoices, getProducts } from '../../api/api'
 
 import useProducts from '../../hooks/useProducts'
 
 import { categoryImages } from '../../utils/categoryImages'
 import { brandsImages } from '../../utils/brandsImages'
 import { useNavigate } from 'react-router-dom'
-import DropDownMenu from '../../components/DropDownMenu/DropDownMenu'
+
+import deviceTypesEnTitles from '../../utils/deviceTypeEnTitle'
+
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function MainPage() {
     const [loadedItemsCount, setLoadedItemsCount] = useState(4)
@@ -33,22 +32,24 @@ export default function MainPage() {
 
     const [choosesStep, setChoosesStep] = useState('brand')
     const [choosesValues, setChoosesValues] = useState({ brand: null, model: null, category: null })
-
     const [chooseOptions, setChooseOptions] = useState({ brands: null, categories: null })
-
     const [filterValue, setFilterValue] = useState('phones')
 
     const [products, isLoading, error] = useProducts()
 
-    useEffect(() => {
-        getStepChoices()
-            .then(res => setChooseOptions({ brands: res.options?.brands.map(brand => brand), categories: res.options.categories }))
-            .catch(error => alert(error))
-    }, [])
+    const { brands, categories, error: chooseValuesError, isLoading: chooseValuesIsLoading } = useSelector(state => state.shared.chooseValues)
 
     useEffect(() => {
-        choosesValues.category && negative(`/search?brand=${choosesValues.brand}&model=${choosesValues.model}&category=${choosesValues.category}`)
-    }, [choosesValues.category, negative, choosesValues])
+        document.querySelector('title').innerHTML = 'No Doors'
+        if (chooseValuesError)
+            return alert(chooseValuesError)
+    }, [])
+
+    useEffect(() => { !chooseValuesIsLoading && setChooseOptions({ brands, categories }) }, [chooseValuesIsLoading])
+
+    useEffect(() => {
+        choosesValues.category && negative(`/search?brand=${choosesValues.brand}&model=${choosesValues.model}&category=${choosesValues.category}&deviceType=${deviceTypesEnTitles[filterValue]}`)
+    }, [choosesValues.category, negative, choosesValues, filterValue])
 
     return (
         <div className={`${styles['main-page']} container`}>
@@ -126,8 +127,8 @@ export default function MainPage() {
                         <li className={`${styles['find-item__header-filter']} ${filterValue === 'phones' && styles['active']}`}
                             onClick={() => setFilterValue('phones')}>Смартфоны</li>
 
-                        <li className={`${styles['find-item__header-filter']} ${filterValue === 'tablet' && styles['active']}`}
-                            onClick={() => setFilterValue('tablet')}>Планшеты</li>
+                        <li className={`${styles['find-item__header-filter']} ${filterValue === 'tablets' && styles['active']}`}
+                            onClick={() => setFilterValue('tablets')}>Планшеты</li>
 
                         <li className={`${styles['find-item__header-filter']} ${filterValue === 'watches' && styles['active']}`}
                             onClick={() => setFilterValue('watches')}>Часы</li>
@@ -140,7 +141,7 @@ export default function MainPage() {
                         setChoosesStep('model')
                     }} />)}
 
-                    {choosesStep === 'model' && chooseOptions.brands.find(brand => brand.title === choosesValues.brand).models.map(model => <ChooseCard key={model.title} title={model.title} picture={model?.imageUrl} onClick={() => {
+                    {choosesStep === 'model' && chooseOptions.brands.find(brand => brand.title === choosesValues.brand)[filterValue].map(model => <ChooseCard key={model.title} title={model.title} picture='https://placehold.co/165x165/transparent/black/png' onClick={() => {
                         setChoosesValues(prev => ({ ...prev, model: model.title }))
                         setChoosesStep('category')
                     }} />)}
@@ -181,7 +182,6 @@ export default function MainPage() {
             <section className={styles['main-page__gallery-section']}>
                 <Gallery />
             </section>
-            <DropDownMenu options={['iPhone', 'iPad']} end={false} />
         </div>
     )
 }

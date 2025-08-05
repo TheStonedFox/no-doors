@@ -40,12 +40,14 @@
 }
 
 .title {
-    /* position: absolute; */
-    /* bottom: 0px; */
     display: flex;
     gap: 13px;
 }
 
 .title h3 {
     transition: 0.2s ease-in-out;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }

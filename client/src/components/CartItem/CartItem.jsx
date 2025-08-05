@@ -16,9 +16,9 @@ import RemoveIcon from './RemoveIcon'
 import { togglePopup } from '../../features/uiSlice'
 import getPrice from '../../utils/getPrice'
 
-export default function CartItem({ productData, initialQuantityValue, getTotalPriceValue, viewOnly }) {
+export default function CartItem({ productData, initialQuantityValue, getTotalPriceValue, viewOnly, className }) {
 
-    const { title, price, wholesalePrice, inStock, _id, discount } = productData
+    const { title, price, wholesalePrice, inStock, _id, discount } = productData || {}
 
     const negative = useNavigate()
 
@@ -35,7 +35,6 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                 dispatch(setUserData())
             })
             .catch(error => alert(error))
-
     }
 
     useEffect(() => {

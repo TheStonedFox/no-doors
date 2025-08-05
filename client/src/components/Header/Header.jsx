@@ -3,7 +3,6 @@ import styles from './Header.module.css'
 import { Link, useLocation } from 'react-router-dom'
 
 import SearchInput from '../SearchInput/SearchInput'
-import LanguageDropdown from '../LanguageDropdown/LanguageDropdown'
 import CatalogMenu from '../CatalogMenu/CatalogMenu'
 import BurgerMenu from '../BurgerMenu/BurgerMenu'
 import Logo from '../../SvgIcons/Logo'
@@ -18,9 +17,8 @@ import FavoriteIcon from './HeaderFavoriteIcon'
 import CartIcon from './CartIcon'
 import MoreArrowIcon from '../../svgIcons/MoreArrowIcon'
 import SearchResult from '../SearchResult/SearchResult'
-import { getProducts, getStepChoices } from '../../api/api'
+import { getStepChoices } from '../../api/api'
 import useSearchResults from '../../hooks/useSearchResults'
-import useProducts from '../../hooks/useProducts'
 import ThemeToggle from '../ThemeToggle/ThemeToggle'
 import DropDownMenu from '../DropDownMenu/DropDownMenu'
 
@@ -32,10 +30,10 @@ export default function Header() {
     const isSearchResultsOpen = useSelector((state) => state.ui.isSearchResultsOpen)
     const userData = useSelector((state) => state.user.userData)
 
+    const { brands, categories, error: dropDownValuesError, isLoading: dropDownValuesLoadingStatus } = useSelector(state => state.shared.chooseValues)
+
     const [fixedMobileInput, setFixedMobileInput] = useState(false)
     const [searchValue, setSearchValue] = useState('')
-
-    const [dropDownMenuItems, setDropDownMenuItems] = useState()
 
     const [searchList, isLoading, error] = useSearchResults(searchValue)
 
@@ -44,12 +42,7 @@ export default function Header() {
 
     const scrollHandler = () => setFixedMobileInput(window.scrollY > 160 ? true : false)
 
-    // useEffect(() => { error && window.innerWidth > 992 && isSearchResultsOpen && alert(`Не удалось загрузить товары. ${error}`) }, [error, searchValue, isSearchResultsOpen])
-    useEffect(() => {
-        getStepChoices()
-            .then(res => setDropDownMenuItems(res.options.brands))
-            .catch(error => alert(error))
-    }, [])
+    useEffect(() => { dropDownValuesError && alert(dropDownValuesError) }, [dropDownValuesError])
 
     useEffect(() => {
         dispatch(setUserData())
@@ -73,7 +66,7 @@ export default function Header() {
                         <a href="tel:+79652374449">{'+380 (965) 237-44-49'}</a>
                     </div>
                     {/* <LanguageDropdown /> */}
-                    <ThemeToggle theme='light' />
+                    <ThemeToggle />
                     <Link to={useSelector((state) => state.user.isTokenValid) ? '/profile' : '/auth'}>Личный кабинет</Link>
                 </div>
             </div>
@@ -110,27 +103,30 @@ export default function Header() {
             <div className={styles['header__bottom-content']}>
                 <ul className={styles['header__brands-list']}>
                     <li>
-                        {/* <p>Apple</p> */}
-                        <DropDownMenu title='Apple1' list={(dropDownMenuItems || [])[0] || []} />
+                        <DropDownMenu title='Apple' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[0]} categories={categories} />
+                        {/* <MoreArrowIcon /> */}
+                    </li>
+                    <li>
+                        {/* <p>Huawei</p> */}
+                        <DropDownMenu title='Huawei' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[1]} categories={categories} />
                         <MoreArrowIcon />
                     </li>
                     <li>
-                        <p>Huawei</p>
+                        {/* <p>Xiaomi</p> */}
+                        <DropDownMenu title='Xiaomi' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[2]} categories={categories} />
                         <MoreArrowIcon />
                     </li>
                     <li>
-                        <p>Xiaomi</p>
+                        {/* <p>Samsung</p> */}
+                        <DropDownMenu title='Samsung' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[3]} categories={categories} />
                         <MoreArrowIcon />
                     </li>
-                    <li>
-                        <p>Samsung</p>
-                        <MoreArrowIcon />
-                    </li>
-
                     <Link>Питание и кабели</Link>
                     <Link>Powerbank</Link>
                     <Link>Акции</Link>
-                    <Link className={styles['header__price-link']}>Прайс-лист</Link>
+                    <div>
+                        <Link className={styles['header__price-link']}>Прайс-лист</Link>
+                    </div>
                 </ul>
             </div>
             <div className={styles['header__mobile-input']} style={{ position: fixedMobileInput ? 'fixed' : 'static' }}>

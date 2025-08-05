@@ -49,6 +49,7 @@ export default function ProductPage() {
         }
     }
 
+    useEffect(() => { document.querySelector('title').innerHTML = product?.title || 'No Doors' }, [product])
     useEffect(() => {
         fetch('http://localhost:3001/products')
             .then(res => res.json())

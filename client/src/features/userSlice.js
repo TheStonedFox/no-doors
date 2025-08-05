@@ -1,34 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getUser } from "../api/api"
+import { getUser, checkToken } from "../api/api"
 
 const initialState = {
     userData: null,
     isTokenValid: false,
+    brandsAndModels: null
 }
 
-
-export const checkToken = createAsyncThunk('user/checkToken', async () => {
-    const res = await fetch('http://192.168.1.104:3001/auth/check', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('token')
-        }
-    })
-
-    const json = await res.json()
-    return json.msg
+export const checkTokenThunk = createAsyncThunk('user/checkTokenThunk', () => {
+    return checkToken().then(res => res.message).catch(error => alert(error))
 })
 
-export const setUserData = createAsyncThunk('user/setUserData', async () => {
-    try {
-        const res = await getUser()
-        return res.user
-    } catch (error) {
-        alert(error)
-    }
-
-})
+export const setUserData = createAsyncThunk('user/setUserData', () => getUser().then(res => res.user).catch(error => console.log(error)))
 
 export const userSlice = createSlice({
     name: 'user',
@@ -37,10 +20,10 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(checkToken.fulfilled, (state, payload) => {
+            .addCase(checkTokenThunk.fulfilled, (state, payload) => {
                 state.isTokenValid = payload.payload === 'token valid'
             })
-            .addCase(checkToken.rejected, (state) => {
+            .addCase(checkTokenThunk.rejected, (state) => {
                 state.isTokenValid = false
             })
             .addCase(setUserData.fulfilled, (state, action) => {
