@@ -58,6 +58,7 @@ export const getUser = async () => apiRequest('profile', 'GET')
 export const updateUserInfo = async (data) => apiRequest('profile', 'PATCH', data)
 
 export const getProducts = async () => apiRequest('products', 'GET')
+export const getProduct = async (productId) => apiRequest(`products/${productId}`, 'GET')
 
 export const addFavoriteItem = async (userId, productId) => apiRequest(`favorites/${productId}`, 'POST', { id: userId })
 export const removeFavoriteItem = async (userId, productId) => apiRequest(`favorites/${productId}`, 'DELETE', { id: userId })

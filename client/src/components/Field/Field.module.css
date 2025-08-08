@@ -5,6 +5,7 @@
     font-weight: 400;
     font-size: 14px;
     gap: 3px;
+    cursor: default;
 }
 
 .field__title {
@@ -15,4 +16,10 @@
     text-align: right;
     font-weight: 400;
     color: var(--typography---main);
+}
+
+.clickable .field__value:hover {
+    text-decoration: underline;
+    color: var(--ui---main);
+    cursor: pointer;
 }

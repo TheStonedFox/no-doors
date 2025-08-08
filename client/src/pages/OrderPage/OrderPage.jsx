@@ -11,7 +11,7 @@ import SuggestionInput from '../../components/SuggestionInput/SuggestionInput'
 import * as api from '../../api/api'
 
 import { useCart } from '../../hooks/useCart'
-import { togglePopup } from '../../features/uiSlice'
+import { addNotification, togglePopup } from '../../features/uiSlice'
 import { setUserData } from '../../features/userSlice'
 import { useNavigate } from 'react-router-dom'
 
@@ -24,8 +24,6 @@ export default function OrderPage() {
 
     const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
     const dispatch = useDispatch()
-    const negative = useNavigate()
-
 
     const [selectedOptions, setSelectedOptions] = useState({ deliveryMethod: 0, payMethod: 0 })
     const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null, city: null, postOffice: null, address: null })
@@ -46,7 +44,6 @@ export default function OrderPage() {
             setUserInfo(prev => ({ ...prev, address: null }))
     }, [selectedOptions])
 
-    // useEffect(() => { console.log(userInfo) }, [userInfo])
     return (
         <div className={styles['order-page']}>
             <h2 className={`${'section-title'} ${styles['order-page__title']}`}>Оформление заказа</h2>
@@ -138,17 +135,17 @@ export default function OrderPage() {
                                 paymentMethod: selectedOptions.payMethod === 0 ? 'offline' : 'online',
                                 address: userInfo.address || '',
                             }
-
                             api.makeOrder(orderData)
-                                .then(() => {
+                                .then(res => {
                                     setValidationErrors([])
                                     dispatch(setUserData())
-                                    dispatch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
-                                    console.log(orderData)
+                                    dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message }))
+                                    // console.log(orderData)
                                 })
                                 .catch(error => {
                                     setValidationErrors(error.data.validationErrors || '')
-                                    alert(error)
+                                    dispatch(addNotification(
+                                        { id: crypto.randomUUID(), type: 'error', text: `${error.message} (${error.data.validationErrors.length})` }))
                                 })
 
                             // if (orderResponse.validationErrors) {

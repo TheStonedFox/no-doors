@@ -12,7 +12,7 @@ import AvatarIcon from './AvatarIcon'
 
 import styles from './ProfilePage.module.css'
 import { checkTokenThunk, setUserData } from '../../features/userSlice'
-import { togglePopup } from '../../features/uiSlice'
+import { addNotification, togglePopup } from '../../features/uiSlice'
 import SuggestionInput from '../../components/SuggestionInput/SuggestionInput'
 import { usePostInfo } from '../../hooks/usePostInfo'
 
@@ -22,7 +22,6 @@ export default function ProfilePage() {
 
     const negative = useNavigate()
     const dispatch = useDispatch()
-
     const userData = useSelector((state => state.user.userData))
 
     const [action, setAction] = useState('info')
@@ -34,24 +33,28 @@ export default function ProfilePage() {
     const cityRegExp = new RegExp(`^${userInfo.city?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*`, 'i')
 
     const onSaveChangesButtonClick = async () => {
-        try {
-            setValidationErrors([])
-            const { phone, email, city, fio, postOffice } = userData || {}
-            const oldUserInfo = { fio, phone, email, city, postOffice }
+        setValidationErrors([])
+        const { phone, email, city, fio, postOffice } = userData || {}
+        const oldUserInfo = { fio, phone, email, city, postOffice }
 
-            if (JSON.stringify(userInfo) === JSON.stringify(oldUserInfo)) return alert('Данные не менялись!')
-
-            const res = await updateUserInfo(userInfo)
-
-            if (res.validationErrors) return setValidationErrors(res.validationErrors)
-            else if (res.msg === 'Пользователь не найден') return alert('Произошла ошибка')
-
+        if (JSON.stringify(userInfo) === JSON.stringify(oldUserInfo)) {
             setAction('info')
-            dispatch(togglePopup({ type: 'product-card', message: 'Данные сохранены!' }))
-            dispatch(setUserData(res.user))
-        } catch (error) {
-            alert(error)
+            return dispatch(addNotification({ id: crypto.randomUUID(), type: 'info', text: 'Данные не были изменены.' }))
         }
+
+        updateUserInfo(userInfo).then(res => {
+            updateUserInfo(res.user)
+            setAction('info')
+            dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message }))
+        })
+            .catch(error => {
+                if (error.data.validationErrors) {
+                    dispatch(addNotification({ id: crypto.randomUUID(), type: 'error', text: error.message }))
+                    return setValidationErrors(error.data.validationErrors)
+                }
+                else if (error.message === 'Пользователь не найден')
+                    return dispatch(addNotification({ id: crypto.randomUUID(), type: 'error', text: error.message }))
+            })
     }
 
     useEffect(() => {

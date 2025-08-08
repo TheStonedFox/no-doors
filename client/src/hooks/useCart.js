@@ -10,20 +10,7 @@ export const useCart = () => {
     const [sum, setSum] = useState(0)
     const [loadingStatus, setLoadingStatus] = useState(true)
 
-    const [order, setOrder] = useState()
-
-
-
-    // useEffect(() => getData(), [order])
-
-    const getData = async () => {
-        try {
-            setProducts(await getProducts().finally(() => setLoadingStatus(false)))
-        } catch (error) {
-            console.error(`не удалось загрузить товары! ${error}`)
-            setLoadingStatus(false)
-        }
-    }
+    // const [order, setOrder] = useState()
 
     const getSum = () => {
         return userData?.cartItems.reduce((result, cartItem) => {
@@ -41,7 +28,8 @@ export const useCart = () => {
     }
 
     useEffect(() => {
-        getData()
+        getProducts().then(res => setProducts(res.products)).catch(error => alert(error))
+            .finally(() => setLoadingStatus(false))
     }, [])
 
     useEffect(() => {

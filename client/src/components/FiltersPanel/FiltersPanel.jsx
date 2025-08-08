@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import styles from './FiltersPanel.module.css'
@@ -28,6 +28,8 @@ export default function FiltersPanel({ isOpen }) {
         models: searchParams.getAll('model'),
         categories: searchParams.getAll('category')
     }
+
+    const panelRef = useRef(null)
 
     const [isSortListOpen, setIsSortListOpen] = useState(false)
     const [sortType, setSortType] = useState('decreasingPrice')
@@ -84,6 +86,14 @@ export default function FiltersPanel({ isOpen }) {
         setSearchParams(newParams)
     }, [sortType])
 
+
+    useEffect(() => {
+        const scrollHandler = () => setIsSortListOpen(false)
+        const link = panelRef.current
+        link.addEventListener('scroll', scrollHandler)
+        return () => link.removeEventListener('scroll', scrollHandler)
+    }, [])
+
     useEffect(() => {
         !searchParams.get('sortType') && searchParams.set('sortType', 'decreasingPrice')
         setSortType(searchParams.get('sortType'))
@@ -91,7 +101,7 @@ export default function FiltersPanel({ isOpen }) {
         isFiltersError && alert(isFiltersError)
     }, [])
     return (
-        <section className={`${styles['filters-panel']} ${isFiltersPanelOpen ? styles['open'] : null}`}>
+        <section className={`${styles['filters-panel']} ${isFiltersPanelOpen ? styles['open'] : null}`} ref={panelRef}>
             {!isFiltersLoading ? <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Сортировка:</h3>
                 <button className={styles['filters-panel__sort-dropdown']}

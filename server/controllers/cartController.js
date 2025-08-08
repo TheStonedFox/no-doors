@@ -1,3 +1,4 @@
+import ProductModel from '../models/ProductModel.js'
 import UserModel from '../models/UserModel.js'
 
 export const addCartItem = async (req, res) => {
@@ -9,6 +10,11 @@ export const addCartItem = async (req, res) => {
 
         if (!user)
             return res.status(404).json({ message: 'Не удалось обновить данные.', code: 404 })
+
+        const product = await ProductModel.findById(req.params.productId)
+
+        if (!product)
+            return res.status(404).json({ message: 'Товар не найден.', code: 404 })
 
         res.status(200).json({ message: 'Товар добавлен в корзину.', code: 200, ID: req.params.productId })
     } catch (error) {

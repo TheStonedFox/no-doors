@@ -5,13 +5,11 @@ import styles from './SearchPage.module.css'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import ItemsList from '../../components/ItemsList/ItemsList'
-import useProducts from '../../hooks/useProducts'
 import Spinner from '../../components/Spinner/Spinner'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import FilterItem from './FilterItem/FilterItem'
-import Checkbox from '../../components/Checkbox/Checkbox'
-import Button from '../../components/Button/Button'
-import CustomRangeSelector from '../../components/CustomRangeSelector/CustomRangeSelector'
+import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
+
 
 import getWordEnding from '../../utils/getWordEnding'
 
@@ -35,7 +33,7 @@ export default function SearchPage() {
     const dispatch = useDispatch()
 
     const [filterOptions, setFilterOptions] = useState({ brands: null, categories: null })
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [productsList, setProductsList] = useState([])
     const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 })
     const [isFiltersLoading, setIsFiltersLoading] = useState(false)
@@ -56,6 +54,8 @@ export default function SearchPage() {
             }))
     }
 
+    useEffect(() => { console.log(isLoading) }, [isLoading])
+
     useEffect(() => {
         searchProducts(`${searchParams.toString()}`)
             .then(res => setProductsList(res.products))
@@ -65,7 +65,6 @@ export default function SearchPage() {
             })
             .finally(() => setIsLoading(false))
     }, [searchParams])
-
 
     useEffect(() => {
         // !searchParams.get('sortType') && searchParams.set('sortType', 'decreasingPrice')
@@ -129,7 +128,8 @@ export default function SearchPage() {
                     {productsList?.map((product, index) => index < 20 && < ProductCard productData={product} key={product._id} />)}
                 </ItemsList> : null}
 
-                {!productsList.length ? <p>Товаров не найдено.</p> : null}
+                {!productsList.length && !isLoading ? <EmptyPlaceholder title='Товаров не найдено.' /> : null}
+
                 {isLoading ? <Spinner /> : null}
             </div>
         </div >

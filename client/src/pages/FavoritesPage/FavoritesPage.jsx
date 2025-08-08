@@ -4,9 +4,11 @@ import { useSelector } from 'react-redux'
 
 import ProductCard from '../../components/ProductCard/ProductCard'
 import Button from '../../components/Button/Button'
+import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
 
 import styles from './FavoritesPage.module.css'
 import Spinner from '../../components/Spinner/Spinner'
+import { getProducts } from '../../api/api'
 
 export default function FavoritesPage() {
 
@@ -15,25 +17,21 @@ export default function FavoritesPage() {
     const userData = useSelector((state) => state.user.userData)
     const [products, setProducts] = useState([])
     const [loadedItemsCount, setLoadedItemsCount] = useState(0)
-    const [loadingStatus, setLadingStatus] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/products`)
-            .then(res => res.json())
-            .then(json => {
-                setProducts(json)
-                setLadingStatus(false)
-            }).catch(error => {
-                setLadingStatus(false)
-                console.log(error)
-            })
+        getProducts().then(res => setProducts(res.products)).catch(error => alert(error))
+            .finally(() => setIsLoading(false))
     }, [])
 
     return (
         <div className={`${styles['favorites-page']} container`}>
             <h2 className={`${'section-title'} ${styles['favorites-page__title']}`}>Избранное</h2>
             {!userData?.favoriteItems && <div>Загрузка...</div>}
-            {userData?.favoriteItems.length === 0 && <div>Ваш список избранного пока пуст.</div>}
-            {!loadingStatus ? <ItemsList className={styles['favorites-page__items-list']}
+            {userData?.favoriteItems.length === 0 && !isLoading ? <EmptyPlaceholder title='Список избранного пуст.' /> : null}
+
+
+            {!isLoading ? <ItemsList className={styles['favorites-page__items-list']}
                 moreButton={true} dataLength={userData?.favoriteItems.length}>
                 {
                     products?.filter(product => userData.favoriteItems.includes(product._id))
@@ -50,8 +48,7 @@ export default function FavoritesPage() {
                         setLoadedItemsCount(prev => prev + 4 <= userData.favoriteItems.length - 4 ? prev + 4 : userData.favoriteItems.length)
                     else
                         setLoadedItemsCount(4)
-                }
-                }
+                }}
             />}
         </div >
     )

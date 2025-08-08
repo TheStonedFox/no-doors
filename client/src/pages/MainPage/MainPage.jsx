@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Slider from '../../components/Slider/Slider'
 import styles from './MainPage.module.css'
 import 'swiper/css/bundle'
 

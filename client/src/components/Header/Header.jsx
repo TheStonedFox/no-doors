@@ -104,21 +104,20 @@ export default function Header() {
                 <ul className={styles['header__brands-list']}>
                     <li>
                         <DropDownMenu title='Apple' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[0]} categories={categories} />
-                        {/* <MoreArrowIcon /> */}
                     </li>
                     <li>
-                        {/* <p>Huawei</p> */}
                         <DropDownMenu title='Huawei' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[1]} categories={categories} />
                         <MoreArrowIcon />
                     </li>
                     <li>
-                        {/* <p>Xiaomi</p> */}
                         <DropDownMenu title='Xiaomi' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[2]} categories={categories} />
                         <MoreArrowIcon />
                     </li>
                     <li>
-                        {/* <p>Samsung</p> */}
-                        <DropDownMenu title='Samsung' deviceTypes={['phones', 'tablets', 'watches']} brandModels={brands[3]} categories={categories} />
+                        <DropDownMenu title='Samsung'
+                            deviceTypes={['phones', 'tablets', 'watches']}
+                            brandModels={brands[3]}
+                            categories={categories} />
                         <MoreArrowIcon />
                     </li>
                     <Link>Питание и кабели</Link>

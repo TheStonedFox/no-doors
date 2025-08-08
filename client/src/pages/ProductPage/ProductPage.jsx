@@ -10,20 +10,16 @@ import ProductCard from '../../components/ProductCard/ProductCard'
 import Field from '../../components/Field/Field'
 import Counter from '../../components/Counter/Counter'
 import Button from '../../components/Button/Button'
-import FavoriteIcon from '../../SvgIcons/FavoriteIcon'
-import CartIcon from '../../components/Header/CartIcon'
 import FavoriteButton from '../../components/FavoriteButton/FavoriteButton'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 
 import styles from './ProductPage.module.css'
-import { useParams } from 'react-router-dom'
-import { addFavoriteItem, removeFavoriteItem, updateUserInfo } from '../../api/api'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getProduct, getProducts } from '../../api/api'
 import getPrice from '../../utils/getPrice'
-import { setUserData } from '../../features/userSlice'
-import { togglePopup, updateFavoriteCounter } from '../../features/uiSlice'
-
+import useProductActions from '../../hooks/useProductActions'
 
 export default function ProductPage() {
     const dispatch = useDispatch()
@@ -35,12 +31,13 @@ export default function ProductPage() {
     const [quantity, setQuantity] = useState(0)
     const [date, setDate] = useState()
     const [activeSlide, setActiveSlide] = useState()
-    const [isInFavorite, setIsInFavorite] = useState(false)
+    const [inCart, setInCart] = useState(false)
+    const [inFavorite, setInFavorite] = useState(false)
 
     const userData = useSelector((state => state.user.userData))
-    const tokenStatus = useSelector((state) => state.user.isTokenValid)
 
     const swiperRef = useRef(null)
+    const [favoriteItemAction, cartItemAction] = useProductActions()
 
     const goToSlide = (index) => {
         setActiveSlide(index)
@@ -49,17 +46,20 @@ export default function ProductPage() {
         }
     }
 
+    const negative = useNavigate()
+
     useEffect(() => { document.querySelector('title').innerHTML = product?.title || 'No Doors' }, [product])
     useEffect(() => {
-        fetch('http://localhost:3001/products')
-            .then(res => res.json())
-            .then(json => {
-                setProducts(json)
-                setLadingStatus(false)
-            }).catch(error => {
-                setLadingStatus(false)
-            })
-        updateUserInfo({ productId: id })
+        getProduct(id).then(res => setProduct(res.product))
+            .catch(error => {
+                alert(error)
+            }).finally(() => setLadingStatus(false))
+
+        getProducts().then(res => setProducts(res.products))
+            .catch(error => {
+                alert(error)
+            }).finally(() => setLadingStatus(false))
+
         setActiveSlide(0)
     }, [dispatch, id, userData])
 
@@ -74,30 +74,30 @@ export default function ProductPage() {
     useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [id])
 
     useEffect(() => {
-        setProduct(products?.find(product => product?._id === id))
+        // setProduct(products?.find(product => product?._id === id))
         setDate(new Date(product?.createdAt))
-        setIsInFavorite(userData?.favoriteItems.includes(id))
+        setInFavorite(userData?.favoriteItems.includes(id))
+        setInCart(userData?.cartItems?.map(item => item?.productId).includes(id))
     }, [products, id])
 
 
-    const onFavoriteButtonClick = async () => {
-        setIsInFavorite(!isInFavorite)
 
-        if (!userData.favoriteItems?.includes(id) && tokenStatus) {
-            await addFavoriteItem(userData._id, id).then(() => {
-                dispatch(setUserData())
-                dispatch(updateFavoriteCounter(userData.favoriteItems?.length + 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в избранное!' }))
-            })
-        } else {
-            await removeFavoriteItem(userData._id, id).then(() => {
-                dispatch(setUserData())
-                dispatch(updateFavoriteCounter(userData.favoriteItems?.length - 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из избранного!' }))
-            })
-        }
+
+    const onAddToFavoriteButtonClick = () => {
+        favoriteItemAction(id)
+        setInFavorite(!inFavorite)
     }
 
+    const onAddToCartButtonClick = () => {
+        cartItemAction(id, quantity)
+        setInCart(!inCart)
+    }
+
+    const onModelFieldClick = () => {
+        negative(`/search?model=${model}`)
+    }
+
+    const { inStock, discount, title, model, price, wholesalePrice } = product || {}
     return (
         <div className={`${styles['product-page']} container`}>
             <section className={styles['product-page__product-card']}>
@@ -139,24 +139,28 @@ export default function ProductPage() {
                     </div>
                 </section>
                 <section className={styles['product-card__info']}>
-                    <h2 className={styles['info__title']}>{product?.title}</h2>
+                    <h2 className={styles['info__title']}>{title}</h2>
                     <section className={styles['info__sub-title']}>
                         <p className={styles['sub-title__article']}>Артикул: 854236896ABC</p> ·
-                        <p className={styles['sub-title__in-stock']}>{`В наличии: ${product?.inStock} шт.`}</p>
+                        {inStock ? <p className={styles['sub-title__in-stock']}>{`В наличии: ${inStock} шт.`}</p> :
+                            <p className={styles['sub-title__in-stock_no-in-stock']}>{`Нет в наличии.`}</p>}
                     </section>
                     <section className={styles['info__fields']}>
                         <Field className={styles['info__field']} title='Тип:' value='Оригинал' />
-                        <Field className={styles['info__field']} title='Совместимость:' value={product?.model} />
-                        <Field className={styles['info__field']} title='Розница: ' value={`${getPrice(product?.discount, product?.price)} ₴`} />
-                        <Field className={styles['info__field']} title='Оптом (от 5 шт.): ' value={`${getPrice(product?.discount, product?.wholesalePrice)} ₴`} />
+                        <Field className={styles['info__field']} title='Совместимость:' value={model} onClick={onModelFieldClick} />
+                        <Field className={styles['info__field']} title='Розница: ' value={`${getPrice(discount, price)} ₴`} />
+                        <Field className={styles['info__field']} title='Оптом (от 5 шт.): ' value={`${getPrice(discount, wholesalePrice)} ₴`} />
                     </section>
 
-
                     <section className={styles['info__controls']}>
-                        <Counter onCounterChange={(value) => setQuantity(value)} />
-                        <Button className={styles['controls__add-to-cart-button']} title='Добавить в корзину'></Button>
+                        {inStock ? < Counter onCounterChange={(value) => setQuantity(value)} /> : null}
+                        {inStock ? <Button className={styles['controls__add-to-cart-button']}
+                            title={`${inCart ? 'В корзине' : 'Добавить в корзину'}`}
+                            onClick={onAddToCartButtonClick}></Button> : null}
 
-                        <FavoriteButton className={styles['controls__add-to-favorite-button']} isInFavorite={isInFavorite} onClick={onFavoriteButtonClick} />
+                        <FavoriteButton className={styles['controls__add-to-favorite-button']}
+                            isInFavorite={inFavorite}
+                            onClick={onAddToFavoriteButtonClick} />
                     </section>
                 </section>
 
@@ -164,7 +168,7 @@ export default function ProductPage() {
             <section className={styles['product-page__popular-products']}>
                 <h2 className='section-title'>Популярные товары</h2>
                 {!loadingStatus ? <ItemsList>
-                    {products?.map((product, index) => index < 20 && < ProductCard productData={product} key={product._id} />)}
+                    {products?.map((product, index) => index < 4 && < ProductCard productData={product} key={product._id} />)}
                 </ItemsList> : <Spinner />}
             </section>
         </div >

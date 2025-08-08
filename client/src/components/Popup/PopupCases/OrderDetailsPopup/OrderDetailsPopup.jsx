@@ -6,7 +6,7 @@ import Button from '../../../Button/Button'
 
 import styles from './OrderDetailsPopup.module.css'
 
-import { statusColors, statusTitles } from '../../../../utils/orderStatus'
+import { statusColors, statusTitles } from '../../../../utils/statusHelper'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { createPayment, getOrder, getPaymentStatus, updatePaymentStatus } from '../../../../api/api'

@@ -8,8 +8,6 @@
     padding-top: 55px;
     padding-bottom: 30px;
     gap: 30px;
-    user-select: none;
-
 }
 
 .product-card__photos {
@@ -172,6 +170,10 @@
 }
 
 .controls__add-to-cart-button {}
+
+.sub-title__in-stock_no-in-stock {
+    color: var(--ui---red);
+}
 
 .controls__add-to-favorite-icon-button>svg {
     width: 18px;

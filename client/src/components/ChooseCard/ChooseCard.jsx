@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styles from './ChooseCard.module.css'
-import ArrowIcon from './ArrowIcon'
+import ArrowIcon from '../../svgIcons/ArrowIcon'
 export default function ChooseCard({ picture, title, onClick }) {
     return (
         <div title={title}

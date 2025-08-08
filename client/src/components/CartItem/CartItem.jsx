@@ -13,8 +13,9 @@ import Spinner from '../Spinner/Spinner'
 import CartPopup from '../Popup/PopupCases/CartPopup/CartPopup'
 import RemoveIcon from './RemoveIcon'
 
-import { togglePopup } from '../../features/uiSlice'
+import { addNotification, togglePopup } from '../../features/uiSlice'
 import getPrice from '../../utils/getPrice'
+import useProductActions from '../../hooks/useProductActions'
 
 export default function CartItem({ productData, initialQuantityValue, getTotalPriceValue, viewOnly, className }) {
 
@@ -28,15 +29,17 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
     const userData = useSelector((state) => state.user.userData)
     const dispatch = useDispatch()
 
-    const onRemoveButtonClick = async () => {
-        removeCartItem(userData?._id, _id)
-            .then(res => {
-                dispatch(togglePopup({ type: 'remove-cart-item', message: res.message }))
-                dispatch(setUserData())
-            })
-            .catch(error => alert(error))
-    }
+    const [, cartItemAction] = useProductActions()
 
+    const onRemoveButtonClick = async () => {
+        // removeCartItem(userData?._id, _id)
+        //     .then(res => {
+        //         dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message }))
+        //         dispatch(setUserData())
+        //     })
+        //     .catch(error => alert(error))
+        cartItemAction(_id)
+    }
     useEffect(() => {
         setQuantity(initialQuantityValue ? initialQuantityValue : 1)
         return () => dispatch(setUserData())

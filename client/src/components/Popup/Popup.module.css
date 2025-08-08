@@ -34,6 +34,17 @@
     top: -40px;
     right: -40px;
     cursor: pointer;
+    color: #fff;
+}
+
+.popup__close-button svg:hover {
+    color: var(--typography---second);
+    transition: 0.2s;
+}
+
+.popup__close-button svg:active {
+    transform: scale(0.9);
+    transition: 0.2s;
 }
 
 @media(max-width: 450px) {

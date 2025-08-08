@@ -21,10 +21,9 @@ import ViewedProductsPage from './pages/ViewedProductsPage/ViewedProductsPage'
 import SearchPage from './pages/SearchPage/SearchPage'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { closeAll, closeBurger } from './features/uiSlice'
+import { closeBurger } from './features/uiSlice'
 import { checkTokenThunk, setUserData } from './features/userSlice'
 import { useEffect, useState } from 'react'
-import { getProducts } from './api/api'
 import { getChooseValues } from './features/sharedSlice'
 
 function App() {

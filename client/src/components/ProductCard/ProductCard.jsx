@@ -13,11 +13,12 @@ import FavoriteIcon from '../../SvgIcons/FavoriteIcon'
 import styles from './ProductCard.module.css'
 
 
-import { togglePopup, updateCartCounter, updateFavoriteCounter } from '../../features/uiSlice'
+import { addNotification, togglePopup, updateCartCounter, updateFavoriteCounter } from '../../features/uiSlice'
 import { setUserData } from '../../features/userSlice'
 import { addFavoriteItem, removeFavoriteItem, addCartItem, removeCartItem } from '../../api/api'
 import Spinner from '../Spinner/Spinner'
 import getPrice from '../../utils/getPrice'
+import useProductActions from '../../hooks/useProductActions'
 
 let favoriteProducts = localStorage.getItem('favoriteItems') ? JSON.parse(localStorage.getItem('favoriteItems')) : []
 let cartProducts = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : []
@@ -38,71 +39,16 @@ export default function ProductCard({ productData }) {
     const dispatch = useDispatch()
     const tokenStatus = useSelector((state) => state.user.isTokenValid)
 
-    const onFavoriteButtonClick = async () => {
+    const [favoriteItemAction, cartItemAction] = useProductActions()
+
+    const onFavoriteButtonClick = () => {
+        favoriteItemAction(productId)
         setInFavorite(!inFavorite)
-
-        // if (!tokenStatus) {
-        //     if (!favoriteProducts?.length)
-        //         localStorage.setItem('favoriteItems', [])
-
-        //     if (!favoriteProducts?.includes(productId))
-        //         favoriteProducts.push(productId)
-        //     else
-        //         favoriteProducts.splice(favoriteProducts.findIndex(i => i === productId), 1)
-
-        //     localStorage.setItem('favoriteItems', JSON.stringify(favoriteProducts))
-        // }
-
-        if (!favoriteItems?.includes(productId) && tokenStatus) {
-            await addFavoriteItem(_id, productId).then(() => {
-                dispatch(setUserData())
-                dispatch(updateFavoriteCounter(favoriteItems?.length + 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в избранное!' }))
-            })
-                .catch(error => console.log(error))
-
-        } else {
-            await removeFavoriteItem(_id, productId).then(() => {
-                dispatch(setUserData())
-                dispatch(updateFavoriteCounter(favoriteItems?.length - 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из избранного!' }))
-            })
-        }
     }
 
-    const onAddToCartButtonClick = async () => {
+    const onAddToCartButtonClick = () => {
         setInCart(!inCart)
-
-        if (!tokenStatus) {
-            if (!cartProducts?.length)
-                localStorage.setItem('cartItems', [])
-
-            if (!cartProducts?.includes(productId))
-                cartProducts.push(productId)
-            else
-                cartProducts.splice(cartProducts.findIndex(i => i === productId), 1)
-
-            localStorage.setItem('cartItems', JSON.stringify(cartProducts))
-        }
-
-        if (!tokenStatus)
-            return
-
-        if (!inCart) {
-            await addCartItem(_id, productId, quantity).then(res => {
-                dispatch(setUserData())
-                dispatch(updateCartCounter(cartItems?.length + 1))
-                dispatch(togglePopup({ type: 'product-card', message: res.message }))
-            }).catch(error => alert(error))
-
-        } else {
-            await removeCartItem(_id, productId).then(res => {
-                dispatch(setUserData())
-                dispatch(updateCartCounter(cartItems?.length - 1))
-                dispatch(togglePopup({ type: 'product-card', message: res.message }))
-            }).catch(error => alert(error))
-        }
-
+        cartItemAction(productId, quantity)
     }
 
     useEffect(() => {
@@ -117,18 +63,17 @@ export default function ProductCard({ productData }) {
         if (tokenStatus) {
             setInFavorite(favoriteItems?.includes(productId))
             cartItems?.map(item => item?.productId === productId && setInCart(true))
-            // dispatch(updateCartCounter(cartItems?.length))
         }
 
     }, [cartItems, favoriteItems, productId, tokenStatus, dispatch])
 
     return (
-        <div className={styles['product-card']}>
-            <div className={styles['product-card__tags']}>
+        <div className={`${styles['product-card']} ${!inStock && styles['disabled']}`}>
+            {inStock ? <div className={styles['product-card__tags']}>
                 {discount ? <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${discount}%`}</div> : null}
                 <div className={`${styles['product-card__tag']} ${styles['product-card__popular-tag']}`}>Популярное</div>
                 {new Date().getUTCDate() - date.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
-            </div>
+            </div> : null}
             <FavoriteIcon className={styles['product-card__fav-button']} onClick={onFavoriteButtonClick} inFavorite={inFavorite} />
             <Link to={`/products/${productId}`}>
                 <div className={styles['product-card__image']}>
@@ -143,15 +88,15 @@ export default function ProductCard({ productData }) {
                 <div className={styles['product-card__fields']}>
                     <Field title='Розница:' value={`${getPrice(discount, price)} ₴`} />
                     <Field title='Оптом (от 5 штук):' value={`${getPrice(discount, wholesalePrice)} ₴`} />
-                    <Field title='В наличии:' value={`${inStock} шт.`} />
+                    {inStock ? <Field title='В наличии:' value={`${inStock} шт.`} /> : <p>Нет в наличии.</p>}
                 </div>
-                <div className={styles['product-card__bottom']}>
+                {inStock ? <div className={styles['product-card__bottom']}>
                     <Counter onCounterChange={(value) => {
                         setQuantity(value)
                         setUserData()
                     }} />
                     <BorderedButton title={inCart ? 'В корзине' : 'В корзину'} onClick={onAddToCartButtonClick} />
-                </div>
+                </div> : null}
             </div>
         </div >
     )

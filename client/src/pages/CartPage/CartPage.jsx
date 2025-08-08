@@ -3,10 +3,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import Button from '../../components/Button/Button'
-import CartItem from '.././../components/CartItem/CartItem'
-import Spinner from '../../components/Spinner/Spinner'
 import Input from '../../components/Input/Input'
 import CartItems from '../../components/CartItems/CartItems'
+import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
 
 import styles from './CartPage.module.css'
 import { useCart } from '../../hooks/useCart'
@@ -17,7 +16,7 @@ export default function CartPage() {
     const negative = useNavigate()
     const [promocode, setPromocode] = useState('')
 
-    const [, userData, sum,] = useCart()
+    const [, userData, sum, loadingStatus] = useCart()
 
     return (
         <div className={`${styles['cart-page']} container`} >
@@ -35,10 +34,11 @@ export default function CartPage() {
                     </div>
                 </div>
                 <div className={styles['result__make-order']}>
-                    <p>Итого:<strong>{sum} грн.</strong></p>
+                    <p>Итого: <strong>{sum} грн.</strong></p>
                     <Button title='Оформить заказ' onClick={() => negative('/order')} />
                 </div>
-            </div> : <p>Ваша корзина пуста.</p>}
+            </div> : null}
+            {!userData?.cartItems.length && !loadingStatus ? <EmptyPlaceholder title='Корзина пуста.' /> : null}
         </div>
     )
 }

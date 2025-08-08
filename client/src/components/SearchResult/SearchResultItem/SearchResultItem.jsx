@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styles from './SearchResultItem.module.css'
 
@@ -9,33 +9,33 @@ import { useDispatch, useSelector } from 'react-redux'
 import { togglePopup, updateFavoriteCounter } from '../../../features/uiSlice'
 import { setUserData } from '../../../features/userSlice'
 import { addFavoriteItem, removeFavoriteItem } from '../../../api/api'
-
-
+import useProductActions from '../../../hooks/useProductActions'
 
 export default function SearchResultItem({ itemInfo }) {
     const [isInFavorite, setIsInFavorite] = useState(false)
-    const dispatch = useDispatch()
+    const [inCart, setInCart] = useState(false)
     const negative = useNavigate()
 
     const userData = useSelector((state => state.user.userData))
     const { _id, title, price, wholesalePrice, inStock } = itemInfo || {}
 
+    const { cartItems, favoriteItems } = userData || {}
+
+    const [favoriteItemAction, cartItemAction] = useProductActions()
+
+    useEffect(() => {
+        setInCart(cartItems?.map(item => item?.productId).includes(_id))
+        setIsInFavorite(favoriteItems.includes(_id))
+    }, [_id, cartItems, favoriteItems])
+
     const onFavoriteButtonClick = async () => {
         setIsInFavorite(!isInFavorite)
+        favoriteItemAction(_id)
+    }
 
-        if (!userData.favoriteItems?.includes(_id)) {
-            await addFavoriteItem(userData._id, _id).then(() => {
-                dispatch(setUserData())
-                dispatch(updateFavoriteCounter(userData.favoriteItems?.length + 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар добавлен в избранное!' }))
-            })
-        } else {
-            await removeFavoriteItem(userData._id, _id).then(() => {
-                dispatch(setUserData())
-                dispatch(updateFavoriteCounter(userData.favoriteItems?.length - 1))
-                dispatch(togglePopup({ type: 'product-card', message: 'Товар удален из избранного!' }))
-            })
-        }
+    const onCartButtonClick = () => {
+        cartItemAction(_id)
+        setInCart(!inCart)
     }
 
     return (
@@ -47,7 +47,7 @@ export default function SearchResultItem({ itemInfo }) {
                 <Link className={styles['item__title']} to={`products/${_id}`}>{title}</Link>
                 <div className={styles['sub-title']}>
                     <p>Артикул:  854236896ABC</p>
-                    <p>{inStock} шт. в наличии</p>
+                    {inStock ? <p>{inStock} шт. в наличии</p> : <p style={{ color: 'var(--ui---red)' }}>Нет в наличии</p>}
                 </div>
             </div>
 
@@ -62,7 +62,9 @@ export default function SearchResultItem({ itemInfo }) {
                 </div>
             </div>
             <div className={styles['item__controls']}>
-                <BorderedButton className={styles['controls__add-to-cart-button']} title='В корзину' />
+                <BorderedButton className={styles['controls__add-to-cart-button']}
+                    title={inCart ? 'В корзине' : 'В корзину'}
+                    onClick={onCartButtonClick} />
                 <FavoriteButton isInFavorite={userData?.favoriteItems.includes(_id)} onClick={onFavoriteButtonClick} />
             </div>
         </div>

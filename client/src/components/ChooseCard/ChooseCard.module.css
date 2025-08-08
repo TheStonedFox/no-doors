@@ -37,6 +37,7 @@
 .card svg {
     width: 0;
     transition: 0.2s ease-in-out;
+    color: var(--ui---main);
 }
 
 .title {

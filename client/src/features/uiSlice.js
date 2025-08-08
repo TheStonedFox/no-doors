@@ -10,6 +10,7 @@ const initialState = {
     popup: { type: '', message: '', data: '' },
     cartCounter: 0,
     favoriteCounter: 0,
+    notificationList: [],
 }
 
 
@@ -43,14 +44,22 @@ export const uiSlice = createSlice({
         closeBurger: (state) => {
             state.isBurgerOpen = false
         },
-        updateCartCounter: (state, payload) => {
-            state.cartCounter = payload.payload
+        updateCartCounter: (state, action) => {
+            state.cartCounter = action.payload
         },
-        updateFavoriteCounter: (state, payload) => {
-            state.favoriteCounter = payload.payload
+        updateFavoriteCounter: (state, action) => {
+            state.favoriteCounter = action.payload
         },
-        setTheme: (state, payload) => {
-            state.theme = payload.payload
+        setTheme: (state, action) => {
+            state.theme = action.payload
+        },
+        addNotification: (state, action) => {
+            state.notificationList.unshift(action.payload)
+        },
+        removeNotification: (state, action) => {
+            state.notificationList = state.notificationList.filter(
+                notification => notification.id !== action.payload
+            )
         }
     }
 })
@@ -58,4 +67,4 @@ export const uiSlice = createSlice({
 
 
 
-export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme } = uiSlice.actions
+export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification } = uiSlice.actions

@@ -124,7 +124,7 @@
 .header__mobile-input {
     display: none;
     width: 100%;
-    z-index: 1000;
+    z-index: 10;
     align-items: center;
     position: relative;
     padding: var(--safe-padding);

@@ -10,7 +10,7 @@ export default function useProducts() {
     const getProductsList = async () => {
         setIsLoading(true)
         setError(null)
-        await getProducts().then(data => setProducts(data)).catch(error => setError(error)).finally(() => setIsLoading(false))
+        await getProducts().then(res => setProducts(res.products)).catch(error => setError(error)).finally(() => setIsLoading(false))
     }
 
     useEffect(() => {

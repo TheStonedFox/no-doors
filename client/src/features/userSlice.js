@@ -8,7 +8,7 @@ const initialState = {
 }
 
 export const checkTokenThunk = createAsyncThunk('user/checkTokenThunk', () => {
-    return checkToken().then(res => res.message).catch(error => alert(error))
+    return checkToken().then(res => res.message).catch(error => console.log(error))
 })
 
 export const setUserData = createAsyncThunk('user/setUserData', () => getUser().then(res => res.user).catch(error => console.log(error)))

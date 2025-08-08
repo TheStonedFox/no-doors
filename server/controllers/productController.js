@@ -3,9 +3,9 @@ import ProductModel from "../models/ProductModel.js"
 export const getProducts = async (req, res) => {
     try {
         const products = await ProductModel.find()
-        return res.status(200).json(products)
+        return res.status(200).json({ products, code: 200 })
     } catch (error) {
-        res.json({ msg: error })
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
 }
 
@@ -14,13 +14,14 @@ export const getProduct = async (req, res) => {
         const product = await ProductModel.findOne({ _id: req.params.id })
 
         if (!product)
-            return res.status(404).json({ msg: 'product not found!' })
+            return res.status(404).json({ message: 'Продукт не найден.', code: 404 })
 
-        res.status(200).json(product)
+        res.status(200).json({ product, code: 200 })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
 }
+
 
 export const addProduct = async (req, res) => {
     try {
