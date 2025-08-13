@@ -12,7 +12,7 @@ import { login, register } from '@api/api'
 import { addNotification } from '../../redux/features/uiSlice'
 
 import { useDispatch } from 'react-redux'
-// import RegisterAdvantagesIcon from '../../svgIcons/RegisterAdvantagesIcon'
+import RegisterAdvantagesIcon from './svgIcons/RegisterAdvantagesIcon'
 
 import { generateId } from '@utils/generateId'
 
@@ -105,7 +105,7 @@ export default function AuthPage() {
 
                 </div>
                 <div className={styles['auth-page__advantages-box']}>
-                    {/* <RegisterAdvantagesIcon className={styles['advantages-box__icon']} /> */}
+                    <RegisterAdvantagesIcon className={styles['advantages-box__icon']} />
                     <h3 className={styles['advantages-box__title']}>У зарегистрированных пользователей ряд преимуществ:</h3>
                     <ul className={styles['advantages-box__list']}>
                         <li>1. Вам не нужно каждый раз вводить данные для оформления заказа</li>
