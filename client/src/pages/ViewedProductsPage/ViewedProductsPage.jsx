@@ -3,14 +3,14 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 
-import ItemsList from '../../components/ItemsList/ItemsList'
-import ProductCard from '../../components/ProductCard/ProductCard'
-import Spinner from '../../components/Spinner/Spinner'
-import Button from '../../components/Button/Button'
+import ItemsList from '@components/ItemsList/ItemsList'
+import ProductCard from '@components/ProductCard/ProductCard'
+import Spinner from '@components/Spinner/Spinner'
+import Button from '@components/Button/Button'
 
 import styles from './ViewedProductsPage.module.css'
 
-import { getProducts } from '../../api/api'
+import { getProducts } from '@api/api'
 
 export default function ViewedProductsPage() {
     const userData = useSelector((state) => state.user.userData)

@@ -6,7 +6,7 @@ import Spinner from '../Spinner/Spinner'
 import CartItem from '../CartItem/CartItem'
 
 import styles from './CartItems.module.css'
-import { getOrder } from '../../api/api'
+import { getOrder } from '@api/api'
 
 export default function CartItems({ orderId }) {
 

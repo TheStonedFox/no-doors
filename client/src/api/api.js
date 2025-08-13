@@ -1,5 +1,3 @@
-// import { apiRequest } from "../utils/apiHelper.js"
-
 
 class ApiError extends Error {
     constructor(message, code, data) {

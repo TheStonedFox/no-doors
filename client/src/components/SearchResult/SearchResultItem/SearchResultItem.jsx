@@ -6,9 +6,8 @@ import BorderedButton from '../../BorderedButton/BorderedButton'
 import FavoriteButton from '../../FavoriteButton/FavoriteButton'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { togglePopup, updateFavoriteCounter } from '../../../features/uiSlice'
-import { setUserData } from '../../../features/userSlice'
-import { addFavoriteItem, removeFavoriteItem } from '../../../api/api'
+import { togglePopup, updateFavoriteCounter } from '../../../redux/features/uiSlice'
+import { setUserData } from '../../../redux/features/userSlice'
 import useProductActions from '../../../hooks/useProductActions'
 
 export default function SearchResultItem({ itemInfo }) {

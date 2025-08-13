@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import Button from '../../components/Button/Button'
-import Input from '../../components/Input/Input'
-import CartItems from '../../components/CartItems/CartItems'
-import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
+import Button from '@components/Button/Button'
+import Input from '@components/Input/Input'
+import CartItems from '@components/CartItems/CartItems'
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 
 import styles from './CartPage.module.css'
 import { useCart } from '../../hooks/useCart'

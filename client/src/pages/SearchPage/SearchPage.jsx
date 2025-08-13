@@ -1,24 +1,24 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styles from './SearchPage.module.css'
 
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
-import ItemsList from '../../components/ItemsList/ItemsList'
-import Spinner from '../../components/Spinner/Spinner'
-import ProductCard from '../../components/ProductCard/ProductCard'
+import ItemsList from '@components/ItemsList/ItemsList'
+import Spinner from '@components/Spinner/Spinner'
+import ProductCard from '@components/ProductCard/ProductCard'
 import FilterItem from './FilterItem/FilterItem'
-import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import FiltersPanel from '@components/FiltersPanel/FiltersPanel'
 
 
-import getWordEnding from '../../utils/getWordEnding'
+import getWordEnding from '@utils/getWordEnding'
 
-import { getStepChoices, searchProducts } from '../../api/api'
+import { getStepChoices, searchProducts } from '@api/api'
 
 import { FaFilter } from "react-icons/fa"
-import FiltersPanel from '../../components/FiltersPanel/FiltersPanel'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleFiltersPanel } from '../../features/uiSlice'
+import { toggleFiltersPanel } from '../../redux/features/uiSlice'
 
 export default function SearchPage() {
 
@@ -53,9 +53,6 @@ export default function SearchPage() {
                 key !== 'title' && [key].map(m => params.delete('model', m.title))
             }))
     }
-
-    useEffect(() => { console.log(isLoading) }, [isLoading])
-
     useEffect(() => {
         searchProducts(`${searchParams.toString()}`)
             .then(res => setProductsList(res.products))
@@ -78,12 +75,18 @@ export default function SearchPage() {
             .finally(() => setIsFiltersLoading(false))
     }, [])
 
+    const deleteParamValue = (params, key, value) => {
+        const values = params.getAll(key).filter(v => v !== value)
+        params.delete(key)
+        values.forEach(v => params.append(key, v))
+    }
+
     return (
         <div className={`${styles['search-page']} container`}>
             <h2 className={`section-title ${styles['search-page__title']}`}>{categories.length === 1 ? categories : 'Комплектующие'} {models.length === 1 && `для ${models}`}</h2>
 
             <section className={styles['search-page__applied-filters-box']}>
-                {searchParams.size ? <section className={styles['search-page__applied-filters']}>
+                {searchParams ? <section className={styles['search-page__applied-filters']}>
                     <FilterItem onClick={() => setSearchParams('')} />
                     {Array.from(searchParams).map(param =>
                         param[1] !== '0' && param[1] !== '10000' && param[0] !== 'sortType' &&
@@ -98,12 +101,19 @@ export default function SearchPage() {
                             onClick={() => {
                                 const newParams = new URLSearchParams(searchParams)
 
-                                newParams.delete('brand', param[1])
-                                newParams.delete('category', param[1])
-                                newParams.delete('model', param[1])
-                                newParams.delete('minPrice', param[1])
-                                newParams.delete('word', param[1])
-                                newParams.delete('deviceType', param[1])
+                                // newParams.delete('brand', param[1])
+                                // newParams.delete('category', param[1])
+                                // newParams.delete('model', param[1])
+                                // newParams.delete('minPrice', param[1])
+                                // newParams.delete('word', param[1])
+                                // newParams.delete('deviceType', param[1])
+
+                                deleteParamValue(newParams, 'brand', param[1])
+                                deleteParamValue(newParams, 'category', param[1])
+                                deleteParamValue(newParams, 'model', param[1])
+                                deleteParamValue(newParams, 'minPrice', param[1])
+                                deleteParamValue(newParams, 'word', param[1])
+                                deleteParamValue(newParams, 'deviceType', param[1])
 
                                 if (param[0] === 'maxPrice') setPriceRange(prev => ({ ...prev, max: 10000 }))
 
@@ -125,7 +135,7 @@ export default function SearchPage() {
                 <FiltersPanel isOpen={isFiltersPanelOpen} />
 
                 {!isLoading ? <ItemsList className={styles['search-page__search-items']}>
-                    {productsList?.map((product, index) => index < 20 && < ProductCard productData={product} key={product._id} />)}
+                    {productsList?.map((product, index) => index < 20 && <ProductCard productData={product} key={product._id} />)}
                 </ItemsList> : null}
 
                 {!productsList.length && !isLoading ? <EmptyPlaceholder title='Товаров не найдено.' /> : null}

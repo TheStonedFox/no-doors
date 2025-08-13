@@ -4,10 +4,10 @@ import styles from './SearchInput.module.css'
 import SearchResult from '../SearchResult/SearchResult'
 
 import SearchIcon from '../../svgIcons/SearchIcon'
-import { getProducts } from '../../api/api'
+import { getProducts } from '@api/api'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleSearchResults } from '../../features/uiSlice'
+import { toggleSearchResults } from '../../redux/features/uiSlice'
 import useSearchResults from '../../hooks/useSearchResults'
 import useProducts from '../../hooks/useProducts'
 

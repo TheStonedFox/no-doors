@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import ItemsList from '../../components/ItemsList/ItemsList'
+import ItemsList from '@components/ItemsList/ItemsList'
 import { useSelector } from 'react-redux'
 
-import ProductCard from '../../components/ProductCard/ProductCard'
-import Button from '../../components/Button/Button'
-import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
+import ProductCard from '@components/ProductCard/ProductCard'
+import Button from '@components/Button/Button'
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 
 import styles from './FavoritesPage.module.css'
-import Spinner from '../../components/Spinner/Spinner'
-import { getProducts } from '../../api/api'
+import Spinner from '@components/Spinner/Spinner'
+import { getProducts } from '@api/api'
 
 export default function FavoritesPage() {
 

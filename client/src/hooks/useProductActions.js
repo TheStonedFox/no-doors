@@ -1,8 +1,9 @@
-import { useDispatch, useSelector } from "react-redux"
-import { setUserData } from "../features/userSlice"
-import { addNotification, updateCartCounter, updateFavoriteCounter } from "../features/uiSlice"
-import { addCartItem, addFavoriteItem, removeCartItem, removeFavoriteItem } from "../api/api"
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserData } from '../redux/features/userSlice'
+import { addNotification, updateCartCounter, updateFavoriteCounter } from '../redux/features/uiSlice'
+import * as api from '@api/api'
 
+import { generateId } from '@utils/generateId'
 
 export default function useProductActions() {
     const dispatch = useDispatch()
@@ -13,27 +14,26 @@ export default function useProductActions() {
     const { favoriteItems = [], cartItems = [], _id } = userData || {}
 
     const cartItemAction = (productId, quantity) => {
-
         if (!tokenStatus)
             return
 
         if (!cartItems?.map(item => item?.productId).includes(productId)) {
-            addCartItem(_id, productId, quantity || 1).then(res => {
+            api.addCartItem(_id, productId, quantity || 1).then(res => {
                 dispatch(setUserData())
                 dispatch(updateCartCounter(cartItems?.length + 1))
-                dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message, route: 'cart' }))
+                dispatch(addNotification({ id: generateId(), type: 'success', text: res.message, route: 'cart' }))
             }).catch(error =>
                 dispatch(addNotification(
-                    { id: crypto.randomUUID(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
+                    { id: generateId(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
 
         } else {
-            removeCartItem(_id, productId).then(res => {
+            api.removeCartItem(_id, productId).then(res => {
                 dispatch(setUserData())
                 dispatch(updateCartCounter(cartItems?.length - 1))
-                dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message }))
+                dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
             }).catch(error =>
                 dispatch(addNotification(
-                    { id: crypto.randomUUID(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
+                    { id: generateId(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
         }
     }
 
@@ -42,20 +42,20 @@ export default function useProductActions() {
             return
 
         if (!favoriteItems?.includes(productId)) {
-            addFavoriteItem(_id, productId).then(() => {
+            api.addFavoriteItem(_id, productId).then(() => {
                 dispatch(setUserData())
                 dispatch(updateFavoriteCounter(favoriteItems?.length + 1))
-                dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: 'Товар добавлен в избранное.', route: 'cart' }))
+                dispatch(addNotification({ id: generateId(), type: 'success', text: 'Товар добавлен в избранное.', route: 'favorites' }))
             })
                 .catch(error =>
                     dispatch(addNotification(
-                        { id: crypto.randomUUID(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
+                        { id: generateId(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
 
         } else {
-            removeFavoriteItem(_id, productId).then(() => {
+            api.removeFavoriteItem(_id, productId).then(() => {
                 dispatch(setUserData())
                 dispatch(updateFavoriteCounter(favoriteItems?.length - 1))
-                dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: 'Товар удален из избранного.' }))
+                dispatch(addNotification({ id: generateId(), type: 'success', text: 'Товар удален из избранного.' }))
             })
         }
     }

@@ -4,7 +4,7 @@ import styles from './ThemeToggle.module.css'
 import { FaSun } from "react-icons/fa"
 import { FaMoon } from "react-icons/fa6"
 import { useDispatch, useSelector } from 'react-redux'
-import { setTheme } from '../../features/uiSlice'
+import { setTheme } from '../../redux/features/uiSlice'
 
 export default function ThemeToggle({ className }) {
 

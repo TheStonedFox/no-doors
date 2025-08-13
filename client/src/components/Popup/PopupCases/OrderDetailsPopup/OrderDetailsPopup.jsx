@@ -6,11 +6,12 @@ import Button from '../../../Button/Button'
 
 import styles from './OrderDetailsPopup.module.css'
 
-import { statusColors, statusTitles } from '../../../../utils/statusHelper'
+import { statusColors, statusTitles } from '@utils/statusHelper'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { createPayment, getOrder, getPaymentStatus, updatePaymentStatus } from '../../../../api/api'
-import { togglePopup } from '../../../../features/uiSlice'
+import * as api from '@api/api'
+
+import { togglePopup } from '../../../../redux/features/uiSlice'
 
 export default function OrderDetailsPopup({ orderId }) {
 
@@ -23,7 +24,7 @@ export default function OrderDetailsPopup({ orderId }) {
     const [paymentStatus, setPaymentStatus] = useState()
 
     useEffect(() => {
-        getOrder(orderId)
+        api.getOrder(orderId)
             .then(res => setOrder(res.order))
             .catch(error => alert(error))
     }, [orderId])
@@ -31,16 +32,16 @@ export default function OrderDetailsPopup({ orderId }) {
 
 
     useEffect(() => {
-        createPayment(order?.sum, order?._id)
+        api.createPayment(order?.sum, order?._id)
             .then(res => setPayData(res))
             .catch(error => alert(error))
 
 
         if (order?.paymentMethod === 'online') {
-            getPaymentStatus(orderId)
+            api.getPaymentStatus(orderId)
                 .then(res => {
                     if (res?.status === 'sandbox' | res?.status === 'success') {
-                        updatePaymentStatus(orderId, { status: 'paid' })
+                        api.updatePaymentStatus(orderId, { status: 'paid' })
                             .then(() => setPaymentStatus('paid'))
                             .catch(error => alert(error))
                     }

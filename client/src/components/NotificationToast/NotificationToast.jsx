@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import styles from './NotificationToast.module.css'
+
 import ArrowIcon from '../../svgIcons/ArrowIcon'
 
 import { GoXCircle } from 'react-icons/go'
 import { GoCheckCircle } from 'react-icons/go'
 import { GoInfo } from "react-icons/go"
 
-import { removeNotification } from '../../features/uiSlice'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { statusColors } from '../../utils/statusHelper'
+import { removeNotification } from '../../redux/features/uiSlice'
+import { statusColors } from '@utils/statusHelper'
+
 export default function NotificationToast({ id, text, type, route }) {
     const dispatch = useDispatch()
     const negative = useNavigate()

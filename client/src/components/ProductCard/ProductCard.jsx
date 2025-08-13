@@ -13,15 +13,17 @@ import FavoriteIcon from '../../SvgIcons/FavoriteIcon'
 import styles from './ProductCard.module.css'
 
 
-import { addNotification, togglePopup, updateCartCounter, updateFavoriteCounter } from '../../features/uiSlice'
-import { setUserData } from '../../features/userSlice'
-import { addFavoriteItem, removeFavoriteItem, addCartItem, removeCartItem } from '../../api/api'
+import { setUserData } from '../../redux/features/userSlice'
 import Spinner from '../Spinner/Spinner'
-import getPrice from '../../utils/getPrice'
+import getPrice from '@utils/getPrice'
 import useProductActions from '../../hooks/useProductActions'
 
-let favoriteProducts = localStorage.getItem('favoriteItems') ? JSON.parse(localStorage.getItem('favoriteItems')) : []
-let cartProducts = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : []
+// import { BsFillCartCheckFill } from "react-icons/bs"
+// import { BsCartPlusFill } from "react-icons/bs"
+
+
+// let favoriteProducts = localStorage.getItem('favoriteItems') ? JSON.parse(localStorage.getItem('favoriteItems')) : []
+// let cartProducts = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : []
 
 export default function ProductCard({ productData }) {
 
@@ -95,7 +97,15 @@ export default function ProductCard({ productData }) {
                         setQuantity(value)
                         setUserData()
                     }} />
-                    <BorderedButton title={inCart ? 'В корзине' : 'В корзину'} onClick={onAddToCartButtonClick} />
+                    <BorderedButton
+                        className={styles['product-card__cart-button']}
+                        title={inCart ? 'В корзине' : 'В корзину'}
+                        onClick={onAddToCartButtonClick} />
+
+                    {/* <button className={styles['product-card__cart-icon-button']} onClick={onAddToCartButtonClick}>
+                        <p>{inCart ? 'В корзине' : 'В корзину'}</p>
+                        {inCart ? <BsFillCartCheckFill /> : <BsCartPlusFill />}
+                    </button> */}
                 </div> : null}
             </div>
         </div >

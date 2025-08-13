@@ -7,7 +7,7 @@ import Button from '../../../Button/Button'
 
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { togglePopup } from '../../../../features/uiSlice'
+import { togglePopup } from '../../../../redux/features/uiSlice'
 
 export default function OrderPlacedPopup({ data }) {
     const negative = useNavigate()

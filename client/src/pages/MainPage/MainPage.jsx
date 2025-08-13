@@ -4,25 +4,25 @@ import 'swiper/css/bundle'
 
 import { Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { useSelector } from 'react-redux'
 
 
-import ChooseCard from '../../components/ChooseCard/ChooseCard'
-import ItemsList from '../../components/ItemsList/ItemsList'
-import ProductCard from '../../components/ProductCard/ProductCard'
-import Advantages from '../../components/Advantages/Advantages'
-import Gallery from '../../components/Gallery/gallery'
-import Button from '../../components/Button/Button'
-import Spinner from '../../components/Spinner/Spinner'
+import ChooseCard from '@components/ChooseCard/ChooseCard'
+import ItemsList from '@components/ItemsList/ItemsList'
+import ProductCard from '@components/ProductCard/ProductCard'
+import Advantages from '@components/Advantages/Advantages'
+import Gallery from '@components/Gallery/gallery'
+import Button from '@components/Button/Button'
+import Spinner from '@components/Spinner/Spinner'
 
-import useProducts from '../../hooks/useProducts'
+import useProducts from '@hooks/useProducts'
 
-import { categoryImages } from '../../utils/categoryImages'
-import { brandsImages } from '../../utils/brandsImages'
+import { categoryImages } from '@utils/categoryImages'
+import { brandsImages } from '@utils/brandsImages'
 import { useNavigate } from 'react-router-dom'
 
-import deviceTypesEnTitles from '../../utils/deviceTypeEnTitle'
+import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 
-import { useDispatch, useSelector } from 'react-redux'
 
 export default function MainPage() {
     const [loadedItemsCount, setLoadedItemsCount] = useState(4)
@@ -51,7 +51,7 @@ export default function MainPage() {
     }, [choosesValues.category, negative, choosesValues, filterValue])
 
     return (
-        <div className={`${styles['main-page']} container`}>
+        <div className={`${styles['main-page']} container`} onClick={() => console.log('asadsads')}>
             {choosesStep !== 'result' ? <section className={styles['main-page__intro-section']}>
                 <Swiper
                     modules={[Pagination]}

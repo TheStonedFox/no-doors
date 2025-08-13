@@ -1,21 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Counter from '../Counter/Counter'
 import Field from '../Field/Field'
 import styles from './CartItem.module.css'
 
-import { addCartItem, removeCartItem, updateCartItem } from '../../api/api'
+import { updateCartItem } from '@api/api'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUserData } from '../../features/userSlice'
+import { setUserData } from '../../redux/features/userSlice'
 
 import Spinner from '../Spinner/Spinner'
-import CartPopup from '../Popup/PopupCases/CartPopup/CartPopup'
 import RemoveIcon from './RemoveIcon'
 
-import { addNotification, togglePopup } from '../../features/uiSlice'
-import getPrice from '../../utils/getPrice'
-import useProductActions from '../../hooks/useProductActions'
+import getPrice from '@utils/getPrice'
+import useProductActions from '@hooks/useProductActions'
 
 export default function CartItem({ productData, initialQuantityValue, getTotalPriceValue, viewOnly, className }) {
 
@@ -31,15 +29,6 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
 
     const [, cartItemAction] = useProductActions()
 
-    const onRemoveButtonClick = async () => {
-        // removeCartItem(userData?._id, _id)
-        //     .then(res => {
-        //         dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message }))
-        //         dispatch(setUserData())
-        //     })
-        //     .catch(error => alert(error))
-        cartItemAction(_id)
-    }
     useEffect(() => {
         setQuantity(initialQuantityValue ? initialQuantityValue : 1)
         return () => dispatch(setUserData())
@@ -87,7 +76,7 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                         (price - price / 100 * discount) * quantity :
                         (wholesalePrice - wholesalePrice / 100 * discount) * quantity} ₴
                 </p>
-                {!viewOnly && <RemoveIcon onClick={onRemoveButtonClick} />}
+                {!viewOnly && <RemoveIcon onClick={() => cartItemAction(_id)} />}
             </div>
         </div >
     )

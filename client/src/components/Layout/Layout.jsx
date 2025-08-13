@@ -7,7 +7,7 @@ import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import Popup from '../Popup/Popup'
 
-import { toggleSearchResults } from '../../features/uiSlice'
+import { toggleSearchResults } from '../../redux/features/uiSlice'
 import { FaChevronUp } from "react-icons/fa"
 import NotificationToast from '../NotificationToast/NotificationToast'
 
@@ -26,6 +26,8 @@ export default function Layout({ children }) {
         window.addEventListener('scroll', scrollHandler)
         return () => window.removeEventListener('scroll', scrollHandler)
     }, [])
+
+    // useEffect(() => { alert(notificationList) }, [notificationList])
     const [scrollTop, setScrollTop] = useState(0)
 
     const dispatch = useDispatch()
@@ -49,7 +51,12 @@ export default function Layout({ children }) {
             <section
                 className={`${styles['notifications-list']} ${notificationList.length > 3 ? styles['fade'] : null}`} ref={notificationsRef}
                 style={!notificationList.length ? { padding: '0' } : {}}>
-
+                {/* <NotificationToast type='error' text='teasasdasddsa' />
+                <NotificationToast type='error' text='teasasdasddsa' />
+                <NotificationToast type='error' text='teasasdasddsa' />
+                <NotificationToast type='error' text='teasasdasddsa' />
+                <NotificationToast type='error' text='teasasdasddsa' />
+                <NotificationToast type='error' text='teasasdasddsa' /> */}
                 {notificationList ? notificationList.map(notification => <NotificationToast
                     key={notification.id}
                     id={notification.id}

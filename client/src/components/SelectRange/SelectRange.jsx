@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './SelectRange.module.css'
 
-import Input from '../../components/Input/Input'
-import Button from '../../components/Button/Button'
+import Input from '@components/Input/Input'
+import Button from '@components/Button/Button'
 
 export default function SelectRange({ range, initValues }) {
 

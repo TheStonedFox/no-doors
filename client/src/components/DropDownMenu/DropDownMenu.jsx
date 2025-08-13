@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './DropDownMenu.module.css'
 import { useNavigate } from 'react-router-dom'
 import { IoChevronBackOutline } from "react-icons/io5"
-import deviceTypesEnTitles from '../../utils/deviceTypeEnTitle'
+import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 
 export default function DropDownMenu({ title, deviceTypes, brandModels, categories, className }) {
     const [deviceType, setDeviceType] = useState()

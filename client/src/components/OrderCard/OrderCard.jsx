@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { data, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-
-import Field from '../../components/Field/Field'
-
 import styles from './OrderCard.module.css'
-import getWordEnding from '../../utils/getWordEnding'
+
+import Field from '@components/Field/Field'
+
+import getWordEnding from '@utils/getWordEnding'
+import { statusColors, statusTitles } from '@utils/statusHelper'
 
 import Spinner from '../Spinner/Spinner'
 
-import { togglePopup } from '../../features/uiSlice'
+import { togglePopup } from '../../redux/features/uiSlice'
 
-import { statusColors, statusTitles } from '../../utils/statusHelper'
-import { getOrder } from '../../api/api'
+import { getOrder } from '@api/api'
 
 export default function OrderCard({ orderId, orderNumber }) {
     // const [status, sum, date] = orderInfo

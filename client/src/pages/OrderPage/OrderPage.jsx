@@ -2,21 +2,23 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import styles from './OrderPage.module.css'
-import Field from '../../components/Field/Field'
-import Button from '../../components/Button/Button'
-import RadioButtonGroup from '../../components/RadioButtonGroup/RadioButtonGroup'
-import Input from '../../components/Input/Input'
-import SuggestionInput from '../../components/SuggestionInput/SuggestionInput'
+import Field from '@components/Field/Field'
+import Button from '@components/Button/Button'
+import RadioButtonGroup from '@components/RadioButtonGroup/RadioButtonGroup'
+import Input from '@components/Input/Input'
+import SuggestionInput from '@components/SuggestionInput/SuggestionInput'
 
-import * as api from '../../api/api'
 
-import { useCart } from '../../hooks/useCart'
-import { addNotification, togglePopup } from '../../features/uiSlice'
-import { setUserData } from '../../features/userSlice'
-import { useNavigate } from 'react-router-dom'
+import { addNotification } from '../../redux/features/uiSlice'
+import { setUserData } from '../../redux/features/userSlice'
 
-import getWordEnding from '../../utils/getWordEnding'
-import { usePostInfo } from '../../hooks/usePostInfo'
+import getWordEnding from '@utils/getWordEnding'
+import { generateId } from '@utils/generateId'
+
+import { usePostInfo } from '@hooks/usePostInfo'
+import { useCart } from '@hooks/useCart'
+
+import { makeOrder } from '@api/api'
 
 
 
@@ -135,36 +137,18 @@ export default function OrderPage() {
                                 paymentMethod: selectedOptions.payMethod === 0 ? 'offline' : 'online',
                                 address: userInfo.address || '',
                             }
-                            api.makeOrder(orderData)
+                            makeOrder(orderData)
                                 .then(res => {
                                     setValidationErrors([])
                                     dispatch(setUserData())
-                                    dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message }))
-                                    // console.log(orderData)
+                                    dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
                                 })
                                 .catch(error => {
                                     setValidationErrors(error.data.validationErrors || '')
                                     dispatch(addNotification(
-                                        { id: crypto.randomUUID(), type: 'error', text: `${error.message} (${error.data.validationErrors.length})` }))
+                                        { id: generateId(), type: 'error', text: `${error.message} (${error.data.validationErrors.length})` }))
                                 })
-
-                            // if (orderResponse.validationErrors) {
-                            //     console.log(orderResponse.validationErrors)
-                            //     // console.log(orderResponse.validationErrors.length)
-                            //     // if (orderResponse.validationErrors.find(error => error.path === 'address') && orderResponse.validationErrors.length === 1 && selectedOptions.deliveryMethod === 0)
-                            //     //     return
-                            //     return setValidationErrors(orderResponse.validationErrors)
-
-                            // }
-
-                            // alert('test')
-
-                            // setValidationErrors([])
-
-                            // dispatch(setUserData())
-                            // dispatch(togglePopup({ type: 'order-placed', data: userData?.orders.length + 1 }))
-                        }
-                        } />
+                        }} />
                         <p className={styles['pay-methods__policy']}>Нажимая на кнопку «Подтвердить заказ», Вы подтверждаете,
                             что даете согласие на <a href="#">обработку персональных данных.</a></p>
                     </div>

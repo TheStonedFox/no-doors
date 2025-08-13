@@ -54,7 +54,7 @@ export const uiSlice = createSlice({
             state.theme = action.payload
         },
         addNotification: (state, action) => {
-            state.notificationList.unshift(action.payload)
+            state.notificationList = [action.payload, ...state.notificationList]
         },
         removeNotification: (state, action) => {
             state.notificationList = state.notificationList.filter(

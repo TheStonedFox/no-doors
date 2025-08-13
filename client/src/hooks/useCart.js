@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getProducts } from "../api/api"
+import { getProducts } from "@api/api"
 import { useSelector } from "react-redux"
 
 export const useCart = () => {

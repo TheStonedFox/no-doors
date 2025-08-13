@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getStepChoices } from "../api/api"
+import { getStepChoices } from "@api/api"
 
 const initialState = {
     chooseValues: {

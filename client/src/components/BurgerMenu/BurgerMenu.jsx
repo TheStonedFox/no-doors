@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import BorderedButton from '../BorderedButton/BorderedButton'
 import ThemeToggle from '../ThemeToggle/ThemeToggle'
-import { toggleBurger } from '../../features/uiSlice'
+import { toggleBurger } from '../../redux/features/uiSlice'
 import { useDispatch } from 'react-redux'
 
 import styles from './BurgerMenu.module.css'

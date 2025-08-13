@@ -1,0 +1,1 @@
+export const generateId = () => Math.random(new Date().toUTCString).toFixed(20).replace('.', '')

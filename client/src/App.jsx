@@ -1,8 +1,9 @@
+import { Routes, Route, useNavigate } from 'react-router-dom'
+
 import './App.css'
 import './global.css'
 
-import { Routes, Route, useNavigate } from 'react-router-dom'
-
+//#region pages imports
 import MainPage from './pages/MainPage/MainPage'
 import ProfilePage from './pages/ProfilePage/ProfilePage'
 import AboutPage from './pages/AboutPage/AboutPage'
@@ -19,12 +20,13 @@ import OrderPage from './pages/OrderPage/OrderPage'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
 import ViewedProductsPage from './pages/ViewedProductsPage/ViewedProductsPage'
 import SearchPage from './pages/SearchPage/SearchPage'
+//#endregion
 
 import { useDispatch, useSelector } from 'react-redux'
-import { closeBurger } from './features/uiSlice'
-import { checkTokenThunk, setUserData } from './features/userSlice'
+import { closeBurger } from './redux/features/uiSlice'
+import { checkTokenThunk, setUserData } from './redux/features/userSlice'
 import { useEffect, useState } from 'react'
-import { getChooseValues } from './features/sharedSlice'
+import { getChooseValues } from './redux/features/sharedSlice'
 
 function App() {
 

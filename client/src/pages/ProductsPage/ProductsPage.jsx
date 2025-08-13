@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 
-import ItemsList from '../../components/ItemsList/ItemsList'
-import ProductCard from '../../components/ProductCard/ProductCard'
-import Gallery from '../../components/Gallery/gallery'
-import Advantages from '../../components/Advantages/Advantages'
+import ItemsList from '@components/ItemsList/ItemsList'
+import ProductCard from '@components/ProductCard/ProductCard'
+import Gallery from '@components/Gallery/gallery'
+import Advantages from '@components/Advantages/Advantages'
 
 import styles from './ProductsPage.module.css'
-import Button from '../../components/Button/Button'
+import Button from '@components/Button/Button'
 
 export default function ProductsPage() {
 

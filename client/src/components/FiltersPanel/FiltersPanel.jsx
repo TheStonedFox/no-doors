@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import styles from './FiltersPanel.module.css'
 
-import deviceTypesEnTitles from '../../utils/deviceTypeEnTitle'
-import { getStepChoices, searchProducts } from '../../api/api'
-
+import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 
 import { FaSortAmountDown } from "react-icons/fa"
 import { FaSortAmountUp } from "react-icons/fa"
@@ -16,7 +14,7 @@ import CustomRangeSelector from '../CustomRangeSelector/CustomRangeSelector'
 import Spinner from '../Spinner/Spinner'
 import Button from '../Button/Button'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleFiltersPanel } from '../../features/uiSlice'
+import { toggleFiltersPanel } from '../../redux/features/uiSlice'
 
 export default function FiltersPanel({ isOpen }) {
 
@@ -110,6 +108,7 @@ export default function FiltersPanel({ isOpen }) {
                     <p>{sortTitles[sortType]}</p>
                     <MoreArrowIcon color='#ffff' style={{ transform: isSortListOpen ? 'rotateX(-180deg)' : '', transition: '0.2s' }} />
                 </button>
+
                 <div className={styles['filter__sort-options']} style={{ maxHeight: isSortListOpen ? '300px' : '0px', transition: '0.2s' }}>
                     <div className={styles['sort__option']}
                         onClick={() => setSortType(sortType === 'decreasingDate' ? 'increasingDate' : 'decreasingDate')}

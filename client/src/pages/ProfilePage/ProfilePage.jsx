@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react'
 
-import { updateUserInfo } from '../../api/api'
+import { updateUserInfo } from '@api/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
-import BorderedButton from '../../components/BorderedButton/BorderedButton'
-import Button from '../../components/Button/Button'
-import Input from '../../components/Input/Input'
-import OrderCard from '../../components/OrderCard/OrderCard'
+import BorderedButton from '@components/BorderedButton/BorderedButton'
+import Button from '@components/Button/Button'
+import Input from '@components/Input/Input'
+import OrderCard from '@components/OrderCard/OrderCard'
 import AvatarIcon from './AvatarIcon'
 
 import styles from './ProfilePage.module.css'
-import { checkTokenThunk, setUserData } from '../../features/userSlice'
-import { addNotification, togglePopup } from '../../features/uiSlice'
-import SuggestionInput from '../../components/SuggestionInput/SuggestionInput'
-import { usePostInfo } from '../../hooks/usePostInfo'
+
+import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
+import { addNotification, togglePopup } from '../../redux/features/uiSlice'
+
+import SuggestionInput from '@components/SuggestionInput/SuggestionInput'
+
+import { usePostInfo } from '@hooks/usePostInfo'
+import { generateId } from '@utils/generateId'
 
 export default function ProfilePage() {
 
@@ -39,21 +43,21 @@ export default function ProfilePage() {
 
         if (JSON.stringify(userInfo) === JSON.stringify(oldUserInfo)) {
             setAction('info')
-            return dispatch(addNotification({ id: crypto.randomUUID(), type: 'info', text: 'Данные не были изменены.' }))
+            return dispatch(addNotification({ id: generateId(), type: 'info', text: 'Данные не были изменены.' }))
         }
 
         updateUserInfo(userInfo).then(res => {
             updateUserInfo(res.user)
             setAction('info')
-            dispatch(addNotification({ id: crypto.randomUUID(), type: 'success', text: res.message }))
+            dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
         })
             .catch(error => {
                 if (error.data.validationErrors) {
-                    dispatch(addNotification({ id: crypto.randomUUID(), type: 'error', text: error.message }))
+                    dispatch(addNotification({ id: generateId(), type: 'error', text: error.message }))
                     return setValidationErrors(error.data.validationErrors)
                 }
                 else if (error.message === 'Пользователь не найден')
-                    return dispatch(addNotification({ id: crypto.randomUUID(), type: 'error', text: error.message }))
+                    return dispatch(addNotification({ id: generateId(), type: 'error', text: error.message }))
             })
     }
 

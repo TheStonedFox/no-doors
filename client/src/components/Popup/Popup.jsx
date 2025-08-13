@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import style from './Popup.module.css'
 
-import { togglePopup } from '../../features/uiSlice'
+import { togglePopup } from '../../redux/features/uiSlice'
 import OrderDetailsPopup from './PopupCases/OrderDetailsPopup/OrderDetailsPopup'
 import OrderPlacedPopup from './PopupCases/OrderPlacedPopup/OrderPlacedPopup'
 import CrossIcon from '../../svgIcons/CrossIcon'

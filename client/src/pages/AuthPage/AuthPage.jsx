@@ -1,19 +1,20 @@
 import React from 'react'
 
 import styles from './AuthPage.module.css'
-import Button from '../../components/Button/Button'
-import BorderedButton from '../../components/BorderedButton/BorderedButton'
-import Checkbox from '../../components/Checkbox/Checkbox'
-import Input from '../../components/Input/Input'
+import Button from '@components/Button/Button'
+import BorderedButton from '@components/BorderedButton/BorderedButton'
+import Checkbox from '@components/Checkbox/Checkbox'
+import Input from '@components/Input/Input'
 
 
 import { useState, useEffect } from 'react'
-import { login, register } from '../../api/api'
-import { addNotification } from '../../features/uiSlice'
+import { login, register } from '@api/api'
+import { addNotification } from '../../redux/features/uiSlice'
 
 import { useDispatch } from 'react-redux'
 import RegisterAdvantagesIcon from '../../svgIcons/RegisterAdvantagesIcon'
 
+import { generateId } from '@utils/generateId'
 
 
 export default function AuthPage() {
@@ -73,7 +74,7 @@ export default function AuthPage() {
                                         localStorage.setItem('token', res.token)
                                         window.location.href = '/profile'
                                     })
-                                    .catch(error => dispatch(addNotification({ id: crypto.randomUUID(), type: 'error', text: error.message })))
+                                    .catch(error => dispatch(addNotification({ id: generateId(), type: 'error', text: error.message })))
                             }}
                         />}
                         {mode === 'login' && <BorderedButton
@@ -85,7 +86,7 @@ export default function AuthPage() {
                             onClick={async () => {
 
                                 if (data.passwordCheck !== data.password) {
-                                    return dispatch(addNotification({ id: crypto.randomUUID(), type: 'error', text: 'Пароли не совпадают.' }))
+                                    return dispatch(addNotification({ id: generateId(), type: 'error', text: 'Пароли не совпадают.' }))
                                 }
 
                                 register(data)
@@ -95,7 +96,7 @@ export default function AuthPage() {
                                     })
                                     .catch(error => {
                                         setValidationErrors(error.data.validationErrors || null)
-                                        dispatch(addNotification({ id: crypto.randomUUID(), type: 'error', text: error.message }))
+                                        dispatch(addNotification({ id: generateId(), type: 'error', text: error.message }))
                                     })
                             }}
                         />}
