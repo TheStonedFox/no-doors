@@ -12,7 +12,7 @@ import { login, register } from '@api/api'
 import { addNotification } from '../../redux/features/uiSlice'
 
 import { useDispatch } from 'react-redux'
-import RegisterAdvantagesIcon from '../../svgIcons/RegisterAdvantagesIcon'
+import RegisterAdvantagesIcon from '../../svgIcons/RegisterAdvantagesIcon.jsx'
 
 import { generateId } from '@utils/generateId'
 
