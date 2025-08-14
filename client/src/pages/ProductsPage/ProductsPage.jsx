@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import ItemsList from '@components/ItemsList/ItemsList'
 import ProductCard from '@components/ProductCard/ProductCard'
-import Gallery from '@components/Gallery/gallery'
+import Gallery from '@components/Gallery/Gallery'
 import Advantages from '@components/Advantages/Advantages'
 
 import styles from './ProductsPage.module.css'
