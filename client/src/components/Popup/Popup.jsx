@@ -5,7 +5,7 @@ import style from './Popup.module.css'
 import { togglePopup } from '../../redux/features/uiSlice'
 import OrderDetailsPopup from './PopupCases/OrderDetailsPopup/OrderDetailsPopup'
 import OrderPlacedPopup from './PopupCases/OrderPlacedPopup/OrderPlacedPopup'
-import CrossIcon from '../../svgIcons/CrossIcon'
+import CrossIcon from '@/svgIcons/CrossIcon'
 
 
 export default function Popup({ children }) {

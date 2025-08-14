@@ -8,7 +8,7 @@ import Field from '../Field/Field'
 import Counter from '../Counter/Counter'
 import BorderedButton from '../BorderedButton/BorderedButton'
 
-import FavoriteIcon from '../../SvgIcons/FavoriteIcon'
+import FavoriteIcon from '@/SvgIcons/FavoriteIcon'
 
 import styles from './ProductCard.module.css'
 

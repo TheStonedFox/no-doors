@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import styles from './NotificationToast.module.css'
 
-import ArrowIcon from '../../svgIcons/ArrowIcon'
+import ArrowIcon from '@/svgIcons/ArrowIcon'
 
 import { GoXCircle } from 'react-icons/go'
 import { GoCheckCircle } from 'react-icons/go'

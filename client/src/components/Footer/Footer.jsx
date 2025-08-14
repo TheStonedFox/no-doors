@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import Logo from '../../SvgIcons/Logo'
-import PhoneIcon from '../../SvgIcons/PhoneIcon'
-import VkIcon from '../../SvgIcons/VkIcon'
-import InstagramIcon from '../../SvgIcons/InstagramIcon'
+import Logo from '@/SvgIcons/Logo'
+import PhoneIcon from '@/SvgIcons/PhoneIcon'
+import VkIcon from '@/SvgIcons/VkIcon'
+import InstagramIcon from '@/SvgIcons/InstagramIcon'
 
 import styles from './Footer.module.css'
 

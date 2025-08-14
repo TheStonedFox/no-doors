@@ -3,7 +3,7 @@ import styles from './SearchInput.module.css'
 
 import SearchResult from '../SearchResult/SearchResult'
 
-import SearchIcon from '../../svgIcons/SearchIcon'
+import SearchIcon from '@/svgIcons/SearchIcon'
 import { getProducts } from '@api/api'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
