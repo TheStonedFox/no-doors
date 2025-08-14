@@ -11,7 +11,7 @@ import ChooseCard from '@components/ChooseCard/ChooseCard'
 import ItemsList from '@components/ItemsList/ItemsList'
 import ProductCard from '@components/ProductCard/ProductCard'
 import Advantages from '@components/Advantages/Advantages'
-import Gallery from '@components/Gallery/gallery'
+import Gallery from '@components/Gallery/Gallery'
 import Button from '@components/Button/Button'
 import Spinner from '@components/Spinner/Spinner'
 
