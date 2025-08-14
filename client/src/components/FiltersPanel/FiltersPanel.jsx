@@ -7,7 +7,7 @@ import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 
 import { FaSortAmountDown } from "react-icons/fa"
 import { FaSortAmountUp } from "react-icons/fa"
-import MoreArrowIcon from '@/svgIcons/MoreArrowIcon'
+import MoreArrowIcon from '@/svg/MoreArrowIcon'
 
 import Checkbox from '../Checkbox/Checkbox'
 import CustomRangeSelector from '../CustomRangeSelector/CustomRangeSelector'

@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './FilterItem.module.css'
-import CrossIcon from '@/svgIcons/CrossIcon'
+import CrossIcon from '@/svg/CrossIcon'
 
 export default function FilterItem({ title, onClick, style }) {
     return (

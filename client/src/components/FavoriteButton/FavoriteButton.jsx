@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styles from './FavoriteButton.module.css'
-import FavoriteIcon from '@/svgIcons/FavoriteIcon'
+import FavoriteIcon from '@/svg/FavoriteIcon'
 
 export default function FavoriteButton({ isInFavorite, onClick, className }) {
 
