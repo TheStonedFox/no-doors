@@ -33,6 +33,7 @@
 /* vars----------------------------------------------------------- */
 :root {
   --ui---bg-main: #fff;
+  --ui---bg-main-darker: #eeeded;
   --typography---main: #181818;
   --typography---second: #686868;
   --typography---label-non-active-text: #b9b9b9;
@@ -51,6 +52,7 @@
 
 :root .dark {
   --ui---bg-main: rgb(32, 32, 32);
+  --ui---bg-main-darker: #1b1b1b;
   --ui---bg-second: rgb(43, 42, 42);
   --typography---main: #cfcdcd;
   --typography---second: #686868;
@@ -153,6 +155,21 @@
   padding-bottom: 150px;
 }
 
+.full-screen-slider {
+  position: fixed;
+  max-width: 100vw;
+  background-color: rgba(0, 0, 0, 0.349);
+  backdrop-filter: blur(50px);
+  right: 0px;
+  top: 0px;
+  z-index: 1000;
+}
+
+.product-card__slider * div {
+  height: 100vh;
+}
+
+
 /* Скролл */
 
 ::-webkit-scrollbar {
@@ -161,7 +178,7 @@
 }
 
 body::-webkit-scrollbar {
-  width: 10px;
+  width: 4px;
   height: 10px;
 }
 

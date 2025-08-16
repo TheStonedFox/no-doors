@@ -1,8 +1,7 @@
 .button {
     display: flex;
-    flex-direction: column;
     border-radius: 4px;
-    padding: 16px 32px;
+    padding: 16px;
     background: var(--ui---main);
     border: 0;
     line-height: 130%;
@@ -15,9 +14,23 @@
     height: 53px;
     font-weight: 500;
     font-size: 16px;
+    justify-content: center;
 }
 
-.button:hover {
-    transition: 0.2s;
-    background: var(--ui---main-hover);
+
+
+
+@media(hover: hover) {
+
+    .button:hover {
+        transition: 0.2s;
+        background: var(--ui---main-hover);
+    }
+}
+
+@media(hover: none) {
+    .button:active {
+        transition: 0.2s;
+        background: var(--ui---main-hover);
+    }
 }

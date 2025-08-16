@@ -27,7 +27,6 @@ export default function Layout({ children }) {
         return () => window.removeEventListener('scroll', scrollHandler)
     }, [])
 
-    // useEffect(() => { alert(notificationList) }, [notificationList])
     const [scrollTop, setScrollTop] = useState(0)
 
     const dispatch = useDispatch()
@@ -44,19 +43,14 @@ export default function Layout({ children }) {
             <div className={styles.footer}><Footer></Footer></div>
             <Popup />
             <div className={styles['scroll-up-button']}
-                style={{ opacity: document.documentElement.scrollHeight / scrollTop < 5 ? '1' : '0', transition: '0.2s' }}
+                id='#up-button'
+                style={{ opacity: document.documentElement.scrollHeight / scrollTop < 5 ? '1' : '0', transition: '0.2s', bottom: '15px' }}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <FaChevronUp color='var( --ui---bg-main)' />
             </div>
             <section
                 className={`${styles['notifications-list']} ${notificationList.length > 3 ? styles['fade'] : null}`} ref={notificationsRef}
                 style={!notificationList.length ? { padding: '0' } : {}}>
-                {/* <NotificationToast type='error' text='teasasdasddsa' />
-                <NotificationToast type='error' text='teasasdasddsa' />
-                <NotificationToast type='error' text='teasasdasddsa' />
-                <NotificationToast type='error' text='teasasdasddsa' />
-                <NotificationToast type='error' text='teasasdasddsa' />
-                <NotificationToast type='error' text='teasasdasddsa' /> */}
                 {notificationList ? notificationList.map(notification => <NotificationToast
                     key={notification.id}
                     id={notification.id}

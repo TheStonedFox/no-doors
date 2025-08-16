@@ -8,7 +8,6 @@ export default function Counter({ onCounterChange, initialValue }) {
     useEffect(() => initialValue && setValue(initialValue), [initialValue])
 
     const handleInput = (e) => {
-
         if (Number(e.target.value) === 0) e.target.value = e.target.value.replace('0', '')
 
         e.target.value <= 99 ? setValue(e.target.value) : setValue(99)
@@ -29,21 +28,21 @@ export default function Counter({ onCounterChange, initialValue }) {
     return (
         <div className={styles.div}>
             <button
-className={styles.counter__button}
-onClick={(e) => {
-                if (value === 1) return
-                value > 0 && setValue(Number(e.target.parentElement.querySelector('input').value) - 1)
-                onCounterChange(value - 1)
-            }}
+                className={styles.counter__button}
+                onClick={(e) => {
+                    if (value === 1) return
+                    value > 0 && setValue(Number(e.target.parentElement.querySelector('input').value) - 1)
+                    onCounterChange(value - 1)
+                }}
             >-</button>
             <input className={styles.counter__input} type="number" value={value} onFocus={handleFocus} onBlur={handleBlur} onInput={handleInput} onKeyUp={() => onCounterChange(value)} />
             <button
-className={styles.counter__button}
-onClick={(e) => {
-                if (value === 99) return
-                value < 99 && setValue(Number(e.target.parentElement.querySelector('input').value) + 1)
-                onCounterChange(value + 1)
-            }}
+                className={styles.counter__button}
+                onClick={(e) => {
+                    if (value === 99) return
+                    value < 99 && setValue(Number(e.target.parentElement.querySelector('input').value) + 1)
+                    onCounterChange(value + 1)
+                }}
             >+</button>
         </div>
     )

@@ -1,0 +1,33 @@
+.slide-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 400px;
+    background-color: var(--ui---bg-main);
+    width: 100%;
+    /* height: 100vh; */
+}
+
+.slide-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.zoom-area {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background-color: #439f4559;
+    border: 2px solid var(--ui---main);
+    z-index: 5;
+    cursor: zoom-in;
+}
+
+.slide__full-screen-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: var(--typography---main);
+}

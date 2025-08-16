@@ -15,37 +15,43 @@ import Field from '@components/Field/Field'
 import Counter from '@components/Counter/Counter'
 import Button from '@components/Button/Button'
 import FavoriteButton from '@components/FavoriteButton/FavoriteButton'
+import Slide from './Slide'
 
 import { getProduct, getProducts } from '@api/api'
 import getPrice from '@utils/getPrice'
 import useProductActions from '@hooks/useProductActions'
 
+import { GrFormNext } from "react-icons/gr"
+import { GrFormPrevious } from "react-icons/gr"
+
+import { BsCartPlusFill } from "react-icons/bs"
+import { BsCartCheck } from "react-icons/bs"
+
 export default function ProductPage() {
     const dispatch = useDispatch()
+    const negative = useNavigate()
     const { id } = useParams()
+    const userData = useSelector((state => state.user.userData))
+
+    const imgLink = '/images/categories/03.png'
+
+    const swiperRef = useRef(null)
+    const [favoriteItemAction, cartItemAction] = useProductActions()
 
     const [loadingStatus, setLadingStatus] = useState(true)
     const [products, setProducts] = useState([])
     const [product, setProduct] = useState()
     const [quantity, setQuantity] = useState(0)
     const [date, setDate] = useState()
-    const [activeSlide, setActiveSlide] = useState()
+
+    const [actionsPanelVisible, setActionsPanelVisible] = useState(false)
+
+
+    const { inStock, discount, title, model, price, wholesalePrice } = product || {}
+
     const [inCart, setInCart] = useState(false)
     const [inFavorite, setInFavorite] = useState(false)
-
-    const userData = useSelector((state => state.user.userData))
-
-    const swiperRef = useRef(null)
-    const [favoriteItemAction, cartItemAction] = useProductActions()
-
-    const goToSlide = (index) => {
-        setActiveSlide(index)
-        if (swiperRef.current) {
-            swiperRef.current.slideTo(index, 400)
-        }
-    }
-
-    const negative = useNavigate()
+    const [zoomProperties, setZoomProperties] = useState({ imageSize: { height: 0, width: 0 }, shiftsValues: { top: 0, left: 0 }, visible: false, fullScreenMode: false })
 
     useEffect(() => { document.querySelector('title').innerHTML = product?.title || 'No Doors' }, [product])
 
@@ -60,25 +66,32 @@ export default function ProductPage() {
                 alert(error)
             }).finally(() => setLadingStatus(false))
 
-        setActiveSlide(0)
+        onSlideChange(0)
     }, [dispatch, id, userData])
 
-    useEffect(() => {
-        document.querySelector('#photos-list').querySelectorAll('div').forEach((photo, index) => {
-            photo.setAttribute('style', 'border: solid 1px transparent')
-            if (activeSlide === index)
-                photo.setAttribute('style', 'border: solid 1px var(--ui---main)')
-        })
-    }, [activeSlide])
-
     useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [id])
+
+    useEffect(() => {
+        window.addEventListener('scroll', scrollHandler)
+
+        return () => removeEventListener('scroll', scrollHandler)
+    }, [dispatch])
+
 
     useEffect(() => {
         // setProduct(products?.find(product => product?._id === id))
         setDate(new Date(product?.createdAt))
         setInFavorite(userData?.favoriteItems.includes(id))
         setInCart(userData?.cartItems?.map(item => item?.productId).includes(id))
-    }, [products, id])
+    }, [products, id, product, userData])
+
+    const scrollHandler = () => {
+        const isScrolled = (window.scrollY > 300) &&
+            (window.scrollY + window.innerHeight < document.documentElement.scrollHeight)
+
+        document.getElementById('#up-button').style = `bottom: ${isScrolled ? ' 85px' : null}`
+        setActionsPanelVisible(isScrolled)
+    }
 
     const onAddToFavoriteButtonClick = () => {
         favoriteItemAction(id)
@@ -94,116 +107,86 @@ export default function ProductPage() {
         negative(`/search?model=${model}`)
     }
 
-    const { inStock, discount, title, model, price, wholesalePrice } = product || {}
-
-    const [position, setPosition] = useState({ x: 0, y: 0 })
-
-    const [previewAreaShifts, setPreviewAreaShifts] = useState({ top: 0, left: 0 })
-
-    const [imageSize, setImageSize] = useState({ height: 0, width: 0 })
-
-    const [visible, setVisible] = useState(false)
-
-    const ZOOM_BOX_SIZE = 130
-
-    const slideWrapperRef = useRef(null)
-
-    const handleMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect()
-
-        let x = e.clientX - rect.left - ZOOM_BOX_SIZE / 2
-        let y = e.clientY - rect.top - ZOOM_BOX_SIZE / 2
-
-        x = Math.max(0, Math.min(x, rect.width - ZOOM_BOX_SIZE))
-        y = Math.max(0, Math.min(y, rect.height - ZOOM_BOX_SIZE))
-
-        setPreviewAreaShifts({ top: y, left: x })
-
-        setPosition({ x, y })
+    const onSlideZoom = (e) => {
+        setZoomProperties({ imageSize: e.imageSize, shiftsValues: e.shiftsValues, visible: e.visible, fullScreenMode: e.fullScreenMode })
     }
-    const imgLink = 'https://content.rozetka.com.ua/goods/images/big/492481090.jpg'
+
+    const onSlideChange = (slideIndex) => {
+        if (swiperRef.current) {
+            swiperRef.current.slideTo(slideIndex, 400)
+        }
+
+        document.querySelector('#photos-list').querySelectorAll('div').forEach((photo, index) => {
+            photo.setAttribute('style', 'border: solid 1px transparent; background-color: 0')
+            if (index === slideIndex)
+                photo.setAttribute('style', 'border: solid 1px var(--ui---main); background-color: var( --ui---bg-main-darker)')
+        })
+    }
+
+    const images = [
+        '/images/categories/03.png',
+        '/images/categories/03.png',
+        '/images/categories/03.png',
+        '/images/categories/03.png',
+        '/images/categories/03.png',
+    ]
+
+    useEffect(() => {
+        swiperRef.current?.slides.forEach(slide => {
+            slide.querySelector('div').style.height = zoomProperties.fullScreenMode ? '100vh' : ''
+        })
+    }, [zoomProperties.fullScreenMode])
 
     return (
         <div className={`${styles['product-page']} container`}>
             <section className={styles['product-page__product-card']}>
                 <section className={styles['product-card__photos']}>
                     {inStock ? <div className={styles['product-card__tags']}>
-                        {new Date().getUTCDate() - date?.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
+                        {/* {new Date().getUTCDate() - date?.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>} */}
 
                         {product?.discount !== 0 && <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${product?.discount}%`}</div>}
 
                         <div className={`${styles['product-card__tag']} ${styles['product-card__popular-tag']}`}>Популярное</div>
                     </div> : null}
                     <Swiper
-                        onSwiper={(swiper) => swiperRef.current = swiper}
-                        onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
                         className={styles['product-card__slider']}
+                        onSwiper={(swiper) => swiperRef.current = swiper}
+                        onSlideChange={(swiper) => onSlideChange(swiper.realIndex)}
                         spaceBetween={50}
                         slidesPerView={1}
-                        pagination={{ clickable: true, el: `.${styles.pagination}` }}>
+                        pagination={{ clickable: true, el: `.${styles.pagination}` }}
+                        style={zoomProperties.fullScreenMode ? {
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            maxWidth: '100vw',
+                            zIndex: 1000
+                        } : {}}>
 
-                        <SwiperSlide className={styles['product-card__slide']} >
-                            <div className={styles['product-card__slide-wrapper']}
-                                ref={slideWrapperRef}
-                                onMouseEnter={() => setVisible(true)}
-                                onMouseMove={handleMouseMove}
-                                onMouseLeave={() => setVisible(false)}
-                            >
-                                <img src={imgLink} alt="slider image" onLoad={(e) =>
-                                    setImageSize({ height: e.currentTarget.clientHeight, width: e.currentTarget.clientWidth })} />
+                        {images && images.map((image, i) => <SwiperSlide key={i} className={`${styles['product-card__slide']}`} >
+                            <Slide image={image} onZoom={onSlideZoom} />
+                        </SwiperSlide>)}
 
-                                {visible ? <div className={styles['product-card__zoom-area']}
-                                    style={{ top: position.y, left: position.x, width: ZOOM_BOX_SIZE, height: ZOOM_BOX_SIZE, }}></div> : null}
-                            </div>
-                        </SwiperSlide>
-
-                        <SwiperSlide className={styles['product-card__slide']} >
-                            <div className={styles['product-card__slide-wrapper']}
-                                ref={slideWrapperRef}
-                                onMouseEnter={() => setVisible(true)}
-                                onMouseMove={handleMouseMove}
-                                onMouseLeave={() => setVisible(false)}
-                            >
-                                <img src={imgLink} alt="slider image" onLoad={(e) =>
-                                    setImageSize({ height: e.currentTarget.clientHeight, width: e.currentTarget.clientWidth })} />
-
-                                {visible ? <div className={styles['product-card__zoom-area']}
-                                    style={{ top: position.y, left: position.x, width: ZOOM_BOX_SIZE, height: ZOOM_BOX_SIZE, }}></div> : null}
-                            </div>
-                        </SwiperSlide>
-
-                        <SwiperSlide className={styles['product-card__slide']} >
-                            <div className={styles['product-card__slide-wrapper']}
-                                ref={slideWrapperRef}
-                                onMouseEnter={() => setVisible(true)}
-                                onMouseMove={handleMouseMove}
-                                onMouseLeave={() => setVisible(false)}
-                            >
-                                <img src={imgLink} alt="slider image" onLoad={(e) =>
-                                    setImageSize({ height: e.currentTarget.clientHeight, width: e.currentTarget.clientWidth })} />
-
-                                {visible ? <div className={styles['product-card__zoom-area']}
-                                    style={{ top: position.y, left: position.x, width: ZOOM_BOX_SIZE, height: ZOOM_BOX_SIZE, }}></div> : null}
-                            </div>
-                        </SwiperSlide>
-
+                        <button className={`swiper-button-prev ${styles['swiper__prev-button']} ${styles['swiper__button']}`} onClick={() => swiperRef.current.slidePrev()}>
+                            <GrFormPrevious />
+                        </button>
+                        <button className={`swiper-button-next ${styles['swiper__next-button']} ${styles['swiper__button']}`} onClick={() => swiperRef.current.slideNext()}>
+                            <GrFormNext />
+                        </button>
                     </Swiper>
+
                     <div className={styles['product-info__photos-list']} id='photos-list'>
-                        <div className={styles['product-info__photos-item']} onClick={() => goToSlide(0)}>
-                            <img src="/images/product-slide.png" alt="product image" />
-                        </div>
-                        <div className={styles['product-info__photos-item']} onClick={() => goToSlide(1)}>
-                            <img src="/images/product-slide.png" alt="product image" />
-                        </div>
-                        <div className={styles['product-info__photos-item']} onClick={() => goToSlide(2)}>
-                            <img src="/images/product-slide.png" alt="product image" />
-                        </div>
+                        {images && images.map((image, i) =>
+                            <div key={i} className={styles['product-info__photos-item']} onClick={() => onSlideChange(i)}>
+                                <img src={image} alt="product image" />
+                            </div>)}
                     </div>
-                    {visible ? <section className={styles['product-page__zoom-image']}>
+                    {zoomProperties.visible ? <section className={styles['product-page__zoom-image']}>
                         <img src={imgLink} alt="slider image"
-                            style={{ transform: `translate(-${previewAreaShifts.left}px, -${previewAreaShifts.top}px)`, width: imageSize.width }} />
+                            style={{ transform: `translate(-${zoomProperties?.shiftsValues?.left}px, -${zoomProperties?.shiftsValues?.top}px)`, width: zoomProperties.imageSize.width }} />
                     </section> : null}
                 </section>
+
                 <section className={styles['product-card__info']}>
                     <h2 className={styles['info__title']}>{title}</h2>
                     <section className={styles['info__sub-title']}>
@@ -218,23 +201,49 @@ export default function ProductPage() {
                         <Field className={styles['info__field']} title='Оптом (от 5 шт.): ' value={`${getPrice(discount, wholesalePrice)} ₴`} />
                     </section>
 
+                    {inStock ? <Counter onCounterChange={(value) => setQuantity(value)} /> : null}
                     <section className={styles['info__controls']}>
-                        {inStock ? < Counter onCounterChange={(value) => setQuantity(value)} /> : null}
-                        {inStock ? <Button className={styles['controls__add-to-cart-button']}
-                            title={`${inCart ? 'В корзине' : 'Добавить в корзину'}`}
-                            onClick={onAddToCartButtonClick}></Button> : null}
+
+                        {inStock ? <button className={styles['controls__add-to-cart-icon-button']} onClick={onAddToCartButtonClick}>
+                            {inCart ? <BsCartCheck /> : <BsCartPlusFill />}
+                            <p>{inCart ? 'В корзине' : 'Добавить в корзину'}</p>
+                        </button> : null}
 
                         <FavoriteButton className={styles['controls__add-to-favorite-button']}
                             isInFavorite={inFavorite}
-                            onClick={onAddToFavoriteButtonClick} />
+                            onClick={onAddToFavoriteButtonClick} />{
+                        }
                     </section>
                 </section>
             </section >
+
             <section className={styles['product-page__popular-products']}>
                 <h2 className='section-title'>Популярные товары</h2>
                 {!loadingStatus ? <ItemsList>
                     {products?.map((product, index) => index < 4 && < ProductCard productData={product} key={product._id} />)}
                 </ItemsList> : <Spinner />}
+            </section>
+
+            <section className={styles['product-page__actions-panel']}
+                style={actionsPanelVisible ?
+                    { transform: 'translateY(0%)', transition: '0.2s' } :
+                    { transform: 'translateY(100%)', transition: '0.2s', boxShadow: 'none' }}>
+
+                <section className={styles['actions-panel__left-box']}>
+                    <img src={images[0]} alt="product-image" className={styles['actions-panel__image']} />
+                    <h3 className={styles['actions-panel__title']}>{title}</h3>
+                </section>
+                <section className={styles['actions-panel__right-box']}>
+                    <p className={styles['actions-panel__price']}>{getPrice(discount, price)} ₴</p>
+                    {inStock ? <button className={styles['controls__add-to-cart-icon-button']} onClick={onAddToCartButtonClick}>
+                        {inCart ? <BsCartCheck /> : <BsCartPlusFill />}
+                    </button> : null}
+
+                    <FavoriteButton className={styles['controls__add-to-favorite-button']}
+                        isInFavorite={inFavorite}
+                        onClick={onAddToFavoriteButtonClick} />
+                </section>
+
             </section>
         </div >
     )
