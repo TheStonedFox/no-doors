@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import styles from './ThemeToggle.module.css'
 
 import { FaSun } from "react-icons/fa"

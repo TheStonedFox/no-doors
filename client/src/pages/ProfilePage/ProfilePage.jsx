@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { updateUserInfo } from '@api/api'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,12 +13,13 @@ import AvatarIcon from './AvatarIcon'
 import styles from './ProfilePage.module.css'
 
 import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
-import { addNotification, togglePopup } from '../../redux/features/uiSlice'
+import { addNotification } from '../../redux/features/uiSlice'
 
 import SuggestionInput from '@components/SuggestionInput/SuggestionInput'
 
 import { usePostInfo } from '@hooks/usePostInfo'
 import { generateId } from '@utils/generateId'
+import { uploadAvatar } from '../../api/api'
 
 export default function ProfilePage() {
 
@@ -29,28 +30,28 @@ export default function ProfilePage() {
     const userData = useSelector((state => state.user.userData))
 
     const [action, setAction] = useState('info')
-    const [userInfo, setUserInfo] = useState({ phone: null, email: null, city: null, postOffice: null })
+    const [userInfo, setUserInfo] = useState({ phone: null, email: null, city: null, postOffice: null, avatarUrl: null })
     const [validationErrors, setValidationErrors] = useState([])
-
     const [postOfficeData, cities] = usePostInfo({ selectedCity: userInfo.city })
 
     const cityRegExp = new RegExp(`^${userInfo.city?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*`, 'i')
 
     const onSaveChangesButtonClick = async () => {
         setValidationErrors([])
-        const { phone, email, city, fio, postOffice } = userData || {}
-        const oldUserInfo = { fio, phone, email, city, postOffice }
+        const { phone, email, city, fio, postOffice, avatarUrl } = userData || {}
+        const oldUserInfo = { fio, phone, email, city, postOffice, avatarUrl }
 
         if (JSON.stringify(userInfo) === JSON.stringify(oldUserInfo)) {
             setAction('info')
             return dispatch(addNotification({ id: generateId(), type: 'info', text: 'Данные не были изменены.' }))
         }
 
-        updateUserInfo(userInfo).then(res => {
-            updateUserInfo(res.user)
-            setAction('info')
-            dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
-        })
+        updateUserInfo(userInfo)
+            .then(res => {
+                dispatch(setUserData())
+                setAction('info')
+                dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
+            })
             .catch(error => {
                 if (error.data.validationErrors) {
                     dispatch(addNotification({ id: generateId(), type: 'error', text: error.message }))
@@ -61,9 +62,28 @@ export default function ProfilePage() {
             })
     }
 
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        // сразу отправляем
+        const formData = new FormData()
+        formData.append("avatar", file)
+
+        uploadAvatar(formData)
+            .then(res => setUserInfo((prev) => ({ ...prev, avatarUrl: res.url })))
+            .catch(error => dispatch(addNotification({ id: generateId(), type: 'error', text: error.message })))
+    }
+
+    const onLogOutButtonClick = () => {
+        localStorage.removeItem('token')
+        dispatch(checkTokenThunk())
+    }
+
+
     useEffect(() => {
-        const { fio, phone, email, city, postOffice } = userData || {}
-        setUserInfo({ fio, phone, email, city, postOffice })
+        const { fio, phone, email, city, postOffice, avatarUrl } = userData || {}
+        setUserInfo({ fio, phone, email, city, postOffice, avatarUrl })
     }, [userData])
 
     useEffect(() => {
@@ -72,22 +92,21 @@ export default function ProfilePage() {
         setUserInfo(prev => ({ ...prev, postOffice: userData?.postOffice }))
     }, [userInfo.city, userData])
 
-
     return (
         <div className={`${styles['profile-page']} container`}>
             <section className='page-title-section'>
                 <h1 className='section-title'>Личный кабинет</h1>
-                <Link className='header-link' to='/auth' onClick={() => {
-                    localStorage.removeItem('token')
-                    dispatch(checkTokenThunk())
-                }}>Выйти из аккаунта</Link>
+                <Link className='header-link' to='/auth' onClick={onLogOutButtonClick}>Выйти из аккаунта</Link>
             </section>
             <section className={styles['profile-page__layout']}>
                 <section className={styles['profile-page__actions']}>
                     <div className={styles['actions__avatar']}>
-                        <AvatarIcon />
 
-                        <input type="file" id='select-image' accept=".jpg,.jpeg,.png" />
+                        {userData?.avatarUrl ? <img
+                            className={styles['avatar-image']}
+                            src={userData?.avatarUrl} alt='avatar'
+                            style={action === 'edit' ? { opacity: '0.1', filter: 'grayscale()' } : {}} /> : <AvatarIcon />}
+                        <input type="file" id='select-image' accept="image/*" onChange={handleFileChange} />
                         {action === 'edit' && <a href='' onClick={(event) => {
                             event.preventDefault()
                             document.querySelector('#select-image').click()
@@ -125,7 +144,7 @@ export default function ProfilePage() {
                         </div>
                         <div className={styles['info__field']}>
                             <h5>Отделение почты:</h5>
-                            <p>{userData?.postOffice}</p>
+                            <p>{`${userData?.city}, ${userData?.postOffice}`}</p>
                         </div>
                     </div>
                 </section>}

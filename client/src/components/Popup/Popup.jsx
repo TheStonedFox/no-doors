@@ -4,7 +4,6 @@ import style from './Popup.module.css'
 
 import { togglePopup } from '../../redux/features/uiSlice'
 import OrderDetailsPopup from './PopupCases/OrderDetailsPopup/OrderDetailsPopup'
-import OrderPlacedPopup from './PopupCases/OrderPlacedPopup/OrderPlacedPopup'
 import CrossIcon from '@/svg/CrossIcon'
 
 
@@ -20,13 +19,13 @@ export default function Popup({ children }) {
             style={isPopupOpen ? {
                 opacity: '1',
                 height: '100%',
+                WebkitBackdropFilter: 'blur(55px);',
                 backdropFilter: 'blur(15px)',
-                // WebkitBackdropFilter: 'blur(5px);'
             } : {
                 opacity: '0',
                 height: '0px',
+                WebkitBackdropFilter: 'blur(0px);',
                 backdropFilter: 'blur(0px)',
-                // WebkitBackdropFilter: 'blur(0px);'
             }}
             onClick={(e) => {
                 e.target === e.currentTarget && dispatch(togglePopup())

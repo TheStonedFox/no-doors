@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from './DropDownMenu.module.css'
 import { useNavigate } from 'react-router-dom'
 import { IoChevronBackOutline } from "react-icons/io5"
 import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 
-export default function DropDownMenu({ title, deviceTypes, brandModels, categories, className }) {
+export default function DropDownMenu({ title, deviceTypes, brandModels, categories, list, className }) {
     const [deviceType, setDeviceType] = useState()
     const [model, setModel] = useState()
     const [subtitle, setSubtitle] = useState(title)
@@ -58,6 +58,20 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
             </section>
 
             <div className={styles['dropdown-menu__content']}>
+                {/* {list ? } */}
+
+                {list && <section className={styles['dropdown-menu__list']} style={{ height: deviceType ? '0px' : '100%' }}>
+                    {list?.map(item => <p
+                        key={item}
+                        className={styles['dropdown-menu__device-type-item']}
+                        onClick={() => {
+                            // setDeviceType(dt)
+                            // setSubtitle(deviceTypesEnTitles[dt])
+                            // setStep('model')
+                            console.log(item)
+                        }}>{item}</p>)}
+                </section>}
+
                 {deviceTypes && <section className={styles['dropdown-menu__list']} style={{ height: deviceType ? '0px' : '100%' }}>
                     {deviceTypes?.map(dt => <p
                         key={dt}

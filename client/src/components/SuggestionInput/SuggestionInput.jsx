@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import styles from './SuggestionInput.module.css'
 import Input from '../Input/Input'

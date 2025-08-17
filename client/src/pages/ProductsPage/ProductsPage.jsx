@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import ItemsList from '@components/ItemsList/ItemsList'
 import ProductCard from '@components/ProductCard/ProductCard'

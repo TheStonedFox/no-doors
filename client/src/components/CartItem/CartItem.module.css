@@ -13,13 +13,13 @@
 
 .cart-item__title h4 {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 120%;
 }
 
 .cart-item__title p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--typography---second);
 }
 

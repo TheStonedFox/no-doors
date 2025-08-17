@@ -8,7 +8,7 @@
 
 .header__title {
     font-weight: 700;
-    font-size: 40px;
+    font-size: 2.5rem;
     color: var(--typography---main);
 }
 
@@ -36,6 +36,15 @@
     border-radius: 50%;
 }
 
+.avatar-image {
+    width: 126px;
+    height: 126px;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
 .actions__avatar>a {
     position: relative;
     display: none;
@@ -47,7 +56,7 @@
     margin-top: auto;
     position: absolute;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 100%;
     color: #fff;
     cursor: pointer;
@@ -73,13 +82,13 @@
 
 .actions__user-name {
     font-weight: 500;
-    font-size: 22px;
+    font-size: 1.375rem;
     color: var(--typography---main);
 }
 
 .actions__discount-value {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1rem;
     color: var(--typography---main);
 }
 
@@ -112,7 +121,7 @@
 
 .info__title {
     font-weight: 500;
-    font-size: 22px;
+    font-size: 1.375rem;
     line-height: 150%;
     color: var(--typography---main);
 }
@@ -126,7 +135,7 @@
 }
 
 .info__field>h5 {
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 150%;
     color: var(--typography---second);
 }
@@ -151,7 +160,7 @@
 
 .edit-info__field-name {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 150%;
     color: var(--typography---second);
 }
@@ -172,14 +181,14 @@
 
 .orders-history__header-title {
     font-weight: 500;
-    font-size: 22px;
+    font-size: 1.375rem;
     line-height: 150%;
     color: var(--typography---main);
 }
 
 .orders-history__clear-link {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 100%;
     text-decoration: underline;
     text-decoration-skip-ink: none;

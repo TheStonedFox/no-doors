@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './FilterItem.module.css'
 import CrossIcon from '@/svg/CrossIcon'
 

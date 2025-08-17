@@ -4,6 +4,10 @@ import dotenv from 'dotenv'
 import { CheckAuth } from './middleware/CheckAuth.js'
 import cors from 'cors'
 
+import { v2 as cloudinary } from 'cloudinary'
+
+import multer from 'multer'
+
 //#region controllers
 import * as authController from './controllers/authController.js'
 import * as userController from './controllers/userController.js'
@@ -18,6 +22,7 @@ import * as sharedController from './controllers/sharedController.js'
 
 import * as validations from './validations.js'
 import ProductModel from './models/ProductModel.js'
+import UserModel from './models/UserModel.js'
 
 
 dotenv.config()
@@ -130,6 +135,32 @@ app.post('/auth/check', CheckAuth, (req, res) => res.status(200).json({ message:
 
 app.get('/chooses-steps', sharedController.getChooseSteps)
 
+// Настройка Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
+})
+
+// Multer (временное хранение в памяти)
+const storage = multer.memoryStorage()
+const upload = multer({ storage })
+
+// Эндпоинт для загрузки
+app.post("/upload", CheckAuth, upload.single("avatar"), async (req, res) => {
+    try {
+        const file = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`
+
+        const result = await cloudinary.uploader.upload(file, {
+            folder: "avatars", // Папка в Cloudinary
+        })
+
+        res.json({ url: result.secure_url })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ message: "Ошибка загрузки" })
+    }
+})
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
     console.log(`The server is running on port ${process.env.PORT || 5000}`)
 })

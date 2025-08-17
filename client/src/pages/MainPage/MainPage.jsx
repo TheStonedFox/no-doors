@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './MainPage.module.css'
 import 'swiper/css/bundle'
 
@@ -50,6 +50,8 @@ export default function MainPage() {
         choosesValues.category && negative(`/search?brand=${choosesValues.brand}&model=${choosesValues.model}&category=${choosesValues.category}&deviceType=${deviceTypesEnTitles[filterValue]}`)
     }, [choosesValues.category, negative, choosesValues, filterValue])
 
+    const paginationRef = useRef(null)
+
     return (
         <div className={`${styles['main-page']} container`} onClick={() => console.log('asadsads')}>
             {choosesStep !== 'result' ? <section className={styles['main-page__intro-section']}>
@@ -58,8 +60,9 @@ export default function MainPage() {
                     className={styles['intro-section__slider']}
                     spaceBetween={50}
                     slidesPerView={1}
+                    autoplay={{ delay: 1000 }}
                     loop={true}
-                    pagination={{ clickable: true, el: `.${styles.pagination}` }}>
+                    pagination={{ clickable: true, el: paginationRef.current }}>
                     <SwiperSlide className={styles.slide}>
                         <h2>Защитное стекло на
                             iPhone 11 Pro
@@ -82,7 +85,7 @@ export default function MainPage() {
                         <img src="/images/intro-slider/01.png" alt="slider image" />
                     </SwiperSlide>
 
-                    <div className={styles.pagination}></div>
+                    <div className={styles.pagination} ref={paginationRef}></div>
                 </Swiper>
                 <div className={styles['into-section__products']}>
                     <div className={styles['into-section__product']}>
@@ -110,6 +113,7 @@ export default function MainPage() {
                     </div>
                 </div>
             </section> : null}
+
             <section className={styles['main-page__find-item-section']}>
                 <section className={styles['find-item__header']}>
                     <h2 className='section-title'>{choosesStep === 'brand' ? 'Выберите бренд' : choosesStep === 'model' ? 'Выберите модель' : choosesStep === 'category' ? 'Выберите категорию' : `${choosesValues.category} для ${choosesValues.model}`}</h2>

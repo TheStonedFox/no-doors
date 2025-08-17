@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
@@ -20,6 +21,7 @@
     "liqpay": "^0.0.1",
     "mongoose": "^8.8.3",
     "moongose": "^1.0.0",
+    "multer": "^2.0.2",
     "supervisor": "^0.12.0"
   }
 }

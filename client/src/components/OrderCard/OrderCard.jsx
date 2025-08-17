@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { data, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import styles from './OrderCard.module.css'

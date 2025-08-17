@@ -1,4 +1,3 @@
-import React from 'react'
 
 import styles from './ChooseCard.module.css'
 import ArrowIcon from '@/svg/ArrowIcon'

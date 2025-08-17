@@ -22,7 +22,7 @@
 
 .cart-items__title {
     font-weight: 500;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 100%;
     color: var(--typography---second);
     justify-self: center;
@@ -68,13 +68,13 @@
 
 .cart-item__title h4 {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 120%;
 }
 
 .cart-item__title p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--typography---second);
 }
 
@@ -102,7 +102,7 @@
 
 .result__promo-code h4 {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 150%;
     color: var(--typography---second);
 }
@@ -135,7 +135,7 @@
 .promo-code__input-box p {
     margin-left: 20px;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 150%;
     color: var(--typography---second);
 }
@@ -166,7 +166,7 @@
 
 .result__make-order p {
     font-weight: 400;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 150%;
     color: var(--typography---second);
 }

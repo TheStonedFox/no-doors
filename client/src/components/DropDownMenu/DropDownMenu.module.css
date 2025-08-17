@@ -1,13 +1,12 @@
 .dropdown-menu {
     display: flex;
-    /* top: -10px; */
     position: absolute;
     flex-direction: column;
     color: var(--typography---main);
     border-radius: 8px;
     overflow: hidden;
     height: 20px;
-    width: 180px;
+    width: 150px;
     user-select: none;
     transition: 0.2s;
 }

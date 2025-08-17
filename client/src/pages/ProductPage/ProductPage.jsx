@@ -1,7 +1,4 @@
-
-
-
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -13,7 +10,6 @@ import Spinner from '@components/Spinner/Spinner'
 import ProductCard from '@components/ProductCard/ProductCard'
 import Field from '@components/Field/Field'
 import Counter from '@components/Counter/Counter'
-import Button from '@components/Button/Button'
 import FavoriteButton from '@components/FavoriteButton/FavoriteButton'
 import Slide from './Slide'
 
@@ -26,6 +22,8 @@ import { GrFormPrevious } from "react-icons/gr"
 
 import { BsCartPlusFill } from "react-icons/bs"
 import { BsCartCheck } from "react-icons/bs"
+import useScrollUpButton from '../../hooks/useScrollUpButton'
+
 
 export default function ProductPage() {
     const dispatch = useDispatch()
@@ -33,25 +31,33 @@ export default function ProductPage() {
     const { id } = useParams()
     const userData = useSelector((state => state.user.userData))
 
-    const imgLink = '/images/categories/03.png'
+
+
+    const [isScrolled, setIsScrolled] = useState(false)
+    const scrollUp = useScrollUpButton({ offset: isScrolled ? 85 : 15 })
+
 
     const swiperRef = useRef(null)
     const [favoriteItemAction, cartItemAction] = useProductActions()
 
+    //#region useStates
     const [loadingStatus, setLadingStatus] = useState(true)
     const [products, setProducts] = useState([])
     const [product, setProduct] = useState()
     const [quantity, setQuantity] = useState(0)
     const [date, setDate] = useState()
-
     const [actionsPanelVisible, setActionsPanelVisible] = useState(false)
-
-
-    const { inStock, discount, title, model, price, wholesalePrice } = product || {}
-
     const [inCart, setInCart] = useState(false)
     const [inFavorite, setInFavorite] = useState(false)
-    const [zoomProperties, setZoomProperties] = useState({ imageSize: { height: 0, width: 0 }, shiftsValues: { top: 0, left: 0 }, visible: false, fullScreenMode: false })
+    const [zoomProperties, setZoomProperties] = useState({
+        imageSize: { height: 0, width: 0 },
+        shiftsValues: { top: 0, left: 0 },
+        visible: false,
+        fullScreenMode: false
+    })
+    //#endregion
+
+    //#region useEffects
 
     useEffect(() => { document.querySelector('title').innerHTML = product?.title || 'No Doors' }, [product])
 
@@ -77,7 +83,6 @@ export default function ProductPage() {
         return () => removeEventListener('scroll', scrollHandler)
     }, [dispatch])
 
-
     useEffect(() => {
         // setProduct(products?.find(product => product?._id === id))
         setDate(new Date(product?.createdAt))
@@ -85,12 +90,25 @@ export default function ProductPage() {
         setInCart(userData?.cartItems?.map(item => item?.productId).includes(id))
     }, [products, id, product, userData])
 
+    useEffect(() => {
+        swiperRef.current?.slides.forEach(slide => {
+            slide.querySelector('div').style.height = zoomProperties.fullScreenMode ? '100vh' : ''
+        })
+    }, [zoomProperties.fullScreenMode])
+    //#endregion
+
+    const { inStock, discount, title, model, price, wholesalePrice } = product || {}
+
+    //#region handlers
     const scrollHandler = () => {
-        const isScrolled = (window.scrollY > 300) &&
+        const isScrollEnd = (window.scrollY > 300) &&
             (window.scrollY + window.innerHeight < document.documentElement.scrollHeight)
 
-        document.getElementById('#up-button').style = `bottom: ${isScrolled ? ' 85px' : null}`
-        setActionsPanelVisible(isScrolled)
+        setIsScrolled(isScrollEnd)
+
+        // document.getElementById('#up-button').style = `${isScrolled ? 'bottom: 85px; opacity: 1' : 'bottom: 15px;'}`
+        scrollUp
+        setActionsPanelVisible(isScrollEnd)
     }
 
     const onAddToFavoriteButtonClick = () => {
@@ -122,6 +140,7 @@ export default function ProductPage() {
                 photo.setAttribute('style', 'border: solid 1px var(--ui---main); background-color: var( --ui---bg-main-darker)')
         })
     }
+    //#endregion
 
     const images = [
         '/images/categories/03.png',
@@ -131,18 +150,12 @@ export default function ProductPage() {
         '/images/categories/03.png',
     ]
 
-    useEffect(() => {
-        swiperRef.current?.slides.forEach(slide => {
-            slide.querySelector('div').style.height = zoomProperties.fullScreenMode ? '100vh' : ''
-        })
-    }, [zoomProperties.fullScreenMode])
-
     return (
         <div className={`${styles['product-page']} container`}>
             <section className={styles['product-page__product-card']}>
                 <section className={styles['product-card__photos']}>
                     {inStock ? <div className={styles['product-card__tags']}>
-                        {/* {new Date().getUTCDate() - date?.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>} */}
+                        {new Date().getUTCDate() - date?.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
 
                         {product?.discount !== 0 && <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${product?.discount}%`}</div>}
 
@@ -182,18 +195,20 @@ export default function ProductPage() {
                             </div>)}
                     </div>
                     {zoomProperties.visible ? <section className={styles['product-page__zoom-image']}>
-                        <img src={imgLink} alt="slider image"
+                        <img src={images[0]} alt="slider image"
                             style={{ transform: `translate(-${zoomProperties?.shiftsValues?.left}px, -${zoomProperties?.shiftsValues?.top}px)`, width: zoomProperties.imageSize.width }} />
                     </section> : null}
                 </section>
 
                 <section className={styles['product-card__info']}>
                     <h2 className={styles['info__title']}>{title}</h2>
+
                     <section className={styles['info__sub-title']}>
                         <p className={styles['sub-title__article']}>Артикул: 854236896ABC</p> ·
                         {inStock ? <p className={styles['sub-title__in-stock']}>{`В наличии: ${inStock} шт.`}</p> :
                             <p className={styles['sub-title__in-stock_no-in-stock']}>{`Нет в наличии.`}</p>}
                     </section>
+
                     <section className={styles['info__fields']}>
                         <Field className={styles['info__field']} title='Тип:' value='Оригинал' />
                         <Field className={styles['info__field']} title='Совместимость:' value={model} onClick={onModelFieldClick} />
@@ -204,15 +219,17 @@ export default function ProductPage() {
                     {inStock ? <Counter onCounterChange={(value) => setQuantity(value)} /> : null}
                     <section className={styles['info__controls']}>
 
-                        {inStock ? <button className={styles['controls__add-to-cart-icon-button']} onClick={onAddToCartButtonClick}>
+                        {inStock ? <button
+                            className={styles['controls__add-to-cart-icon-button']}
+                            onClick={onAddToCartButtonClick}>
                             {inCart ? <BsCartCheck /> : <BsCartPlusFill />}
                             <p>{inCart ? 'В корзине' : 'Добавить в корзину'}</p>
                         </button> : null}
 
-                        <FavoriteButton className={styles['controls__add-to-favorite-button']}
+                        <FavoriteButton
+                            className={styles['controls__add-to-favorite-button']}
                             isInFavorite={inFavorite}
-                            onClick={onAddToFavoriteButtonClick} />{
-                        }
+                            onClick={onAddToFavoriteButtonClick} />
                     </section>
                 </section>
             </section >
@@ -223,7 +240,6 @@ export default function ProductPage() {
                     {products?.map((product, index) => index < 4 && < ProductCard productData={product} key={product._id} />)}
                 </ItemsList> : <Spinner />}
             </section>
-
             <section className={styles['product-page__actions-panel']}
                 style={actionsPanelVisible ?
                     { transform: 'translateY(0%)', transition: '0.2s' } :
@@ -231,7 +247,7 @@ export default function ProductPage() {
 
                 <section className={styles['actions-panel__left-box']}>
                     <img src={images[0]} alt="product-image" className={styles['actions-panel__image']} />
-                    <h3 className={styles['actions-panel__title']}>{title}</h3>
+                    <h3 className={styles['actions-panel__title']} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>{title}</h3>
                 </section>
                 <section className={styles['actions-panel__right-box']}>
                     <p className={styles['actions-panel__price']}>{getPrice(discount, price)} ₴</p>
@@ -243,7 +259,6 @@ export default function ProductPage() {
                         isInFavorite={inFavorite}
                         onClick={onAddToFavoriteButtonClick} />
                 </section>
-
             </section>
         </div >
     )

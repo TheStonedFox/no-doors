@@ -55,7 +55,7 @@
 
 .contacts-data__input-box h5 {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 150%;
 }
 
@@ -92,7 +92,7 @@
 .delivery-method__title {
     font-family: var(--font-family);
     font-weight: 500;
-    font-size: 22px;
+    font-size: 1.375rem;
     line-height: 150%;
     color: var(--typography---main);
 }
@@ -106,7 +106,7 @@
 
 .pay-methods__policy {
     font-weight: 400;
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 130%;
     text-align: center;
     color: var(--typography---label-non-active-text);

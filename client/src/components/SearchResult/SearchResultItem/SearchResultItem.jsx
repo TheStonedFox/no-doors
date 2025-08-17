@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import styles from './SearchResultItem.module.css'
 
 import BorderedButton from '../../BorderedButton/BorderedButton'
 import FavoriteButton from '../../FavoriteButton/FavoriteButton'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { togglePopup, updateFavoriteCounter } from '../../../redux/features/uiSlice'
-import { setUserData } from '../../../redux/features/userSlice'
+import { useSelector } from 'react-redux'
 import useProductActions from '../../../hooks/useProductActions'
 
 export default function SearchResultItem({ itemInfo }) {
@@ -38,11 +36,11 @@ export default function SearchResultItem({ itemInfo }) {
     }
 
     return (
-        <div className={styles['search-result__item']} >
-            <div className={styles['item__image']} onMouseDown={() => negative(`products/${_id}`)}>
+        <div className={styles['search-result__item']}>
+            <div className={styles['item__image']} style={{ opacity: inStock ? '1' : '0.5' }} onMouseDown={() => negative(`products/${_id}`)}>
                 <img src="../../../../public/images/categories/03.png" alt="product image" />
             </div>
-            <div className={styles['item_info']}>
+            <div className={styles['item_info']} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <Link className={styles['item__title']} to={`products/${_id}`}>{title}</Link>
                 <div className={styles['sub-title']}>
                     <p>Артикул:  854236896ABC</p>
@@ -50,7 +48,7 @@ export default function SearchResultItem({ itemInfo }) {
                 </div>
             </div>
 
-            <div className={styles['item__prices']}>
+            <div className={styles['item__prices']} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <div>
                     <p className={styles['item__price-type']}>в розницу</p>
                     <p className={styles['item__price-value']}>{price} ₴</p>
@@ -61,11 +59,11 @@ export default function SearchResultItem({ itemInfo }) {
                 </div>
             </div>
             <div className={styles['item__controls']}>
-                <BorderedButton className={styles['controls__add-to-cart-button']}
+                {inStock ? <BorderedButton className={styles['controls__add-to-cart-button']}
                     title={inCart ? 'В корзине' : 'В корзину'}
-                    onClick={onCartButtonClick} />
+                    onClick={onCartButtonClick} /> : null}
                 <FavoriteButton isInFavorite={userData?.favoriteItems.includes(_id)} onClick={onFavoriteButtonClick} />
             </div>
-        </div>
+        </div >
     )
 }

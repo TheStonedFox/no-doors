@@ -78,7 +78,7 @@
 .product-card__tag {
     padding: 4px 10px;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 100%;
     text-align: center;
     color: #fff;
@@ -150,7 +150,7 @@
 
     font-family: var(--font-family);
     font-weight: 500;
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 120%;
     color: var(--typography---main);
 
@@ -166,7 +166,7 @@
     flex-wrap: wrap;
     gap: 5px;
     row-gap: 10px;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--typography---second);
     margin-bottom: 32px;
     text-wrap: nowrap;

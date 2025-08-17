@@ -1,0 +1,231 @@
+.header__top-content {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    /* margin-bottom: 15px; */
+    padding: 11px var(--safe-padding);
+}
+
+
+.header__top-links {
+    display: flex;
+    flex: 1 1 50%;
+    gap: 20px;
+}
+
+.header__top-links a {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 100%;
+    color: var(--typography---main);
+    transition: 0.2s;
+}
+
+
+.header__top-buttons {
+    display: flex;
+    flex: 1 1 50%;
+    align-items: center;
+    justify-content: end;
+    gap: 20px;
+}
+
+.header__top-buttons__profile {
+    display: flex;
+    gap: 10px;
+    text-align: center;
+    text-wrap: nowrap;
+    height: 26px;
+    overflow: hidden;
+    /* border: 2px var(--ui---main) solid; */
+    transition: 0.2s;
+    border-radius: 12px;
+    padding-left: 8px;
+}
+
+
+.header__top-buttons__profile div {
+    display: flex;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.header__top-buttons__profile svg {
+
+    width: 100%;
+    height: 100%;
+}
+
+
+.header__top-buttons__profile img {
+    width: 26px;
+}
+
+
+
+.header__phone-number {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 100%;
+    gap: 8px;
+}
+
+
+@media(hover: hover) {
+    .header__top-content a:hover {
+        text-decoration: underline;
+        color: var(--ui---main);
+        transition: 0.2s;
+    }
+
+    .header__middle-button:hover {
+        color: var(--ui---main);
+        transition: 0.2s;
+    }
+
+    .header__top-buttons__profile:hover {
+        transition: 0.2s;
+    }
+
+    .header__top-buttons__profile:hover img {
+        filter: grayscale();
+        transition: 0.2s;
+    }
+
+    .header__top-buttons__profile:hover div {
+        border: 2px solid var(--ui---main);
+    }
+
+}
+
+@media(hover: none) {
+    .header__top-content a:active {
+        text-decoration: underline;
+        color: var(--ui---main);
+        transition: 0.2s;
+    }
+
+    .header__middle-button:active {
+        color: var(--ui---main);
+        transition: 0.2s;
+    }
+
+
+
+    .header__top-buttons__profile:active {
+        transition: 0.2s;
+    }
+
+    .header__top-buttons__profile:active img {
+        filter: grayscale();
+        transition: 0.2s;
+    }
+
+    .header__top-buttons__profile:active div {
+        border: 2px solid var(--ui---main);
+    }
+}
+
+
+@media (max-width: 992px) {
+
+    .header__brands-list .brands-list__link {
+        display: none;
+    }
+
+    .header__brands-list {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .header__middle-menu-button {
+        display: flex;
+    }
+
+    .header__middle-catalog-button {
+        display: flex;
+    }
+
+    .header .brands-list__more-item {
+        display: flex;
+    }
+
+}
+
+@media(max-width: 840px) {
+    .header .header__logo {
+        display: none;
+    }
+
+    .header__top-buttons__profile {
+        font-size: 0;
+        gap: 0;
+        padding: 0;
+
+    }
+
+    .header__phone-number {
+        font-size: 0;
+        gap: 0;
+    }
+}
+
+@media(max-width: 800px) {
+
+    .header__mobile-input {
+        display: flex;
+    }
+
+    .header__middle-buttons p {
+        display: none;
+    }
+
+    .burger {
+        display: flex;
+    }
+
+    .header__bottom-content {
+        display: none;
+    }
+
+    .header__middle-content .header__search-input,
+    .header__top-content {
+        display: none;
+    }
+
+    .header__middle-content {
+        padding-top: 30px;
+        padding-bottom: 20px;
+        margin: 0;
+    }
+
+    .header .header__logo {
+        display: flex;
+    }
+
+
+}
+
+@media(max-width: 768px) {
+
+    .header__middle-content {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+}
+
+@media(max-width: 360px) {
+    .header__middle-content {
+        gap: 10px;
+    }
+}

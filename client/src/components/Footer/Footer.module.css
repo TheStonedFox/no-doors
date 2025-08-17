@@ -41,7 +41,7 @@
     flex-direction: column;
     gap: 10px;
     line-height: 100%;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .footer__contacts ul li {
@@ -82,12 +82,12 @@
 .footer__policy a {
     text-decoration: underline;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .footer__policy p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--typography---second);
 }
 

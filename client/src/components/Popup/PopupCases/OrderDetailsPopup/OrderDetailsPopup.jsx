@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Field from '../../../Field/Field'
 import CartItems from '../../../CartItems/CartItems'

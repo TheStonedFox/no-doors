@@ -1,10 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './Slide.module.css'
 
 import CrossIcon from '../../svg/CrossIcon'
 
-import { BsFullscreen } from "react-icons/bs"
-import { RxExitFullScreen } from "react-icons/rx"
 
 export default function Slide({ onZoom, image }) {
 

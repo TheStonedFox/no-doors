@@ -27,7 +27,7 @@
     overflow-y: scroll;
     z-index: 2;
     border-radius: 0 0 5px 5px;
-    background-color: #fff;
+    background-color: var(--ui---bg-main);
 
 }
 

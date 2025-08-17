@@ -27,7 +27,7 @@
 
 .auth-page__auth-box h3 {
     font-weight: 500;
-    font-size: 22px;
+    font-size: 1.375rem;
     line-height: 150%;
 }
 
@@ -62,7 +62,7 @@
 
 .auth-page__policy-box {
     font-weight: 400;
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 150%;
 }
 
@@ -94,7 +94,7 @@
 
 .advantages-box__title {
     font-weight: 500;
-    font-size: 22px;
+    font-size: 1.375rem;
     line-height: 150%;
     margin-bottom: 15px;
 }

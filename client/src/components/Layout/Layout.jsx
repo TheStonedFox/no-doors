@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './Layout.module.css'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,6 +10,7 @@ import Popup from '../Popup/Popup'
 import { toggleSearchResults } from '../../redux/features/uiSlice'
 import { FaChevronUp } from "react-icons/fa"
 import NotificationToast from '../NotificationToast/NotificationToast'
+import useScrollUpButton from '../../hooks/useScrollUpButton'
 
 export default function Layout({ children }) {
 
@@ -17,11 +18,14 @@ export default function Layout({ children }) {
 
     const notificationsRef = useRef(null)
 
+    const scrollUp = useScrollUpButton({ offset: 15 })
+    const scrollHandler = () => scrollUp
+
     useEffect(() => { document.querySelector('html').style = `${isPopupOpen ? 'overflow-y: hidden' : ''}` }, [isPopupOpen])
 
     const notificationList = useSelector((state) => state.ui.notificationList)
 
-    const scrollHandler = () => setScrollTop(document.documentElement.scrollTop)
+    // const scrollHandler = () => setScrollTop(document.documentElement.scrollTop)
     useEffect(() => {
         window.addEventListener('scroll', scrollHandler)
         return () => window.removeEventListener('scroll', scrollHandler)
@@ -44,7 +48,7 @@ export default function Layout({ children }) {
             <Popup />
             <div className={styles['scroll-up-button']}
                 id='#up-button'
-                style={{ opacity: document.documentElement.scrollHeight / scrollTop < 5 ? '1' : '0', transition: '0.2s', bottom: '15px' }}
+                // style={{ opacity: document.documentElement.scrollHeight / scrollTop < 5 ? '1' : '0', transition: '0.2s', bottom: '15px' }}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <FaChevronUp color='var( --ui---bg-main)' />
             </div>

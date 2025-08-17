@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import styles from './SearchInput.module.css'
 
 import SearchResult from '../SearchResult/SearchResult'
 
 import SearchIcon from '@/svg/SearchIcon'
-import { getProducts } from '@api/api'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleSearchResults } from '../../redux/features/uiSlice'
 import useSearchResults from '../../hooks/useSearchResults'
-import useProducts from '../../hooks/useProducts'
 
 export default function SearchInput({ className, value, onChange }) {
 

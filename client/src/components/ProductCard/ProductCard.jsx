@@ -1,22 +1,21 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Field from '../Field/Field'
-import Counter from '../Counter/Counter'
 import BorderedButton from '../BorderedButton/BorderedButton'
+import Counter from '../Counter/Counter'
+import Field from '../Field/Field'
 
 import FavoriteIcon from '@/svg/FavoriteIcon'
 
 import styles from './ProductCard.module.css'
 
 
-import { setUserData } from '../../redux/features/userSlice'
-import Spinner from '../Spinner/Spinner'
 import getPrice from '@utils/getPrice'
 import useProductActions from '../../hooks/useProductActions'
+import { setUserData } from '../../redux/features/userSlice'
+import Spinner from '../Spinner/Spinner'
 
 // import { BsFillCartCheckFill } from "react-icons/bs"
 // import { BsCartPlusFill } from "react-icons/bs"
@@ -71,13 +70,13 @@ export default function ProductCard({ productData }) {
 
     return (
         <div className={`${styles['product-card']} ${!inStock && styles['disabled']}`}>
-            {inStock ? <div className={styles['product-card__tags']}>
+            {inStock ? <div className={styles['product-card__tags']} >
                 {discount ? <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${discount}%`}</div> : null}
                 <div className={`${styles['product-card__tag']} ${styles['product-card__popular-tag']}`}>Популярное</div>
                 {new Date().getUTCDate() - date.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
             </div> : null}
             <FavoriteIcon className={styles['product-card__fav-button']} onClick={onFavoriteButtonClick} inFavorite={inFavorite} />
-            <Link to={`/products/${productId}`}>
+            <Link to={`/products/${productId}`} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <div className={styles['product-card__image']}>
                     {imageLoading && <Spinner />}
                     <img style={imageLoading ? { display: 'none' } : { display: 'flex' }}
@@ -85,7 +84,7 @@ export default function ProductCard({ productData }) {
                         onLoad={() => setImageLoading(false)} />
                 </div>
             </Link>
-            <div className={styles['product-card__bottom-box']}>
+            <div className={styles['product-card__bottom-box']} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <Link className={styles['product-card__title']} to={`/products/${productId}`}>{title}</Link>
                 <div className={styles['product-card__fields']}>
                     <Field title='Розница:' value={`${getPrice(discount, price)} ₴`} />

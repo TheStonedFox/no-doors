@@ -15,7 +15,6 @@ export const profile = async (req, res) => {
     }
 }
 
-
 export const orders = async (req, res) => {
 
     try {
@@ -59,6 +58,7 @@ export const update = async (req, res) => {
         user.email = req.body.email || user.email
         user.city = req.body.city || user.city
         user.postOffice = req.body.postOffice || user.postOffice
+        user.avatarUrl = req.body.avatarUrl || user.avatarUrl
 
         await user.save()
 

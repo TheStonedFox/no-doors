@@ -1,53 +1,4 @@
-
-class ApiError extends Error {
-    constructor(message, code, data) {
-        super(message)
-        this.name = 'ApiError'
-        this.code = code
-        this.data = data
-    }
-}
-
-const apiRequest = async (url, method, body, headers) => {
-    try {
-        if (method === 'GET') {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/${url}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token') || null,
-                    ...headers
-                },
-            })
-
-            if (!res.ok) {
-                const json = await res.json()
-                throw new ApiError(json.message, json.code, json)
-            }
-
-            return await res.json()
-        }
-
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/${url}`, {
-            method,
-            body: method !== 'GET' && body ? JSON.stringify(body) : null,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token'),
-                ...headers
-            },
-        })
-
-        if (!res.ok) {
-            const json = await res.json()
-            throw new ApiError(json.message, json.code, json)
-        }
-
-        return await res.json()
-
-    } catch (error) {
-        throw error instanceof Error ? error : new Error(String(error))
-    }
-}
+import { apiRequest } from "../utils/apiRequest"
 
 export const register = async (data) => apiRequest('auth/register', 'POST', data)
 export const login = async (email, password) => apiRequest(`auth/login`, 'POST', { email, password })
@@ -86,6 +37,9 @@ export const getStepChoices = async () => apiRequest('chooses-steps', 'GET')
 export const searchProducts = async (query) => apiRequest(`search?${query}`, 'GET')
 
 export const checkToken = async () => apiRequest('auth/check', 'POST')
+
+export const uploadAvatar = async (body) => apiRequest('upload', 'POST', body)
+
 
 
 

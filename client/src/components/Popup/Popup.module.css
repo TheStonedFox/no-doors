@@ -6,8 +6,8 @@
     z-index: 1000;
     width: 100%;
     background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(55px);
     /* Префикс для Safari */
     transition: 0.2s ease-out opacity, backdrop-filter;
     overflow: hidden;

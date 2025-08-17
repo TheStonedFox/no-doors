@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './BorderedButton.module.css'
 
 export default function BorderedButton({ title, onClick, className }) {

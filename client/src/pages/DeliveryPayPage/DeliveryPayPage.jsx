@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './DeliveryPayPage.module.css'
 
 export default function DeliveryPayPage() {
