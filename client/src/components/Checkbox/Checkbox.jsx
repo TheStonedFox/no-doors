@@ -4,17 +4,18 @@ import styles from './Checkbox.module.css'
 
 import { useState } from 'react'
 
-export default function Checkbox({ onClick, isChecked, title }) {
-    const [checked, setChecked] = useState(false)
+export default function Checkbox({ onClick, isChecked, title, onChange }) {
+    const [checked, setChecked] = useState(isChecked)
 
-    useEffect(() => {
-        setChecked(isChecked ? true : false)
-    }, [isChecked])
+    // useEffect(() => {
+    //     setChecked(isChecked)
+    // }, [isChecked])
     return (
         <div className={styles['check-box']}
             onClick={() => {
                 setChecked(!checked)
                 onClick && onClick()
+                onChange(checked)
             }}>
             <div className={`${styles['check-box__indicator']} ${checked ? styles['active'] : null}`}>
                 <svg width={checked ? 8 : 0} height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">

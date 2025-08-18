@@ -66,6 +66,8 @@
 
 .header__top-buttons__profile img {
     width: 26px;
+    height: 26px;
+    object-fit: cover;
 }
 
 

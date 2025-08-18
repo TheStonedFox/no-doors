@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
+import { generateId } from '../../utils/generateId'
+
 const initialState = {
     isBurgerOpen: false,
     isCatalogOpen: false,
@@ -54,7 +56,8 @@ export const uiSlice = createSlice({
             state.theme = action.payload
         },
         addNotification: (state, action) => {
-            state.notificationList = [action.payload, ...state.notificationList]
+            // state.notificationList = [action.payload, ...state.notificationList]
+            state.notificationList = [{ ...action.payload, id: generateId() }, ...state.notificationList]
         },
         removeNotification: (state, action) => {
             state.notificationList = state.notificationList.filter(
@@ -63,7 +66,6 @@ export const uiSlice = createSlice({
         }
     }
 })
-
 
 
 

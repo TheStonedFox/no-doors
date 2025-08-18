@@ -21,19 +21,19 @@ export default function useProductActions() {
             api.addCartItem(_id, productId, quantity || 1).then(res => {
                 dispatch(setUserData())
                 dispatch(updateCartCounter(cartItems?.length + 1))
-                dispatch(addNotification({ id: generateId(), type: 'success', text: res.message, route: 'cart' }))
+                dispatch(addNotification({ type: 'success', text: res.message, route: 'cart' }))
             }).catch(error =>
                 dispatch(addNotification(
-                    { id: generateId(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
+                    { type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
 
         } else {
             api.removeCartItem(_id, productId).then(res => {
                 dispatch(setUserData())
                 dispatch(updateCartCounter(cartItems?.length - 1))
-                dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
+                dispatch(addNotification({ type: 'success', text: res.message }))
             }).catch(error =>
                 dispatch(addNotification(
-                    { id: generateId(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
+                    { type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
         }
     }
 
@@ -45,17 +45,17 @@ export default function useProductActions() {
             api.addFavoriteItem(_id, productId).then(() => {
                 dispatch(setUserData())
                 dispatch(updateFavoriteCounter(favoriteItems?.length + 1))
-                dispatch(addNotification({ id: generateId(), type: 'success', text: 'Товар добавлен в избранное.', route: 'favorites' }))
+                dispatch(addNotification({ type: 'success', text: 'Товар добавлен в избранное.', route: 'favorites' }))
             })
                 .catch(error =>
                     dispatch(addNotification(
-                        { id: generateId(), type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
+                        { type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
 
         } else {
             api.removeFavoriteItem(_id, productId).then(() => {
                 dispatch(setUserData())
                 dispatch(updateFavoriteCounter(favoriteItems?.length - 1))
-                dispatch(addNotification({ id: generateId(), type: 'success', text: 'Товар удален из избранного.' }))
+                dispatch(addNotification({ type: 'success', text: 'Товар удален из избранного.' }))
             })
         }
     }

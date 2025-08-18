@@ -234,6 +234,10 @@ export default function ProductPage() {
                 </section>
             </section >
 
+            <section className={styles['product-page__comments']}>
+                <h2 className='section-title'>Отзывы к товару</h2>
+            </section>
+
             <section className={styles['product-page__popular-products']}>
                 <h2 className='section-title'>Популярные товары</h2>
                 {!loadingStatus ? <ItemsList>

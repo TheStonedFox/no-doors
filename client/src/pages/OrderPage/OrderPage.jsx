@@ -141,12 +141,12 @@ export default function OrderPage() {
                                 .then(res => {
                                     setValidationErrors([])
                                     dispatch(setUserData())
-                                    dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
+                                    dispatch(addNotification({ type: 'success', text: res.message }))
                                 })
                                 .catch(error => {
                                     setValidationErrors(error.data.validationErrors || '')
                                     dispatch(addNotification(
-                                        { id: generateId(), type: 'error', text: `${error.message} (${error.data.validationErrors.length})` }))
+                                        { type: 'error', text: `${error.message} (${error.data.validationErrors.length})` }))
                                 })
                         }} />
                         <p className={styles['pay-methods__policy']}>Нажимая на кнопку «Подтвердить заказ», Вы подтверждаете,

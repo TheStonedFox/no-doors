@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 
 import './App.css'
 import './global.css'
@@ -24,31 +24,36 @@ import SearchPage from './pages/SearchPage/SearchPage'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { closeBurger } from './redux/features/uiSlice'
-import { checkTokenThunk, setUserData } from './redux/features/userSlice'
+import { checkTokenThunk, resetUser, setUserData } from './redux/features/userSlice'
 import { useEffect, useState } from 'react'
 import { getChooseValues } from './redux/features/sharedSlice'
 
 function App() {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const tokenStatus = useSelector((state) => state.user.isTokenValid)
   const [localToken, setLocalToken] = useState()
-  const negative = useNavigate()
 
   window.addEventListener('storage', (e) => {
-    if (e.key === 'token' && !localStorage.getItem('token'))
-      negative('/')
+    if (e.key === 'token' && !localStorage.getItem('token') || e.key === 'token' && !sessionStorage.getItem('token'))
+      navigate('/')
     if (e.key === 'token')
-      setLocalToken(localStorage.getItem('token'))
+      setLocalToken(localStorage.getItem('token') || sessionStorage.getItem('token'))
+
   })
 
   useEffect(() => {
     dispatch(checkTokenThunk())
+  }, [dispatch])
 
-    tokenStatus && dispatch(setUserData())
-
-    return () => dispatch(setUserData())
-  }, [tokenStatus, localToken, dispatch])
+  useEffect(() => {
+    if (tokenStatus) {
+      dispatch(setUserData())
+    } else {
+      dispatch(resetUser())
+    }
+  }, [tokenStatus, dispatch, localToken])
 
   useEffect(() => {
     dispatch(getChooseValues())
@@ -60,12 +65,11 @@ function App() {
     }
   }, [])
 
-  const isTokenValid = useSelector((state) => state.user.isTokenValid)
   return (
     <>
       <Layout >
         <Routes>
-          {isTokenValid ? <>
+          {tokenStatus ? <>
             <Route path='/profile' element={<ProfilePage />}></Route>
             <Route path='/profile/viewed-products' element={<ViewedProductsPage />}></Route>
             <Route path='/order' element={<OrderPage />}></Route>
@@ -74,6 +78,7 @@ function App() {
             <Route path='/cart' element={<CartPage />}></Route>
           </> : null}
           <Route path='/' element={<MainPage />}></Route>
+          <Route path='/profile' element={<AuthPage />}></Route>
           <Route path='/auth' element={<AuthPage />}></Route>
           <Route path='/cart' element={<AuthPage />}></Route>
           <Route path='/about' element={<AboutPage />}></Route>
@@ -83,6 +88,8 @@ function App() {
           <Route path='/products' element={<ProductsPage />}></Route>
           <Route path='/products/:id' element={<ProductPage />}></Route>
           <Route path='/search' element={<SearchPage />}></Route>
+
+          {!tokenStatus ? <Route path='*' element={<Navigate to='/' />} /> : null}
         </Routes>
       </Layout >
     </ >

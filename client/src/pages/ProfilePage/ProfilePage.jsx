@@ -12,6 +12,8 @@ import AvatarIcon from './AvatarIcon'
 
 import styles from './ProfilePage.module.css'
 
+import Spinner from '@components/Spinner/Spinner'
+
 import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
 import { addNotification } from '../../redux/features/uiSlice'
 
@@ -43,22 +45,22 @@ export default function ProfilePage() {
 
         if (JSON.stringify(userInfo) === JSON.stringify(oldUserInfo)) {
             setAction('info')
-            return dispatch(addNotification({ id: generateId(), type: 'info', text: 'Данные не были изменены.' }))
+            return dispatch(addNotification({ type: 'info', text: 'Данные не были изменены.' }))
         }
 
         updateUserInfo(userInfo)
             .then(res => {
                 dispatch(setUserData())
                 setAction('info')
-                dispatch(addNotification({ id: generateId(), type: 'success', text: res.message }))
+                dispatch(addNotification({ type: 'success', text: res.message }))
             })
             .catch(error => {
                 if (error.data.validationErrors) {
-                    dispatch(addNotification({ id: generateId(), type: 'error', text: error.message }))
+                    dispatch(addNotification({ type: 'error', text: error.message }))
                     return setValidationErrors(error.data.validationErrors)
                 }
                 else if (error.message === 'Пользователь не найден')
-                    return dispatch(addNotification({ id: generateId(), type: 'error', text: error.message }))
+                    return dispatch(addNotification({ type: 'error', text: error.message }))
             })
     }
 
@@ -71,15 +73,18 @@ export default function ProfilePage() {
         formData.append("avatar", file)
 
         uploadAvatar(formData)
-            .then(res => setUserInfo((prev) => ({ ...prev, avatarUrl: res.url })))
-            .catch(error => dispatch(addNotification({ id: generateId(), type: 'error', text: error.message })))
+            .then(res => {
+                setUserInfo((prev) => ({ ...prev, avatarUrl: res.url }))
+                dispatch(addNotification({ type: 'success', text: res.message }))
+            })
+            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
     }
 
     const onLogOutButtonClick = () => {
         localStorage.removeItem('token')
+        sessionStorage.removeItem('token')
         dispatch(checkTokenThunk())
     }
-
 
     useEffect(() => {
         const { fio, phone, email, city, postOffice, avatarUrl } = userData || {}
@@ -101,7 +106,6 @@ export default function ProfilePage() {
             <section className={styles['profile-page__layout']}>
                 <section className={styles['profile-page__actions']}>
                     <div className={styles['actions__avatar']}>
-
                         {userData?.avatarUrl ? <img
                             className={styles['avatar-image']}
                             src={userData?.avatarUrl} alt='avatar'
@@ -111,6 +115,13 @@ export default function ProfilePage() {
                             event.preventDefault()
                             document.querySelector('#select-image').click()
                         }}>Сменить аватар</a>}
+                        {/* {action === 'edit' && userData?.avatarUrl && <a href='' onClick={(event) => {
+                            event.preventDefault()
+                            // document.querySelector('#select-image').click()
+                            updateUserInfo({ avatarUrl: 's' })
+                                .then(() => dispatch(setUserData()))
+                            dispatch(setUserData())
+                        }}>Удалить</a>} */}
                     </div>
                     <div className={styles['actions__text']}>
                         <p className={styles['actions__user-name']}>{userData?.fio}</p>

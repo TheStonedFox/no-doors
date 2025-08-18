@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import UserModel from '../models/UserModel.js'
 
 export const CheckAuth = async (req, res, next) => {
     // const token = (req.headers.authorization || '').slice(7)

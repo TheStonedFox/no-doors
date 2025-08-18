@@ -1,7 +1,7 @@
 import UserModel from "../models/UserModel.js"
 import OrderModel from "../models/OrderModel.js"
 import { validationResult } from "express-validator"
-
+import { v2 as cloudinary } from 'cloudinary'
 export const profile = async (req, res) => {
     try {
         const user = await UserModel.findById({ _id: req.id })
@@ -65,5 +65,21 @@ export const update = async (req, res) => {
         return res.status(200).json({ message: 'Данные обновлены', code: 200, user })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+}
+
+
+export const uploadAvatar = async (req, res) => {
+    try {
+        const file = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`
+
+        const result = await cloudinary.uploader.upload(file, {
+            folder: "avatars", // Папка в Cloudinary
+        })
+
+        res.json({ url: result.secure_url, code: 200, message: 'Загрузка завершена.' })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ message: "Ошибка загрузки." })
     }
 }

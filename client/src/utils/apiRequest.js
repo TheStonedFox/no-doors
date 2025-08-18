@@ -17,7 +17,7 @@ export const apiRequest = async (url, method, body, headers = {}) => {
             body: method !== 'GET' && body ? (isFormData ? body : JSON.stringify(body)) : null,
             headers: {
                 ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-                'Authorization': localStorage.getItem('token') || null,
+                'Authorization': localStorage.getItem('token') || sessionStorage.getItem('token') || null,
                 ...headers,
             },
         })

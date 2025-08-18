@@ -1,30 +1,80 @@
+import { useState, useEffect, useRef } from 'react'
+
+import { useNavigate } from 'react-router-dom'
 
 import styles from './AuthPage.module.css'
 import Button from '@components/Button/Button'
-import BorderedButton from '@components/BorderedButton/BorderedButton'
 import Checkbox from '@components/Checkbox/Checkbox'
 import Input from '@components/Input/Input'
+import BorderedButton from '@components/BorderedButton/BorderedButton'
 
-
-import { useState, useEffect } from 'react'
 import { login, register } from '@api/api'
 import { addNotification } from '../../redux/features/uiSlice'
 
 import { useDispatch } from 'react-redux'
 import RegisterAdvantagesIcon from '@/svg/RegisterAdvantagesIcon'
 
-import { generateId } from '@utils/generateId'
-
+import ReCAPTCHA from 'react-google-recaptcha'
+import { checkTokenThunk, resetUser, setUserData } from '../../redux/features/userSlice'
 
 export default function AuthPage() {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const reCaptchaRef = useRef(null)
 
     const [mode, setMode] = useState('login')
-    const [data, setData] = useState({})
+    const [data, setData] = useState({ email: '', password: '', passwordCheck: '', fio: '', phone: '', reCaptchaToken: null })
     const [validationErrors, setValidationErrors] = useState([])
+    const [isCaptchaNeed, setIsCaptchaNeed] = useState(false)
+    const [isPolicyAccepted, setIsPolicyAccepted] = useState(false)
 
-    useEffect(() => setData({ email: '', password: '', passwordCheck: '', fio: '', phone: '' }), [mode])
+    useEffect(() => {
+        if (reCaptchaRef.current)
+            reCaptchaRef.current.reset()
+    }, [mode, isCaptchaNeed])
+
+    const onRegisterButtonClick = () => {
+        if (data.passwordCheck !== data.password) {
+            return dispatch(addNotification({ type: 'error', text: 'Пароли не совпадают.' }))
+        }
+
+        if (!isPolicyAccepted)
+            return dispatch(addNotification({ type: 'info', text: 'Вы должны дать свое согласие на обработку персональных данных, прежде чем завершить регистрацию.' }))
+
+        register(data)
+            .then(res => {
+                dispatch(addNotification({ type: 'info', text: res.message }))
+                setMode('login')
+            })
+            .catch(error => {
+                setValidationErrors(error.data.validationErrors || null)
+                dispatch(addNotification({ type: 'error', text: error.message }))
+                reCaptchaRef.current.reset()
+            })
+    }
+
+    const onLoginButtonClick = () => {
+        login({ ...data, isCaptchaNeed })
+            .then(res => {
+                if (localStorage.getItem('rememberMe') === '1')
+                    localStorage.setItem('token', res.token)
+                else
+                    sessionStorage.setItem('token', res.token)
+                // window.location.href = '/profile'
+                dispatch(setUserData())
+                dispatch(checkTokenThunk())
+                navigate('/profile')
+
+                dispatch(addNotification({ type: 'info', text: res.message }))
+            })
+            .catch(error => {
+                dispatch(addNotification({ type: 'error', text: error.message }))
+                setIsCaptchaNeed(true)
+            })
+    }
+
     return (
         <div className={styles['auth-page']}>
             <h2 className={`${'section-title'} ${styles['auth-page__title']}`}>Вход и регистрация</h2>
@@ -36,14 +86,17 @@ export default function AuthPage() {
                         <h5>ФИО:</h5>
                         <Input placeholder='Иванов Иван Иванович' type='text' value={data.fio} errorFrame={validationErrors?.find(error => error.path === 'fio')} onChange={(value) => setData(prev => ({ ...prev, fio: value }))} />
                     </div>}
+
                     {mode === 'register' && <div className={styles['auth-box__input-box']}>
                         <h5>Телефон:</h5>
                         <Input placeholder='0123456789' type='tel' value={data.phone} errorFrame={validationErrors?.find(error => error.path === 'phone')} onChange={(value) => setData(prev => ({ ...prev, phone: value }))} />
                     </div>}
+
                     <div className={styles['auth-box__input-box']}>
                         <h5>Электронная почта:</h5>
                         <Input placeholder='example@mail.com' type='email' value={data.email} errorFrame={validationErrors?.find(error => error.path === 'email')} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />
                     </div>
+
                     <div className={styles['auth-box__input-box']}>
                         <h5>Пароль:</h5>
                         <Input placeholder='Введите пароль' type='password' value={data.password} errorFrame={validationErrors?.find(error => error.path === 'password')} onChange={(value) => setData(prev => ({ ...prev, password: value }))} />
@@ -55,50 +108,25 @@ export default function AuthPage() {
                     </div>}
 
                     {mode === 'login' && <div className={styles['auth-page__remember-me-box']}>
-                        <Checkbox title='Запомнить меня' />
+                        <Checkbox title='Запомнить меня' onChange={(value) => localStorage.setItem('rememberMe', !value ? '1' : '0')}
+                            isChecked={localStorage.getItem('rememberMe') === '1' ? true : false} />
                         <a href="#">Забыли пароль?</a>
                     </div>}
                     {mode === 'register' && <div className={styles['auth-page__policy-box']}>
                         <Checkbox
                             title={<p>Я прочитал и даю своё согласие на <a href='#'>обработку
                                 персональных данных</a></p>}
+                            onChange={(value) => setIsPolicyAccepted(!value)}
                         />
                     </div>}
+                    {isCaptchaNeed || mode === 'register' ? <ReCAPTCHA ref={reCaptchaRef}
+                        sitekey={import.meta.env.VITE_RE_CAPTCHA_SITE_KEY}
+                        onChange={(token) => setData(prev => ({ ...prev, reCaptchaToken: token }))}></ReCAPTCHA> : false}
+
                     <div className={styles['auth-page__buttons']}>
-                        {mode === 'login' && <Button
-                            title='Войти'
-                            onClick={() => {
-                                login(data.email, data.password)
-                                    .then(res => {
-                                        localStorage.setItem('token', res.token)
-                                        window.location.href = '/profile'
-                                    })
-                                    .catch(error => dispatch(addNotification({ id: generateId(), type: 'error', text: error.message })))
-                            }}
-                        />}
-                        {mode === 'login' && <BorderedButton
-                            onClick={() => setMode('register')}
-                            title='Зарегистрироваться'
-                        />}
-                        {mode === 'register' && <Button
-                            title='Зарегистрироваться'
-                            onClick={async () => {
-
-                                if (data.passwordCheck !== data.password) {
-                                    return dispatch(addNotification({ id: generateId(), type: 'error', text: 'Пароли не совпадают.' }))
-                                }
-
-                                register(data)
-                                    .then(res => {
-                                        if (res.code === 200)
-                                            setMode('login')
-                                    })
-                                    .catch(error => {
-                                        setValidationErrors(error.data.validationErrors || null)
-                                        dispatch(addNotification({ id: generateId(), type: 'error', text: error.message }))
-                                    })
-                            }}
-                        />}
+                        {mode === 'login' && <Button title='Войти' onClick={onLoginButtonClick} />}
+                        {mode === 'login' && <BorderedButton onClick={() => setMode('register')} title='Зарегистрироваться' />}
+                        {mode === 'register' && <Button title='Зарегистрироваться' onClick={onRegisterButtonClick} />}
                         {mode === 'register' && <BorderedButton onClick={() => setMode('login')} title='Войти' />}
                     </div>
 
@@ -123,7 +151,8 @@ export default function AuthPage() {
                             скидка которых суммируется с уже имеющейся</li>
                     </ul>
                 </div>
+
             </div>
-        </div>
+        </div >
     )
 }
