@@ -82,7 +82,7 @@ function App() {
           <Route path='/profile' element={<AuthPage />}></Route>
           <Route path='/auth' element={<AuthPage />}></Route>
           <Route path='/cart' element={<AuthPage />}></Route>
-          <Route path='/auth/reset-password/' element={<ResetPasswordPage />}></Route>
+          {!tokenStatus ? <Route path='/auth/reset-password/' element={<ResetPasswordPage />}></Route> : null}
           <Route path='/about' element={<AboutPage />}></Route>
           <Route path='/delivery-and-pay' element={<DeliveryPayPage />}></Route>
           <Route path='/guarantees' element={<GuaranteesPage />}></Route>
@@ -91,7 +91,7 @@ function App() {
           <Route path='/products/:id' element={<ProductPage />}></Route>
           <Route path='/search' element={<SearchPage />}></Route>
 
-          {!tokenStatus ? <Route path='*' element={<Navigate to='/' />} /> : null}
+      <Route path='*' element={<Navigate to='/' />} /> 
         </Routes>
       </Layout >
     </ >

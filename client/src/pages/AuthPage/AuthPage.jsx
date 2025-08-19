@@ -17,6 +17,8 @@ import RegisterAdvantagesIcon from '../../svg/RegisterAdvantagesIcon'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { checkTokenThunk, resetUser, setUserData } from '../../redux/features/userSlice'
 
+import Spinner from '../../components/Spinner/Spinner'
+
 export default function AuthPage() {
 
     const dispatch = useDispatch()
@@ -25,7 +27,15 @@ export default function AuthPage() {
     const reCaptchaRef = useRef(null)
 
     const [mode, setMode] = useState('login')
-    const [data, setData] = useState({ email: '', password: '', passwordCheck: '', fio: '', phone: '', reCaptchaToken: null })
+    const [data, setData] = useState({
+        email: '',
+        password: '',
+        passwordCheck: '',
+        fio: '',
+        phone: '',
+        reCaptchaToken: null,
+        emailConfirmCode: null
+    })
     const [validationErrors, setValidationErrors] = useState([])
     const [isCaptchaNeed, setIsCaptchaNeed] = useState(false)
     const [isPolicyAccepted, setIsPolicyAccepted] = useState(false)
@@ -35,7 +45,11 @@ export default function AuthPage() {
             reCaptchaRef.current.reset()
     }, [mode, isCaptchaNeed])
 
+    const [isLadingEnd, setIsLadingEnd] = useState(true)
+
+
     const onRegisterButtonClick = () => {
+
         if (data.passwordCheck !== data.password) {
             return dispatch(addNotification({ type: 'error', text: 'Пароли не совпадают.' }))
         }
@@ -43,8 +57,12 @@ export default function AuthPage() {
         if (!isPolicyAccepted)
             return dispatch(addNotification({ type: 'info', text: 'Вы должны дать свое согласие на обработку персональных данных, прежде чем завершить регистрацию.' }))
 
+        if (mode === 'email-confirm' && !data.emailConfirmCode) return dispatch(addNotification({ type: 'error', text: 'Введите код' }))
+
+        setIsLadingEnd(false)
         register(data)
             .then(res => {
+                if (res.code === 202) return setMode('email-confirm')
                 dispatch(addNotification({ type: 'info', text: res.message }))
                 setMode('login')
             })
@@ -53,16 +71,17 @@ export default function AuthPage() {
                 dispatch(addNotification({ type: 'error', text: error.message }))
                 reCaptchaRef.current.reset()
             })
+            .finally(() => setIsLadingEnd(true))
     }
 
     const onLoginButtonClick = () => {
+        setIsLadingEnd(false)
         login({ ...data, isCaptchaNeed })
             .then(res => {
                 if (localStorage.getItem('rememberMe') === '1')
                     localStorage.setItem('token', res.token)
                 else
                     sessionStorage.setItem('token', res.token)
-                // window.location.href = '/profile'
                 dispatch(setUserData())
                 dispatch(checkTokenThunk())
                 navigate('/profile')
@@ -72,24 +91,28 @@ export default function AuthPage() {
             .catch(error => {
                 dispatch(addNotification({ type: 'error', text: error.message }))
                 setIsCaptchaNeed(true)
+                setIsLadingEnd(true)
             })
     }
 
     const onResetPasswordButtonClick = () => {
-
+        setIsLadingEnd(false)
         resetPassword({ ...data })
             .then(res => {
                 dispatch(addNotification({ type: 'info', text: res.message }))
                 setMode('login')
             })
             .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
+            .finally(() => setIsLadingEnd(true))
     }
+
+    useEffect(() => { console.log(isLadingEnd) }, [isLadingEnd])
 
     return (
         <div className={styles['auth-page']}>
             <h2 className={`${'section-title'} ${styles['auth-page__title']}`}>Вход и регистрация</h2>
             <div className={styles['auth-page__layout']}>
-                <div className={styles['auth-page__auth-box']}>
+                {isLadingEnd ? <div className={styles['auth-page__auth-box']}>
                     <h3>
                         {mode === 'login' && 'Вход'}
                         {mode === 'register' && 'Регистрация'}
@@ -106,12 +129,12 @@ export default function AuthPage() {
                         <Input placeholder='0123456789' type='tel' value={data.phone} errorFrame={validationErrors?.find(error => error.path === 'phone')} onChange={(value) => setData(prev => ({ ...prev, phone: value }))} />
                     </div>}
 
-                    <div className={styles['auth-box__input-box']}>
+                    {mode !== 'email-confirm' && <div className={styles['auth-box__input-box']}>
                         <h5>Электронная почта:</h5>
                         <Input placeholder='example@mail.com' type='email' value={data.email} errorFrame={validationErrors?.find(error => error.path === 'email')} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />
-                    </div>
+                    </div>}
 
-                    {mode !== 'reset' && <div className={styles['auth-box__input-box']}>
+                    {mode !== 'reset' && mode !== 'email-confirm' && <div className={styles['auth-box__input-box']}>
                         <h5>Пароль:</h5>
                         <Input placeholder='Введите пароль' type='password' value={data.password} errorFrame={validationErrors?.find(error => error.path === 'password')} onChange={(value) => setData(prev => ({ ...prev, password: value }))} />
                     </div>}
@@ -135,7 +158,14 @@ export default function AuthPage() {
                             onChange={(value) => setIsPolicyAccepted(!value)}
                         />
                     </div>}
-                    {isCaptchaNeed || mode === 'register' ? <ReCAPTCHA
+
+                    {mode === 'email-confirm' && <div className={styles['auth-box__input-box']}>
+                        <h5>На почту {data.email} был отправлен код, введите его ниже.</h5>
+                        <Input placeholder='000000' value={data.emailConfirmCode}
+                            onChange={(value) => setData(prev => ({ ...prev, emailConfirmCode: value }))} />
+                    </div>}
+
+                    {isCaptchaNeed || mode === 'email-confirm' ? <ReCAPTCHA
                         ref={reCaptchaRef}
                         style={{ margin: '0 auto' }}
                         sitekey={import.meta.env.VITE_RE_CAPTCHA_SITE_KEY}
@@ -144,12 +174,13 @@ export default function AuthPage() {
                     <div className={styles['auth-page__buttons']}>
                         {mode === 'login' && <Button title='Войти' onClick={onLoginButtonClick} />}
                         {mode === 'login' && <BorderedButton onClick={() => setMode('register')} title='Зарегистрироваться' />}
-                        {mode === 'register' && <Button title='Зарегистрироваться' onClick={onRegisterButtonClick} />}
-                        {mode === 'register' && <BorderedButton onClick={() => setMode('login')} title='Войти' />}
+                        {mode === 'register' && <Button title='Продолжить' onClick={onRegisterButtonClick} />}
+                        {mode === 'email-confirm' && <Button title='Зарегистрироваться' onClick={onRegisterButtonClick} />}
                         {mode === 'reset' && <Button onClick={onResetPasswordButtonClick} title='Восстановить пароль' />}
+                        {mode !== 'login' && <BorderedButton onClick={() => setMode(mode !== 'email-confirm' ? 'login' : 'register')} title='Назад' />}
                     </div>
 
-                </div>
+                </div> : <Spinner />}
                 <div className={styles['auth-page__advantages-box']}>
                     <RegisterAdvantagesIcon className={styles['advantages-box__icon']} />
                     <h3 className={styles['advantages-box__title']}>У зарегистрированных пользователей ряд преимуществ:</h3>

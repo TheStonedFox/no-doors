@@ -18,10 +18,18 @@ const resetTokenModel = new mongoose.Schema({
     expires: Date
 }, { _id: false })
 
+const emailConfirmCodeModel = new mongoose.Schema({
+    email: String,
+    code: String,
+    expires: Date
+}, { _id: false })
+
+
 const UtilityListsModel = new mongoose.Schema({
     brands: [BrandModel],
     categories: [],
-    resetPasswordTokens: [resetTokenModel]
+    resetPasswordTokens: [resetTokenModel],
+    emailConfirmedCodes: [emailConfirmCodeModel]
 })
 
 export default mongoose.model('UtilityListsModel', UtilityListsModel)
