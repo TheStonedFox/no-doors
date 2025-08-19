@@ -2,6 +2,9 @@ import { apiRequest } from "../utils/apiRequest"
 
 export const register = async (data) => apiRequest('auth/register', 'POST', data)
 export const login = async (body) => apiRequest(`auth/login`, 'POST', body)
+export const resetPassword = async (body) => apiRequest(`auth/reset-password`, 'POST', body)
+export const updatePassword = async (body) => apiRequest(`auth/reset-password`, 'PATCH', body)
+export const checkResetPasswordLink = async (token) => apiRequest(`auth/reset-password?token=${token}`, 'GET')
 
 export const getUser = async () => apiRequest('profile', 'GET')
 export const updateUserInfo = async (data) => apiRequest('profile', 'PATCH', data)

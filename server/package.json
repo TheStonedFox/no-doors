@@ -22,6 +22,7 @@
     "mongoose": "^8.8.3",
     "moongose": "^1.0.0",
     "multer": "^2.0.2",
+    "nodemailer": "^7.0.5",
     "supervisor": "^0.12.0"
   }
 }

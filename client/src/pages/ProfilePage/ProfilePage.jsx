@@ -8,7 +8,7 @@ import BorderedButton from '@components/BorderedButton/BorderedButton'
 import Button from '@components/Button/Button'
 import Input from '@components/Input/Input'
 import OrderCard from '@components/OrderCard/OrderCard'
-import AvatarIcon from './AvatarIcon'
+import AvatarIcon from '../../svg/AvatarIcon'
 
 import styles from './ProfilePage.module.css'
 
@@ -20,7 +20,6 @@ import { addNotification } from '../../redux/features/uiSlice'
 import SuggestionInput from '@components/SuggestionInput/SuggestionInput'
 
 import { usePostInfo } from '@hooks/usePostInfo'
-import { generateId } from '@utils/generateId'
 import { uploadAvatar } from '../../api/api'
 
 export default function ProfilePage() {

@@ -5,8 +5,6 @@
     max-width: var(--container-width);
 }
 
-
-
 .auth-page__title {
     padding-bottom: 60px;
     padding-top: 50px;
@@ -58,6 +56,11 @@
     display: flex;
     justify-content: space-between;
     gap: 15px;
+}
+
+.auth-page__remember-me-box a:hover {
+    color: var(--ui---blue);
+    text-decoration: underline;
 }
 
 .auth-page__policy-box {

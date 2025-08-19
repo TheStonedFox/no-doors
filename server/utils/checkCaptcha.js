@@ -1,5 +1,4 @@
-export const CheckCaptcha = async (req, res, next) => {
-    const token = (req.body.token || '')
+export const checkCaptcha = async (token) => {
     try {
         const secret = process.env.RECAPTCHA_SECRET_KEY
 
@@ -14,9 +13,8 @@ export const CheckCaptcha = async (req, res, next) => {
         })
 
         const data = await res.json()
-        if (data.success)
-            next()
+        return data.success
     } catch (error) {
-        res.status(404).json({ message: error.message, code: 404, token })
+        return error
     }
 }

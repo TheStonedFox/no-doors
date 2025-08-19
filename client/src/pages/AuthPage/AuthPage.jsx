@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import styles from './AuthPage.module.css'
 import Button from '@components/Button/Button'
@@ -8,11 +8,11 @@ import Checkbox from '@components/Checkbox/Checkbox'
 import Input from '@components/Input/Input'
 import BorderedButton from '@components/BorderedButton/BorderedButton'
 
-import { login, register } from '@api/api'
+import { login, register, resetPassword } from '@api/api'
 import { addNotification } from '../../redux/features/uiSlice'
 
 import { useDispatch } from 'react-redux'
-import RegisterAdvantagesIcon from '@/svg/RegisterAdvantagesIcon'
+import RegisterAdvantagesIcon from '../../svg/RegisterAdvantagesIcon'
 
 import ReCAPTCHA from 'react-google-recaptcha'
 import { checkTokenThunk, resetUser, setUserData } from '../../redux/features/userSlice'
@@ -75,12 +75,26 @@ export default function AuthPage() {
             })
     }
 
+    const onResetPasswordButtonClick = () => {
+
+        resetPassword({ ...data })
+            .then(res => {
+                dispatch(addNotification({ type: 'info', text: res.message }))
+                setMode('login')
+            })
+            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
+    }
+
     return (
         <div className={styles['auth-page']}>
             <h2 className={`${'section-title'} ${styles['auth-page__title']}`}>Вход и регистрация</h2>
             <div className={styles['auth-page__layout']}>
                 <div className={styles['auth-page__auth-box']}>
-                    <h3>Вход</h3>
+                    <h3>
+                        {mode === 'login' && 'Вход'}
+                        {mode === 'register' && 'Регистрация'}
+                        {mode === 'reset' && 'Восстановление пароля'}
+                    </h3>
 
                     {mode === 'register' && <div className={styles['auth-box__input-box']}>
                         <h5>ФИО:</h5>
@@ -97,10 +111,10 @@ export default function AuthPage() {
                         <Input placeholder='example@mail.com' type='email' value={data.email} errorFrame={validationErrors?.find(error => error.path === 'email')} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />
                     </div>
 
-                    <div className={styles['auth-box__input-box']}>
+                    {mode !== 'reset' && <div className={styles['auth-box__input-box']}>
                         <h5>Пароль:</h5>
                         <Input placeholder='Введите пароль' type='password' value={data.password} errorFrame={validationErrors?.find(error => error.path === 'password')} onChange={(value) => setData(prev => ({ ...prev, password: value }))} />
-                    </div>
+                    </div>}
 
                     {mode === 'register' && <div className={styles['auth-box__input-box']}>
                         <h5>Пароль еще раз:</h5>
@@ -110,8 +124,10 @@ export default function AuthPage() {
                     {mode === 'login' && <div className={styles['auth-page__remember-me-box']}>
                         <Checkbox title='Запомнить меня' onChange={(value) => localStorage.setItem('rememberMe', !value ? '1' : '0')}
                             isChecked={localStorage.getItem('rememberMe') === '1' ? true : false} />
-                        <a href="#">Забыли пароль?</a>
+                        <Link onClick={() => setMode('reset')}>Забыли пароль?</Link>
                     </div>}
+
+
                     {mode === 'register' && <div className={styles['auth-page__policy-box']}>
                         <Checkbox
                             title={<p>Я прочитал и даю своё согласие на <a href='#'>обработку
@@ -119,7 +135,9 @@ export default function AuthPage() {
                             onChange={(value) => setIsPolicyAccepted(!value)}
                         />
                     </div>}
-                    {isCaptchaNeed || mode === 'register' ? <ReCAPTCHA ref={reCaptchaRef}
+                    {isCaptchaNeed || mode === 'register' ? <ReCAPTCHA
+                        ref={reCaptchaRef}
+                        style={{ margin: '0 auto' }}
                         sitekey={import.meta.env.VITE_RE_CAPTCHA_SITE_KEY}
                         onChange={(token) => setData(prev => ({ ...prev, reCaptchaToken: token }))}></ReCAPTCHA> : false}
 
@@ -128,6 +146,7 @@ export default function AuthPage() {
                         {mode === 'login' && <BorderedButton onClick={() => setMode('register')} title='Зарегистрироваться' />}
                         {mode === 'register' && <Button title='Зарегистрироваться' onClick={onRegisterButtonClick} />}
                         {mode === 'register' && <BorderedButton onClick={() => setMode('login')} title='Войти' />}
+                        {mode === 'reset' && <Button onClick={onResetPasswordButtonClick} title='Восстановить пароль' />}
                     </div>
 
                 </div>

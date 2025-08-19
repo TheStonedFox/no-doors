@@ -15,8 +15,6 @@ import * as orderController from './controllers/orderController.js'
 import * as sharedController from './controllers/sharedController.js'
 
 import { CheckAuth } from './middleware/CheckAuth.js'
-import { CheckCaptcha } from './middleware/CheckCaptcha.js'
-import { CheckValidation } from './middleware/CheckValidation.js'
 
 //#endregion
 
@@ -49,6 +47,10 @@ app.use(express.json())
 //#region auth
 app.post('/auth/register', validations.registerValidation, authController.register)
 app.post('/auth/login', authController.login)
+
+app.post('/auth/reset-password', validations.registerValidation, authController.resetPassword)
+app.get('/auth/reset-password', authController.checkLink)
+app.patch('/auth/reset-password', validations.registerValidation, authController.updatePassword)
 //#endregion
 
 
@@ -143,6 +145,9 @@ app.post('/auth/check', CheckAuth, (req, res) => res.status(200).json({ message:
 //#endregion
 
 app.get('/chooses-steps', sharedController.getChooseSteps)
+
+
+app.get('/auth/reset-password', (req, res) => res.json({ token: req.query.token }))
 
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
     console.log(`The server is running on port ${process.env.PORT || 5000}`)

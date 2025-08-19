@@ -13,7 +13,6 @@ import { addNotification } from '../../redux/features/uiSlice'
 import { setUserData } from '../../redux/features/userSlice'
 
 import getWordEnding from '@utils/getWordEnding'
-import { generateId } from '@utils/generateId'
 
 import { usePostInfo } from '@hooks/usePostInfo'
 import { useCart } from '@hooks/useCart'

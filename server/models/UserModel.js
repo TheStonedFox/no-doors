@@ -28,12 +28,12 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        // postOffice: String,
         avatarUrl: String,
         viewedProducts: [],
         cartItems: [CartItemSchema],
         favoriteItems: [],
         orders: [],
+        resetPasswordToken: { token: String, expires: Date }
     },
     { timestamps: true }
 )

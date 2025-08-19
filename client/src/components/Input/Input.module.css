@@ -9,12 +9,23 @@
     line-height: 130%;
     border: 1px solid transparent;
     transition: 0.1s;
+    background-color: var(--ui---bg-main-darker);
 }
 
 .input.active {
     border: 1px solid var(--ui---main);
     transition: 0.1s;
 }
+
+.input:-webkit-autofill {
+    /* чтобы убрать желтый/синий фон */
+    box-shadow: 0 0 0px 1000px var(--ui---bg-main) inset !important;
+    /* плавный переход при фокусе */
+    transition: background-color 5000s ease-in-out 0s;
+    /* цвет текста */
+    -webkit-text-fill-color: var(--typography---main) !important;
+}
+
 
 input::placeholder {
     color: var(--typography---label-non-active-text);

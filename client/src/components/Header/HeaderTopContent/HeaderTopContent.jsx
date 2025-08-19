@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import PhoneIcon from '@/svg/PhoneIcon'
 import ThemeToggle from '../../ThemeToggle/ThemeToggle'
-import AvatarIcon from '../../../pages/ProfilePage/AvatarIcon'
+import AvatarIcon from '../../../svg/AvatarIcon'
 
 
 export default function HeaderTopContent() {

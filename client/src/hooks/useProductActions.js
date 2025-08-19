@@ -3,8 +3,6 @@ import { setUserData } from '../redux/features/userSlice'
 import { addNotification, updateCartCounter, updateFavoriteCounter } from '../redux/features/uiSlice'
 import * as api from '@api/api'
 
-import { generateId } from '@utils/generateId'
-
 export default function useProductActions() {
     const dispatch = useDispatch()
 

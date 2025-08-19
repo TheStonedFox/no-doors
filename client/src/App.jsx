@@ -20,6 +20,7 @@ import OrderPage from './pages/OrderPage/OrderPage'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
 import ViewedProductsPage from './pages/ViewedProductsPage/ViewedProductsPage'
 import SearchPage from './pages/SearchPage/SearchPage'
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 //#endregion
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -81,6 +82,7 @@ function App() {
           <Route path='/profile' element={<AuthPage />}></Route>
           <Route path='/auth' element={<AuthPage />}></Route>
           <Route path='/cart' element={<AuthPage />}></Route>
+          <Route path='/auth/reset-password/' element={<ResetPasswordPage />}></Route>
           <Route path='/about' element={<AboutPage />}></Route>
           <Route path='/delivery-and-pay' element={<DeliveryPayPage />}></Route>
           <Route path='/guarantees' element={<GuaranteesPage />}></Route>
