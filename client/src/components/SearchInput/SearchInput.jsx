@@ -12,7 +12,7 @@ import useSearchResults from '../../hooks/useSearchResults'
 export default function SearchInput({ className, value, onChange }) {
 
     const dispatch = useDispatch()
-    const negative = useNavigate()
+    const navigate = useNavigate()
 
     const [searchList, isLoading, error] = useSearchResults(value)
 
@@ -31,7 +31,7 @@ export default function SearchInput({ className, value, onChange }) {
                     onChange={(event) => onChange(event.target.value)}
                     autoComplete='off'
                 />
-                <button className={styles.button} onClick={() => value && negative(`/search?word=${value}`)}>
+                <button className={styles.button} onClick={() => value && navigate(`/search?word=${value}`)}>
                     <SearchIcon />
                     <p>Найти</p>
                 </button>

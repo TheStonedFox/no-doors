@@ -72,7 +72,6 @@ export default function ResetPasswordPage() {
         e.target.parentElement.style = ''
     }
 
-
     return (
         <div className={`${styles['reset-password-page']} container`}>
             <h2 className={`${'section-title'} ${styles['reset-password-page__title']}`}>Восстановление пароля</h2>

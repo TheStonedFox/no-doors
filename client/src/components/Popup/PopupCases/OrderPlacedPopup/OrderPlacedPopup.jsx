@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import { togglePopup } from '../../../../redux/features/uiSlice'
 
 export default function OrderPlacedPopup({ data }) {
-    const negative = useNavigate()
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     return (
@@ -31,7 +31,7 @@ export default function OrderPlacedPopup({ data }) {
             </div>
             <Button title='Посмотреть заказ' onClick={() => {
                 dispatch(togglePopup())
-                negative('/profile')
+                navigate('/profile')
             }} />
         </div>
     )

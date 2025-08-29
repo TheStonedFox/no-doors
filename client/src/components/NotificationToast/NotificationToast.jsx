@@ -15,7 +15,7 @@ import { statusColors } from '@utils/statusHelper'
 
 export default function NotificationToast({ id, text, type, route }) {
     const dispatch = useDispatch()
-    const negative = useNavigate()
+    const navigate = useNavigate()
 
     const [hide, setHide] = useState(false)
 
@@ -33,7 +33,7 @@ export default function NotificationToast({ id, text, type, route }) {
     const onNotificationClick = (redirect) => {
         setHide(true)
         dispatch(removeNotification(id))
-        route && redirect && negative(`/${route}`)
+        route && redirect && navigate(`/${route}`)
     }
 
 

@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 
 export default function CartPopup({ text }) {
     const dispatch = useDispatch()
-    const negative = useNavigate()
+    const navigate = useNavigate()
     return (
         <div className={style['cart-popoup']}>
             <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +29,7 @@ export default function CartPopup({ text }) {
                     title='Оформить заказ'
                     onClick={() => {
                         dispatch(togglePopup())
-                        negative('/cart')
+                        navigate('/cart')
                     }}
                 />
                 <BorderedButton title='Продолжить покупки' onClick={() => dispatch(togglePopup())} />

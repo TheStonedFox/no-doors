@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './Slide.module.css'
 
-import CrossIcon from '../../svg/CrossIcon'
-
 
 export default function Slide({ onZoom, image }) {
 
@@ -30,19 +28,15 @@ export default function Slide({ onZoom, image }) {
         setPosition({ x, y })
     }
 
-    useEffect(() => { onZoom({ shiftsValues, visible, imageSize, fullScreenMode }) }, [visible, imageSize, shiftsValues, fullScreenMode])
+    useEffect(() => { onZoom({ shiftsValues, visible, imageSize, fullScreenMode }) }, [visible, imageSize, shiftsValues])
 
     return (
-        <div className={styles['slide-wrapper']}
+        <div className={`${styles['slide-wrapper']}`}
             ref={slideWrapperRef}
             onMouseEnter={() => setVisible(true)}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => setVisible(false)}
-            onClick={() => !fullScreenMode && setFullScreenMode(true)}
         >
-            {
-                fullScreenMode ?
-                    <CrossIcon className={styles['slide__full-screen-button']} onClick={() => setFullScreenMode(false)} /> : null}
             <img src={image} alt="slider image" onLoad={(e) =>
                 setImageSize({ height: e.currentTarget.clientHeight, width: e.currentTarget.clientWidth })} />
 

@@ -26,7 +26,7 @@ export default function ProfilePage() {
 
     document.querySelector('title').innerHTML = 'Личный кабинет'
 
-    const negative = useNavigate()
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const userData = useSelector((state => state.user.userData))
 
@@ -96,6 +96,8 @@ export default function ProfilePage() {
         setUserInfo(prev => ({ ...prev, postOffice: userData?.postOffice }))
     }, [userInfo.city, userData])
 
+    useEffect(() => { console.log('adsads') }, [userInfo.postOffice])
+
     return (
         <div className={`${styles['profile-page']} container`}>
             <section className='page-title-section'>
@@ -131,7 +133,7 @@ export default function ProfilePage() {
                         {action !== 'edit' && <BorderedButton className={styles['actions__action-button']} title='Редактировать профиль' onClick={() => setAction('edit')} />}
                         {action !== 'history' && action !== 'edit' && <BorderedButton className={styles['actions__action-button']} title='Просмотренные товары' onClick={() => {
                             setAction('products')
-                            negative('/profile/viewed-products')
+                            navigate('/profile/viewed-products')
                         }} />}
                         {action !== 'edit' && action !== 'history' && < BorderedButton className={styles['actions__action-button']} title='История заказов' onClick={() => setAction('history')} />}
                         {action === 'edit' && < div className={styles['action__edit-mode-buttons']}>

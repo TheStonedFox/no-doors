@@ -21,18 +21,6 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // .addCase(checkTokenThunk.fulfilled, (state, payload) => {
-            //     state.isTokenValid = payload.payload === 'token valid'
-            // })
-            // .addCase(checkTokenThunk.rejected, (state) => {
-            //     state.isTokenValid = false
-            // })
-            // .addCase(setUserData.fulfilled, (state, action) => {
-            //     state.userData = action.payload
-            // })
-            // .addCase(setUserData.rejected, (state) => {
-            //     state.userData = null
-            // })
             .addCase(checkTokenThunk.fulfilled, (state, action) => {
                 state.isTokenValid = action.payload === 'token valid'
                 if (!state.isTokenValid) state.userData = null

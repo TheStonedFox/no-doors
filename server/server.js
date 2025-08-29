@@ -13,6 +13,8 @@ import * as cartController from './controllers/cartController.js'
 import * as paymentController from './controllers/paymentController.js'
 import * as orderController from './controllers/orderController.js'
 import * as sharedController from './controllers/sharedController.js'
+import * as commentsController from './controllers/commentsController.js'
+import * as replyController from './controllers/replyController.js'
 
 import { CheckAuth } from './middleware/CheckAuth.js'
 
@@ -20,6 +22,8 @@ import { CheckAuth } from './middleware/CheckAuth.js'
 
 import * as validations from './validations.js'
 import ProductModel from './models/ProductModel.js'
+import { setLikes } from './utils/setLikes.js'
+import ReplyModel from './models/ReplyModel.js'
 
 dotenv.config()
 
@@ -48,25 +52,76 @@ app.use(express.json())
 app.post('/auth/register', validations.registerValidation, authController.register)
 app.post('/auth/login', authController.login)
 
+app.post('/auth/remove-codes', authController.removeCodes)
 app.post('/auth/reset-password', validations.registerValidation, authController.resetPassword)
 app.get('/auth/reset-password', authController.checkLink)
 app.patch('/auth/reset-password', validations.registerValidation, authController.updatePassword)
+// app.get('/auth/reset-password', (req, res) => res.json({ token: req.query.token }))
 //#endregion
 
 
 //#region  user
 app.get('/profile', CheckAuth, userController.profile)
+app.get('/profile/:userId', userController.getUserInfo)
 app.patch('/profile', CheckAuth, validations.profileInfoValidation, userController.update)
 app.post('/profile/upload', CheckAuth, upload.single("avatar"), userController.uploadAvatar)
 //#endregion
 
 //#region products
+app.get('/products/review-eligibility', productController.checkReviewEligibility)
 app.get('/products', productController.getProducts)
-
+app.post('/products', productController.addProduct)
 app.get('/products/:id', productController.getProduct)
 
-app.post('/products', productController.addProduct)
+app.get('/products/:id/comments', productController.getAllComments)
+app.post('/products/:id/comments/', (req, res) => { })
+
 //#endregion
+
+//#region favorites
+app.post('/favorites/:productId', CheckAuth, favoriteController.addFavoriteItem)
+app.delete('/favorites/:productId', CheckAuth, favoriteController.removeFavoriteItem)
+//#endregion
+
+//#region cart
+app.post('/cart-items/:productId', cartController.addCartItem)
+app.delete('/cart-items/:productId', cartController.removeCartItem)
+app.patch('/cart-items/:id', cartController.updateCartItem)
+//#endregion
+
+//#region orders
+app.post('/orders', CheckAuth, validations.orderValidation, orderController.createOrder)
+app.get('/orders/:id', CheckAuth, orderController.getOrder)
+app.patch('/orders/:id', CheckAuth, orderController.updateOrderStatus)
+//#endregion
+
+//#region comments
+app.post('/comments/', CheckAuth, commentsController.addComment)
+app.get('/comments/:commentId', commentsController.getComment)
+app.patch('/comments/:commentId', CheckAuth, commentsController.editComment)
+app.patch('/comments/:commentId/like', CheckAuth, commentsController.likeComment)
+
+app.get('/replies/:replyId', replyController.getReply)
+app.get('/comments/:commentId/replies/', replyController.getAllReplies)
+app.post('/replies', CheckAuth, replyController.addReply)
+app.patch('/replies/:replyId/like', CheckAuth, replyController.replyLike)
+app.patch('/replies/:replyId', CheckAuth, replyController.editReply)
+//#endregion
+
+
+//#region liqpay
+app.post('/create-payment', CheckAuth, paymentController.create)
+app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
+//#endregion
+
+//#region service
+app.post('/auth/check', CheckAuth, (req, res) => res.status(200).json({ message: 'token valid', code: 200 }))
+//#endregion
+
+//#endregion
+
+app.get('/chooses-steps', sharedController.getChooseSteps)
+
 
 app.get('/search', async (req, res) => {
 
@@ -115,39 +170,6 @@ app.get('/search', async (req, res) => {
 
     res.status(200).json({ filters, products: finalList, message: 'Товары найдены.', code: 200 })
 })
-
-//#region favorites
-app.post('/favorites/:productId', CheckAuth, favoriteController.addFavoriteItem)
-app.delete('/favorites/:productId', CheckAuth, favoriteController.removeFavoriteItem)
-//#endregion
-
-//#region cart
-app.post('/cart-items/:productId', cartController.addCartItem)
-app.delete('/cart-items/:productId', cartController.removeCartItem)
-app.patch('/cart-items/:id', cartController.updateCartItem)
-//#endregion
-
-//#region orders
-app.post('/orders', CheckAuth, validations.orderValidation, orderController.createOrder)
-app.get('/orders/:id', CheckAuth, orderController.getOrder)
-app.patch('/orders/:id', CheckAuth, orderController.updateOrderStatus)
-//#endregion
-
-//#region liqpay
-app.post('/create-payment', CheckAuth, paymentController.create)
-app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
-//#endregion
-
-//#region service
-app.post('/auth/check', CheckAuth, (req, res) => res.status(200).json({ message: 'token valid', code: 200 }))
-//#endregion
-
-//#endregion
-
-app.get('/chooses-steps', sharedController.getChooseSteps)
-
-
-app.get('/auth/reset-password', (req, res) => res.json({ token: req.query.token }))
 
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
     console.log(`The server is running on port ${process.env.PORT || 5000}`)

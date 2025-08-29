@@ -29,7 +29,8 @@ const UtilityListsModel = new mongoose.Schema({
     brands: [BrandModel],
     categories: [],
     resetPasswordTokens: [resetTokenModel],
-    emailConfirmedCodes: [emailConfirmCodeModel]
+    emailConfirmedCodes: [emailConfirmCodeModel],
+    promocodeList: [String]
 })
 
 export default mongoose.model('UtilityListsModel', UtilityListsModel)

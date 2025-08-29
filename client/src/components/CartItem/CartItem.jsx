@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import Counter from '../Counter/Counter'
 import Field from '../Field/Field'
@@ -19,7 +19,7 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
 
     const { title, price, wholesalePrice, inStock, _id, discount } = productData || {}
 
-    const negative = useNavigate()
+    const navigate = useNavigate()
 
     const [quantity, setQuantity] = useState(initialQuantityValue)
     const [imageLoading, setImageLoading] = useState(true)
@@ -41,8 +41,8 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                 {imageLoading && <Spinner />}
             </div>
 
-            <div className={styles['cart-item__title']} onClick={() => negative(`/products/${_id}`)}>
-                <h4>{title}</h4>
+            <div className={styles['cart-item__title']} onClick={() => navigate(`/products/${_id}`)}>
+                <Link>{title}</Link>
                 <p>Артикул: 854236896ABC</p>
             </div>
             <div className={styles['cart-item__fields']}>

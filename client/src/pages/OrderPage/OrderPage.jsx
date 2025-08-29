@@ -79,7 +79,7 @@ export default function OrderPage() {
                     </div>
                     <div className={styles['contacts-data__delivery-method']}>
                         <h3 className={styles['delivery-method__title']}>Способ получения</h3>
-                        <RadioButtonGroup style={styles['delivery-method__radio-buttons']} options={['Доставка 100 ₴', 'Самовывоз бесплатно']}
+                        <RadioButtonGroup className={styles['delivery-method__radio-buttons']} options={['Доставка 100 ₴', 'Самовывоз бесплатно']}
                             onSelect={(value) => setSelectedOptions(prev => ({ ...prev, deliveryMethod: value }))} />
                     </div>
                     {selectedOptions.deliveryMethod === 0 &&
@@ -123,7 +123,7 @@ export default function OrderPage() {
                     <Field title='Итого к оплате' value={`${selectedOptions.delivery === 0 ? sum : sum + 100} ₴`}></Field>
                     <div className={styles['pay-methods']}>
                         <h3 className={styles['pay-methods__title']}>Способ оплаты</h3>
-                        <RadioButtonGroup style={styles['pay-methods__radio-buttons']} options={['Оплата при получении', 'Онлайн оплата']}
+                        <RadioButtonGroup className={styles['pay-methods__radio-buttons']} options={['Оплата при получении', 'Онлайн оплата']}
                             onSelect={(value) => setSelectedOptions(prev => ({ ...prev, payMethod: value }))} />
                         <Button title='Подтвердить заказ' onClick={async () => {
 

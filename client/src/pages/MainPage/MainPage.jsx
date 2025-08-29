@@ -27,7 +27,7 @@ import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 export default function MainPage() {
     const [loadedItemsCount, setLoadedItemsCount] = useState(4)
     // const [isLoading, setLoadingStatus] = useState(true)
-    const negative = useNavigate()
+    const navigate = useNavigate()
 
     const [choosesStep, setChoosesStep] = useState('brand')
     const [choosesValues, setChoosesValues] = useState({ brand: null, model: null, category: null })
@@ -47,13 +47,13 @@ export default function MainPage() {
     useEffect(() => { !chooseValuesIsLoading && setChooseOptions({ brands, categories }) }, [chooseValuesIsLoading])
 
     useEffect(() => {
-        choosesValues.category && negative(`/search?brand=${choosesValues.brand}&model=${choosesValues.model}&category=${choosesValues.category}&deviceType=${deviceTypesEnTitles[filterValue]}`)
-    }, [choosesValues.category, negative, choosesValues, filterValue])
+        choosesValues.category && navigate(`/search?brand=${choosesValues.brand}&model=${choosesValues.model}&category=${choosesValues.category}&deviceType=${deviceTypesEnTitles[filterValue]}`)
+    }, [choosesValues.category, navigate, choosesValues, filterValue])
 
     const paginationRef = useRef(null)
 
     return (
-        <div className={`${styles['main-page']} container`} onClick={() => console.log('asadsads')}>
+        <div className={`${styles['main-page']} container`} >
             {choosesStep !== 'result' ? <section className={styles['main-page__intro-section']}>
                 <Swiper
                     modules={[Pagination]}

@@ -1,0 +1,22 @@
+.skeleton-shimmer {
+    border-radius: 8px;
+    background-color: var(--ui---bg-main-darker);
+
+    background-image: linear-gradient(90deg,
+            transparent 25%,
+            var(--ui---bg-main) 50%,
+            transparent 75%);
+    background-repeat: no-repeat;
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}

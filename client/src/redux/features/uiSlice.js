@@ -57,6 +57,7 @@ export const uiSlice = createSlice({
         },
         addNotification: (state, action) => {
             // state.notificationList = [action.payload, ...state.notificationList]
+            // if (state.notificationList.findIndex(i => i.text === action.payload.text && i.type === action.payload.type))
             state.notificationList = [{ ...action.payload, id: generateId() }, ...state.notificationList]
         },
         removeNotification: (state, action) => {
@@ -66,7 +67,5 @@ export const uiSlice = createSlice({
         }
     }
 })
-
-
 
 export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification } = uiSlice.actions

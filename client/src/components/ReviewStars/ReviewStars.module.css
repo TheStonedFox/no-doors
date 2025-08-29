@@ -1,0 +1,21 @@
+.review-stars {
+    position: relative;
+    max-width: fit-content;
+
+}
+
+.review-stars__filled {
+    width: 75%;
+    overflow: hidden;
+    position: relative;
+    color: var(--ui---stars);
+    top: 0px;
+    font-size: 16px;
+}
+
+.review-stars__unfilled {
+    position: absolute;
+    color: var(--ui---bg-main-darker);
+    top: 0px;
+    font-size: 16px;
+}

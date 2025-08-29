@@ -12,7 +12,7 @@ import { useCart } from '../../hooks/useCart'
 
 export default function CartPage() {
     document.querySelector('title').innerHTML = 'Корзина'
-    const negative = useNavigate()
+    const navigate = useNavigate()
     const [promocode, setPromocode] = useState('')
 
     const [, userData, sum, loadingStatus] = useCart()
@@ -34,7 +34,7 @@ export default function CartPage() {
                 </div>
                 <div className={styles['result__make-order']}>
                     <p>Итого: <strong>{sum} грн.</strong></p>
-                    <Button title='Оформить заказ' onClick={() => negative('/order')} />
+                    <Button title='Оформить заказ' onClick={() => navigate('/order')} />
                 </div>
             </div> : null}
             {!userData?.cartItems.length && !loadingStatus ? <EmptyPlaceholder title='Корзина пуста.' /> : null}

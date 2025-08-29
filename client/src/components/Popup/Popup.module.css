@@ -5,9 +5,10 @@
     position: fixed;
     z-index: 1000;
     width: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
     -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(55px);
+    backdrop-filter: blur(10px);
     /* Префикс для Safari */
     transition: 0.2s ease-out opacity, backdrop-filter;
     overflow: hidden;
@@ -17,16 +18,16 @@
 }
 
 .popup__content {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     position: relative;
-    background-color: transparent;
     flex-direction: column;
     padding: 20px;
     background-color: var(--ui---bg-main);
     border-radius: 8px;
     gap: 20px;
-    max-width: 90%;
+    max-width: 400px;
+    width: 100%;
 }
 
 .popup__close-button {

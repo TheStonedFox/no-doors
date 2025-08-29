@@ -18,7 +18,7 @@
     min-width: 16px;
     min-height: 16px;
     border-radius: 50%;
-    background: #fff;
+    background: var(--ui---bg-main);
     transition: 0.2s;
     border: 2px solid var(--ui---main);
 }

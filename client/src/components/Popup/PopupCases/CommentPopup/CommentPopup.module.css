@@ -1,0 +1,41 @@
+.add-comment-popup {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+
+.add-comment-popup h3 {
+    font-size: 22px;
+}
+
+.add-comment-popup>p {
+    color: var(--typography---second);
+    font-style: 12px;
+}
+
+.add-comment-popup__text {
+    min-height: 120px;
+    padding: 10px;
+    min-width: 100%;
+    max-width: 100%;
+    max-height: 350px;
+    border: 1px solid var(--typography---second);
+    border-radius: 4px;
+}
+
+.add-comment-popup__text:focus {
+    border: 1px solid var(--ui---main);
+    outline: none;
+    border-radius: 4px;
+
+}
+
+.add-comment-popup__choose-rating {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-comment-popup__choose-rating svg {
+    width: 32px;
+}

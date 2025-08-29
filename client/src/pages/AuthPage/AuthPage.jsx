@@ -15,9 +15,12 @@ import { useDispatch } from 'react-redux'
 import RegisterAdvantagesIcon from '../../svg/RegisterAdvantagesIcon'
 
 import ReCAPTCHA from 'react-google-recaptcha'
-import { checkTokenThunk, resetUser, setUserData } from '../../redux/features/userSlice'
+import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
 
 import Spinner from '../../components/Spinner/Spinner'
+import { removeSendedCodes } from '../../api/api'
+
+
 
 export default function AuthPage() {
 
@@ -65,13 +68,16 @@ export default function AuthPage() {
                 if (res.code === 202) return setMode('email-confirm')
                 dispatch(addNotification({ type: 'info', text: res.message }))
                 setMode('login')
+                setIsPolicyAccepted(false)
             })
             .catch(error => {
                 setValidationErrors(error.data.validationErrors || null)
                 dispatch(addNotification({ type: 'error', text: error.message }))
                 reCaptchaRef.current.reset()
+
             })
             .finally(() => setIsLadingEnd(true))
+        setData(prev => ({ ...prev, emailConfirmCode: null }))
     }
 
     const onLoginButtonClick = () => {
@@ -106,7 +112,18 @@ export default function AuthPage() {
             .finally(() => setIsLadingEnd(true))
     }
 
-    useEffect(() => { console.log(isLadingEnd) }, [isLadingEnd])
+    const onGoBackButtonClick = () => {
+        setIsLadingEnd(false)
+        removeSendedCodes(data.email)
+            .then(() => setMode(mode !== 'email-confirm' ? 'login' : 'register'))
+            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
+            .finally(() => setIsLadingEnd(true))
+    }
+
+    useEffect(() => {
+        setData(prev => ({ ...prev, emailConfirmCode: null }))
+        validationErrors && setValidationErrors([])
+    }, [mode])
 
     return (
         <div className={styles['auth-page']}>
@@ -150,9 +167,9 @@ export default function AuthPage() {
                         <Link onClick={() => setMode('reset')}>Забыли пароль?</Link>
                     </div>}
 
-
                     {mode === 'register' && <div className={styles['auth-page__policy-box']}>
                         <Checkbox
+                            isChecked={isPolicyAccepted}
                             title={<p>Я прочитал и даю своё согласие на <a href='#'>обработку
                                 персональных данных</a></p>}
                             onChange={(value) => setIsPolicyAccepted(!value)}
@@ -165,7 +182,7 @@ export default function AuthPage() {
                             onChange={(value) => setData(prev => ({ ...prev, emailConfirmCode: value }))} />
                     </div>}
 
-                    {isCaptchaNeed || mode === 'email-confirm' ? <ReCAPTCHA
+                    {isCaptchaNeed && mode === 'email-confirm' || mode !== 'register' ? <ReCAPTCHA
                         ref={reCaptchaRef}
                         style={{ margin: '0 auto' }}
                         sitekey={import.meta.env.VITE_RE_CAPTCHA_SITE_KEY}
@@ -177,7 +194,7 @@ export default function AuthPage() {
                         {mode === 'register' && <Button title='Продолжить' onClick={onRegisterButtonClick} />}
                         {mode === 'email-confirm' && <Button title='Зарегистрироваться' onClick={onRegisterButtonClick} />}
                         {mode === 'reset' && <Button onClick={onResetPasswordButtonClick} title='Восстановить пароль' />}
-                        {mode !== 'login' && <BorderedButton onClick={() => setMode(mode !== 'email-confirm' ? 'login' : 'register')} title='Назад' />}
+                        {mode !== 'login' && <BorderedButton onClick={onGoBackButtonClick} title='Назад' />}
                     </div>
 
                 </div> : <Spinner />}

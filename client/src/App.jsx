@@ -21,6 +21,8 @@ import PaymentPage from './pages/PaymentPage/PaymentPage'
 import ViewedProductsPage from './pages/ViewedProductsPage/ViewedProductsPage'
 import SearchPage from './pages/SearchPage/SearchPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
+import CommentsPage from './pages/CommentsPage/CommentsPage'
+import CommentPage from './pages/CommentPage/CommentPage'
 //#endregion
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -90,8 +92,10 @@ function App() {
           <Route path='/products' element={<ProductsPage />}></Route>
           <Route path='/products/:id' element={<ProductPage />}></Route>
           <Route path='/search' element={<SearchPage />}></Route>
+          <Route path='/products/:productId/comments' element={<CommentsPage />}></Route>
+          <Route path='/comments/:commentId' element={<CommentPage />}></Route>
 
-      <Route path='*' element={<Navigate to='/' />} /> 
+          <Route path='*' element={<Navigate to='/' />} />
         </Routes>
       </Layout >
     </ >

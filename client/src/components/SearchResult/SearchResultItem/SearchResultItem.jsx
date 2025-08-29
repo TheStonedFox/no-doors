@@ -11,7 +11,7 @@ import useProductActions from '../../../hooks/useProductActions'
 export default function SearchResultItem({ itemInfo }) {
     const [isInFavorite, setIsInFavorite] = useState(false)
     const [inCart, setInCart] = useState(false)
-    const negative = useNavigate()
+    const navigate = useNavigate()
 
     const userData = useSelector((state => state.user.userData))
     const { _id, title, price, wholesalePrice, inStock } = itemInfo || {}
@@ -22,7 +22,7 @@ export default function SearchResultItem({ itemInfo }) {
 
     useEffect(() => {
         setInCart(cartItems?.map(item => item?.productId).includes(_id))
-        setIsInFavorite(favoriteItems.includes(_id))
+        setIsInFavorite(favoriteItems?.includes(_id))
     }, [_id, cartItems, favoriteItems])
 
     const onFavoriteButtonClick = async () => {
@@ -37,7 +37,7 @@ export default function SearchResultItem({ itemInfo }) {
 
     return (
         <div className={styles['search-result__item']}>
-            <div className={styles['item__image']} style={{ opacity: inStock ? '1' : '0.5' }} onMouseDown={() => negative(`products/${_id}`)}>
+            <div className={styles['item__image']} style={{ opacity: inStock ? '1' : '0.5' }} onMouseDown={() => navigate(`products/${_id}`)}>
                 <img src="../../../../public/images/categories/03.png" alt="product image" />
             </div>
             <div className={styles['item_info']} style={{ opacity: inStock ? '1' : '0.5' }}>

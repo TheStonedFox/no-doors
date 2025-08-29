@@ -7,7 +7,8 @@ const initialState = {
         categories: [],
         error: null,
         isLoading: false,
-    }
+    },
+    idCommentToUpdate: null
 }
 
 export const getChooseValues = createAsyncThunk('shared/getChooseValues', () => getStepChoices().then(res => res.options))
@@ -15,6 +16,11 @@ export const getChooseValues = createAsyncThunk('shared/getChooseValues', () => 
 export const sharedSlice = createSlice({
     name: 'shared',
     initialState,
+    reducers: {
+        setIdCommentToUpdate: (state, action) => {
+            state.idCommentToUpdate = action.payload
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getChooseValues.fulfilled, (state, payload) => {
@@ -35,3 +41,4 @@ export const sharedSlice = createSlice({
 })
 
 
+export const { setIdCommentToUpdate } = sharedSlice.actions

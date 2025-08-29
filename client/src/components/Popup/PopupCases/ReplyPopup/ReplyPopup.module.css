@@ -1,0 +1,31 @@
+.reply-popup {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.reply-popup textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    max-height: 250px;
+    min-height: 120px;
+}
+
+.reply-popup textarea {
+    min-height: 120px;
+    padding: 10px;
+    min-width: 100%;
+    max-width: 100%;
+    max-height: 350px;
+    border: 1px solid var(--typography---second);
+    border-radius: 4px;
+}
+
+.reply-popup textarea:focus {
+    border: 1px solid var(--ui---main);
+    outline: none;
+    border-radius: 4px;
+
+}

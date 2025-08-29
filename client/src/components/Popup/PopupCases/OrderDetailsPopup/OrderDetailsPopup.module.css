@@ -6,7 +6,7 @@
     /* grid-template-rows: 50px minmax(100px, 300px) 53px; */
     /* max-height: 500px; */
     height: 400px;
-    /* background-color: rebeccapurple; */
+    width: 100%;
     overflow: hidden;
 }
 

@@ -15,6 +15,21 @@ export const profile = async (req, res) => {
     }
 }
 
+export const getUserInfo = async (req, res) => {
+    try {
+        const user = await UserModel.findById({ _id: req.params.userId })
+
+        if (!user)
+            return res.status(404).json({ message: 'Пользователь не найден!', code: 404 })
+
+        const { fio, avatarUrl } = user
+
+        res.status(200).json({ fio, avatarUrl })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+}
+
 export const orders = async (req, res) => {
 
     try {

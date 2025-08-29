@@ -1,0 +1,39 @@
+/* .star-count {
+    display: flex;
+    flex-direction: column;
+    color: var(--ui---stars);
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+} */
+.star-count-list {}
+
+.star-count__percent {
+    width: 100%;
+    background-color: var(--ui---bg-main-darker);
+    height: 8px;
+    border-radius: 5px;
+}
+
+.star-count__value {
+    color: var(--typography---main);
+}
+
+
+
+.count-item {
+    display: grid;
+    grid-template-columns: 20px 1fr 20px;
+    align-items: center;
+    gap: 10px;
+}
+
+.count-item__percent {
+    height: 6px;
+    background-color: red;
+    width: 100%;
+    border-radius: 4px;
+    background-color: var(--ui---stars);
+}
+
+.count-item_value {}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import styles from './ProductPage.module.css'
 
@@ -11,7 +11,10 @@ import ProductCard from '@components/ProductCard/ProductCard'
 import Field from '@components/Field/Field'
 import Counter from '@components/Counter/Counter'
 import FavoriteButton from '@components/FavoriteButton/FavoriteButton'
+import ReviewStars from '../../components/ReviewStars/ReviewStars'
 import Slide from './Slide'
+
+import CrossIcon from '../../svg/CrossIcon.jsx'
 
 import { getProduct, getProducts } from '@api/api'
 import getPrice from '@utils/getPrice'
@@ -24,20 +27,24 @@ import { BsCartPlusFill } from "react-icons/bs"
 import { BsCartCheck } from "react-icons/bs"
 import useScrollUpButton from '../../hooks/useScrollUpButton'
 
+import getWordEnding from '../../utils/getWordEnding.js'
+import { getAverageRating } from '../../utils/getAvrrageRating.js'
+
+import CommentsPage from '../CommentsPage/CommentsPage.jsx'
+
 
 export default function ProductPage() {
     const dispatch = useDispatch()
-    const negative = useNavigate()
+    const navigate = useNavigate()
     const { id } = useParams()
     const userData = useSelector((state => state.user.userData))
-
-
 
     const [isScrolled, setIsScrolled] = useState(false)
     const scrollUp = useScrollUpButton({ offset: isScrolled ? 85 : 15 })
 
 
     const swiperRef = useRef(null)
+    const fullScreenSwiperRef = useRef(null)
     const [favoriteItemAction, cartItemAction] = useProductActions()
 
     //#region useStates
@@ -92,12 +99,20 @@ export default function ProductPage() {
 
     useEffect(() => {
         swiperRef.current?.slides.forEach(slide => {
-            slide.querySelector('div').style.height = zoomProperties.fullScreenMode ? '100vh' : ''
+            // slide.querySelector('div').style.height = zoomProperties.fullScreenMode ? '100vh' : ''
         })
     }, [zoomProperties.fullScreenMode])
     //#endregion
 
-    const { inStock, discount, title, model, price, wholesalePrice } = product || {}
+    const [averageRating, setAverageRating] = useState(0)
+    const { inStock, discount, title, model, price, wholesalePrice, ratingValue, starsValues } = product || {}
+
+    const entries = Object.entries(starsValues || {})
+    const reviewsTotal = entries.reduce((acc, i) => acc + i[1], 0)
+
+    useEffect(() => {
+        setAverageRating(getAverageRating(starsValues))
+    }, [starsValues, reviewsTotal, entries])
 
     //#region handlers
     const scrollHandler = () => {
@@ -122,18 +137,24 @@ export default function ProductPage() {
     }
 
     const onModelFieldClick = () => {
-        negative(`/search?model=${model}`)
+        navigate(`/search?model=${model}`)
     }
 
     const onSlideZoom = (e) => {
-        setZoomProperties({ imageSize: e.imageSize, shiftsValues: e.shiftsValues, visible: e.visible, fullScreenMode: e.fullScreenMode })
+        setZoomProperties({ imageSize: e.imageSize, shiftsValues: e.shiftsValues, visible: e.visible, })
     }
+
+    const [isFullScreenMode, setIsFullScreenMode] = useState(false)
+
 
     const onSlideChange = (slideIndex) => {
         if (swiperRef.current) {
             swiperRef.current.slideTo(slideIndex, 400)
         }
 
+        if (fullScreenSwiperRef.current) {
+            fullScreenSwiperRef.current.slideTo(slideIndex, 400)
+        }
         document.querySelector('#photos-list').querySelectorAll('div').forEach((photo, index) => {
             photo.setAttribute('style', 'border: solid 1px transparent; background-color: 0')
             if (index === slideIndex)
@@ -141,6 +162,10 @@ export default function ProductPage() {
         })
     }
     //#endregion
+
+    useEffect(() => {
+        document.querySelector('html').setAttribute('style', ` ${isFullScreenMode ? 'overflow-y: hidden' : ''}`)
+    }, [isFullScreenMode])
 
     const images = [
         '/images/categories/03.png',
@@ -162,21 +187,14 @@ export default function ProductPage() {
                         <div className={`${styles['product-card__tag']} ${styles['product-card__popular-tag']}`}>Популярное</div>
                     </div> : null}
                     <Swiper
-                        className={styles['product-card__slider']}
+                        className={`${styles['product-card__slider']}  full-screen`}
                         onSwiper={(swiper) => swiperRef.current = swiper}
                         onSlideChange={(swiper) => onSlideChange(swiper.realIndex)}
                         spaceBetween={50}
                         slidesPerView={1}
-                        pagination={{ clickable: true, el: `.${styles.pagination}` }}
-                        style={zoomProperties.fullScreenMode ? {
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            maxWidth: '100vw',
-                            zIndex: 1000
-                        } : {}}>
+                        pagination={{ clickable: true, el: `.${styles.pagination}` }}>
 
-                        {images && images.map((image, i) => <SwiperSlide key={i} className={`${styles['product-card__slide']}`} >
+                        {images && images.map((image, i) => <SwiperSlide onClick={() => setIsFullScreenMode(true)} key={i} className={`${styles['product-card__slide']}`} >
                             <Slide image={image} onZoom={onSlideZoom} />
                         </SwiperSlide>)}
 
@@ -188,7 +206,33 @@ export default function ProductPage() {
                         </button>
                     </Swiper>
 
-                    <div className={styles['product-info__photos-list']} id='photos-list'>
+
+                    {isFullScreenMode ? <Swiper
+                        className={`${styles['product-card__full-screen-slider']}`}
+                        onSwiper={(swiper) => fullScreenSwiperRef.current = swiper}
+                        onSlideChange={(swiper) => onSlideChange(swiper.realIndex)}
+                        spaceBetween={50}
+                        slidesPerView={1}
+                        pagination={{ clickable: true, el: `.${styles.pagination}` }}>
+
+                        <button onClick={() => setIsFullScreenMode(false)}
+                            style={{ position: 'absolute', zIndex: 200, top: 10, right: 10 }}>
+                            <CrossIcon />
+                        </button>
+
+                        {images && images.map((image, i) => <SwiperSlide key={i} className={`${styles['product-card__slide']}`} >
+                            <img src={image} alt="product-image" />
+                        </SwiperSlide>)}
+
+                        <button className={`swiper-button-prev ${styles['swiper__prev-button']} ${styles['swiper__button']}`} onClick={() => fullScreenSwiperRef.current.slidePrev()}>
+                            <GrFormPrevious />
+                        </button>
+                        <button className={`swiper-button-next ${styles['swiper__next-button']} ${styles['swiper__button']}`} onClick={() => fullScreenSwiperRef.current.slideNext()}>
+                            <GrFormNext />
+                        </button>
+                    </Swiper> : null}
+
+                    <div className={`${styles['product-info__photos-list']} ${isFullScreenMode ? styles['full-screen'] : null}`} id='photos-list'>
                         {images && images.map((image, i) =>
                             <div key={i} className={styles['product-info__photos-item']} onClick={() => onSlideChange(i)}>
                                 <img src={image} alt="product image" />
@@ -204,12 +248,17 @@ export default function ProductPage() {
                     <h2 className={styles['info__title']}>{title}</h2>
 
                     <section className={styles['info__sub-title']}>
-                        <p className={styles['sub-title__article']}>Артикул: 854236896ABC</p> ·
-                        {inStock ? <p className={styles['sub-title__in-stock']}>{`В наличии: ${inStock} шт.`}</p> :
-                            <p className={styles['sub-title__in-stock_no-in-stock']}>{`Нет в наличии.`}</p>}
+                        <section className={styles['sub-title__rating']}>
+                            <ReviewStars ratingValue={averageRating} /> |
+                            <Link to={`/products/${id}/comments`}>{reviewsTotal ? `${reviewsTotal} Отзыв${getWordEnding(reviewsTotal)}` : 'Отзывов нет'}</Link>
+                        </section>
+                        <p className={styles['sub-title__article']}>Артикул: 854236896ABC</p>
                     </section>
 
                     <section className={styles['info__fields']}>
+
+                        {inStock ? <p className={styles['sub-title__in-stock']}>{`В наличии: ${inStock} шт.`}</p> :
+                            <p className={styles['sub-title__in-stock_no-in-stock']}>{`Нет в наличии.`}</p>}
                         <Field className={styles['info__field']} title='Тип:' value='Оригинал' />
                         <Field className={styles['info__field']} title='Совместимость:' value={model} onClick={onModelFieldClick} />
                         <Field className={styles['info__field']} title='Розница: ' value={`${getPrice(discount, price)} ₴`} />

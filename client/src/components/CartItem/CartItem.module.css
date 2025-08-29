@@ -11,6 +11,10 @@
     justify-self: start;
 }
 
+.cart-item__title a:hover {
+    text-decoration: underline;
+}
+
 .cart-item__title h4 {
     font-weight: 500;
     font-size: 1rem;
