@@ -15,16 +15,13 @@ import * as orderController from './controllers/orderController.js'
 import * as sharedController from './controllers/sharedController.js'
 import * as commentsController from './controllers/commentsController.js'
 import * as replyController from './controllers/replyController.js'
+import * as validations from './validations.js'
+//#endregion
 
 import { CheckAuth } from './middleware/CheckAuth.js'
 
-//#endregion
 
-import * as validations from './validations.js'
-import ProductModel from './models/ProductModel.js'
-import { setLikes } from './utils/setLikes.js'
-import ReplyModel from './models/ReplyModel.js'
-
+//#region config
 dotenv.config()
 
 cloudinary.config({
@@ -42,9 +39,10 @@ const app = express()
 const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
-
 app.use(cors())
 app.use(express.json())
+//#endregion
+
 
 //#region Routes
 
@@ -59,7 +57,6 @@ app.patch('/auth/reset-password', validations.registerValidation, authController
 // app.get('/auth/reset-password', (req, res) => res.json({ token: req.query.token }))
 //#endregion
 
-
 //#region  user
 app.get('/profile', CheckAuth, userController.profile)
 app.get('/profile/:userId', userController.getUserInfo)
@@ -72,10 +69,7 @@ app.get('/products/review-eligibility', productController.checkReviewEligibility
 app.get('/products', productController.getProducts)
 app.post('/products', productController.addProduct)
 app.get('/products/:id', productController.getProduct)
-
 app.get('/products/:id/comments', productController.getAllComments)
-app.post('/products/:id/comments/', (req, res) => { })
-
 //#endregion
 
 //#region favorites
@@ -100,9 +94,10 @@ app.post('/comments/', CheckAuth, commentsController.addComment)
 app.get('/comments/:commentId', commentsController.getComment)
 app.patch('/comments/:commentId', CheckAuth, commentsController.editComment)
 app.patch('/comments/:commentId/like', CheckAuth, commentsController.likeComment)
+app.delete('/comments/:commentId', CheckAuth, commentsController.removeComment)
+app.get('/comments/:commentId/replies/', commentsController.getAllReplies)
 
 app.get('/replies/:replyId', replyController.getReply)
-app.get('/comments/:commentId/replies/', replyController.getAllReplies)
 app.post('/replies', CheckAuth, replyController.addReply)
 app.patch('/replies/:replyId/like', CheckAuth, replyController.replyLike)
 app.patch('/replies/:replyId', CheckAuth, replyController.editReply)
@@ -116,60 +111,13 @@ app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
 
 //#region service
 app.post('/auth/check', CheckAuth, (req, res) => res.status(200).json({ message: 'token valid', code: 200 }))
-//#endregion
-
-//#endregion
-
 app.get('/chooses-steps', sharedController.getChooseSteps)
+//#endregion
+
+app.get('/search', productController.searchProducts)
+//#endregion
 
 
-app.get('/search', async (req, res) => {
-
-    const filters = {
-        brand: req.query.brand || '',
-        model: req.query.model || '',
-        category: req.query.category || '',
-        word: req.query.word || '',
-        minPrice: Number(req.query.minPrice) || 0,
-        maxPrice: Number(req.query.maxPrice) || 10000
-    }
-
-    const query = {}
-
-    if (filters.category) query.category = filters.category
-    if (filters.brand) query.brand = filters.brand
-    if (filters.model) query.model = filters.model
-
-
-    const list = await ProductModel.find(query)
-    if (!list.length)
-        return res.status(404).json({ message: 'Не найдено ни одного товара.', filters, code: 404 })
-
-    const finalList =
-        list.filter(item => {
-            if (filters.word)
-                return item.price > filters.minPrice && item.price <= filters.maxPrice && item.title.includes(filters.word)
-
-            return item.price > filters.minPrice && item.price <= filters.maxPrice
-        }).sort((a, b) => {
-            const aFinal = a.price - (a.discount ? (a.price * a.discount) / 100 : 0)
-            const bFinal = b.price - (b.discount ? (b.price * b.discount) / 100 : 0)
-            if (req.query.sortType === 'increasingPrice') return aFinal - bFinal
-            if (req.query.sortType === 'decreasingPrice') return bFinal - aFinal
-            if (req.query.sortType === 'increasingBrand') return a.brand.localeCompare(b.brand)
-            if (req.query.sortType === 'decreasingBrand') return b.brand.localeCompare(a.brand)
-            if (req.query.sortType === 'increasingDiscount') return a.discount - b.discount
-            if (req.query.sortType === 'decreasingDiscount') return b.discount - a.discount
-
-            // if (req.query.sortType === 'increasingDate') a.createdAt
-            // if (req.query.sortType === 'decreasingDate') b.brand.localeCompare(a.brand)
-        })
-
-    if (!finalList.length)
-        return res.status(404).json({ message: 'Не найдено ни одного товара.1', filters, code: 404 })
-
-    res.status(200).json({ filters, products: finalList, message: 'Товары найдены.', code: 200 })
-})
 
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
     console.log(`The server is running on port ${process.env.PORT || 5000}`)

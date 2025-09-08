@@ -9,14 +9,14 @@ export const addFavoriteItem = async (req, res) => {
         )
 
         if (!user)
-            return res.status(404).json({ message: 'Не удалось обновить данные.', code: 404 })
+            return res.status(404).json({ message: 'Не удалось обновить данные.' })
 
         const product = await ProductModel.findById(req.params.productId)
 
         if (!product)
-            return res.status(404).json({ message: 'Товар не найден.', code: 404 })
+            return res.status(404).json({ message: 'Товар не найден.' })
 
-        res.status(200).json({ message: 'Товар добавлен.', code: 200 })
+        res.status(200).json({ message: 'Товар добавлен.' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -33,9 +33,9 @@ export const removeFavoriteItem = async (req, res) => {
         )
 
         if (!user)
-            return res.status(404).json({ message: 'Не удалось обновить данные.', code: 404 })
+            return res.status(404).json({ message: 'Не удалось обновить данные.' })
 
-        res.status(200).json({ msg: 'Товар удален.', code: 200 })
+        res.status(200).json({ msg: 'Товар удален.' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
-		"extract-jsx-classes.moduleCSSVariable": "styles"
+		"extract-jsx-classes.moduleCSSVariable": "styles",
+		"cSpell.words": [
+			"entrie"
+		]
 	}
 }

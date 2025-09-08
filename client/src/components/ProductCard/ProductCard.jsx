@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
+import styles from './ProductCard.module.css'
 
+import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -9,22 +10,13 @@ import Field from '../Field/Field'
 
 import FavoriteIcon from '@/svg/FavoriteIcon'
 
-import styles from './ProductCard.module.css'
-
-
 import getPrice from '@utils/getPrice'
 import useProductActions from '../../hooks/useProductActions'
 import { setUserData } from '../../redux/features/userSlice'
 import Spinner from '../Spinner/Spinner'
+import { addNotification } from '../../redux/features/uiSlice'
 
-// import { BsFillCartCheckFill } from "react-icons/bs"
-// import { BsCartPlusFill } from "react-icons/bs"
-
-
-// let favoriteProducts = localStorage.getItem('favoriteItems') ? JSON.parse(localStorage.getItem('favoriteItems')) : []
-// let cartProducts = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : []
-
-export default function ProductCard({ productData }) {
+export default function ProductCard({ productData, ref }) {
 
     const [inCart, setInCart] = useState(false)
     const [inFavorite, setInFavorite] = useState(false)
@@ -43,11 +35,15 @@ export default function ProductCard({ productData }) {
     const [favoriteItemAction, cartItemAction] = useProductActions()
 
     const onFavoriteButtonClick = () => {
+        if (!tokenStatus)
+            return dispatch(addNotification({ text: 'Нужно войти в аккаунт для этого действия', type: 'info', route: 'auth/' }))
         favoriteItemAction(productId)
         setInFavorite(!inFavorite)
     }
 
     const onAddToCartButtonClick = () => {
+        if (!tokenStatus)
+            return dispatch(addNotification({ text: 'Нужно войти в аккаунт для этого действия', type: 'info', route: 'auth/' }))
         setInCart(!inCart)
         cartItemAction(productId, quantity)
     }
@@ -68,13 +64,18 @@ export default function ProductCard({ productData }) {
 
     }, [cartItems, favoriteItems, productId, tokenStatus, dispatch])
 
+
+    function onCounterChange(value) {
+        setQuantity(value)
+        setUserData()
+    }
     return (
-        <div className={`${styles['product-card']} ${!inStock && styles['disabled']}`}>
-            {inStock ? <div className={styles['product-card__tags']} >
-                {discount ? <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${discount}%`}</div> : null}
+        <div className={`${styles['product-card']} ${!inStock && styles['disabled']}`} ref={ref}>
+            {Boolean(inStock) && <div className={styles['product-card__tags']} >
+                {Boolean(discount) && <div className={`${styles['product-card__tag']} ${styles['product-card__discount-tag']}`}>{`Скидка ${discount}%`}</div>}
                 <div className={`${styles['product-card__tag']} ${styles['product-card__popular-tag']}`}>Популярное</div>
                 {new Date().getUTCDate() - date.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
-            </div> : null}
+            </div>}
             <FavoriteIcon className={styles['product-card__fav-button']} onClick={onFavoriteButtonClick} inFavorite={inFavorite} />
             <Link to={`/products/${productId}`} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <div className={styles['product-card__image']}>
@@ -91,21 +92,13 @@ export default function ProductCard({ productData }) {
                     <Field title='Оптом (от 5 штук):' value={`${getPrice(discount, wholesalePrice)} ₴`} />
                     {inStock ? <Field title='В наличии:' value={`${inStock} шт.`} /> : <p>Нет в наличии.</p>}
                 </div>
-                {inStock ? <div className={styles['product-card__bottom']}>
-                    <Counter onCounterChange={(value) => {
-                        setQuantity(value)
-                        setUserData()
-                    }} />
+                {Boolean(inStock) && <div className={styles['product-card__bottom']}>
+                    <Counter onCounterChange={onCounterChange} maxValue={inStock} />
                     <BorderedButton
                         className={styles['product-card__cart-button']}
                         title={inCart ? 'В корзине' : 'В корзину'}
                         onClick={onAddToCartButtonClick} />
-
-                    {/* <button className={styles['product-card__cart-icon-button']} onClick={onAddToCartButtonClick}>
-                        <p>{inCart ? 'В корзине' : 'В корзину'}</p>
-                        {inCart ? <BsFillCartCheckFill /> : <BsCartPlusFill />}
-                    </button> */}
-                </div> : null}
+                </div>}
             </div>
         </div >
     )

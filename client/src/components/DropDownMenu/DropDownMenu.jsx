@@ -3,6 +3,7 @@ import styles from './DropDownMenu.module.css'
 import { useNavigate } from 'react-router-dom'
 import { IoChevronBackOutline } from "react-icons/io5"
 import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
+import { generateId } from '../../utils/generateId'
 
 export default function DropDownMenu({ title, deviceTypes, brandModels, categories, list, className }) {
     const navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
         setModel()
         setDeviceType()
     }
+
 
 
     const onDropDownTitleClick = () => {
@@ -52,7 +54,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
         return () => document.removeEventListener('touchstart', handler)
     }, [])
     return (
-        <div className={`${styles['dropdown-menu']} ${step !== '' ? styles['open-drop-down'] : null} dropdown`}
+        <div tabIndex={1} className={`${styles['dropdown-menu']} ${step !== '' ? styles['open-drop-down'] : null} dropdown`}
             onMouseEnter={onDropDownMouseEnter} onMouseLeave={() => resetValues()}>
             <section className={styles['dropdown-menu__title']} onClick={() => onDropDownTitleClick()}>
                 {step !== 'brand' && <IoChevronBackOutline
@@ -63,7 +65,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
             <div className={styles['dropdown-menu__content']}>
                 {list && <section className={styles['dropdown-menu__list']} style={{ height: deviceType ? '0px' : '100%' }}>
                     {list?.map(item => <p
-                        key={item}
+                        key={generateId()}
                         className={styles['dropdown-menu__device-type-item']}
                         onClick={() => {
                             resetValues()
@@ -76,7 +78,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
 
                 {deviceTypes && <section className={styles['dropdown-menu__list']} style={{ height: deviceType ? '0px' : '100%' }}>
                     {deviceTypes?.map(dt => <p
-                        key={dt}
+                        key={generateId()}
                         className={styles['dropdown-menu__device-type-item']}
                         onClick={() => {
                             setDeviceType(dt)
@@ -87,7 +89,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
 
                 {deviceType && <section className={styles['dropdown-menu__list']} style={{ height: model ? '0px' : '100%' }}>
                     {brandModels[deviceType]?.map(model => <p
-                        key={model.title}
+                        key={generateId()}
                         className={styles['dropdown-menu__device-model-item']}
                         onClick={() => {
                             setModel(model.title)
@@ -99,7 +101,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
 
                 {model && <section className={`${styles['dropdown-menu__list']}`}>
                     {categories && categories?.map(category => <p
-                        key={category}
+                        key={generateId()}
                         className={styles['dropdown-menu__category-item']}
                         onClick={() => {
                             navigate(`search?brand=${title}&model=${model}&category=${category}&deviceType=${deviceTypesEnTitles[deviceType]}`)

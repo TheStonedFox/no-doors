@@ -14,7 +14,6 @@ export const addReply = async (req, res) => {
     }
 }
 
-
 export const getReply = async (req, res) => {
     try {
         const reply = await ReplyModel.findById(req.params.replyId)
@@ -46,23 +45,14 @@ export const editReply = async (req, res) => {
 
 export const removeReply = async (req, res) => {
     try {
+        const replyId = req.params.replyId
 
-    } catch (error) {
-        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
-    }
-}
+        const reply = await ReplyModel.findByIdAndDelete(replyId)
 
+        if (!reply)
+            return res.status(404).json({ message: 'Ответ не найден.' })
 
-export const getAllReplies = async (req, res) => {
-    try {
-        const replies = await ReplyModel.find({ commentId: req.params.commentId })
-
-        if (!replies)
-            return res.status(404).json({ message: 'Ответ не найдено.1' })
-
-        const sorted = replies.sort((a, b) => b.createdAt - a.createdAt)
-
-        res.status(200).json({ message: 'Ответы получены.', replies: sorted })
+        res.status(200).json({ message: 'Ответ удален.' })
 
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })

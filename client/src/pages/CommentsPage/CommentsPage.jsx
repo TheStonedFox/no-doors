@@ -3,60 +3,65 @@ import styles from './CommentsPage.module.css'
 import Comment from '../../components/Comment/Comment'
 import Button from '../../components/Button/Button'
 import StarCount from './StarCount/StarCount'
-import Spinner from '../../components/Spinner/Spinner'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { togglePopup } from '../../redux/features/uiSlice'
-import { data, useNavigate, useParams } from 'react-router-dom'
-import { checkReviewEligibility, editComment, getProduct, getProductComments, getUserInfo } from '../../api/api'
-import { useEffect, useRef, useState } from 'react'
-import { setIdCommentToUpdate } from '../../redux/features/sharedSlice'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { checkReviewEligibility, getProduct, getProductComments } from '../../api/api'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { IoChevronBackOutline } from "react-icons/io5"
 
 import RadioButtonGroup from '../../components/RadioButtonGroup/RadioButtonGroup.jsx'
-import { getAverageRating } from '../../utils/getAvrrageRating.js'
+import { getAverageRating } from '../../utils/getAverageRating.js'
 import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder.jsx'
 
 export default function CommentsPage() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
     const { productId } = useParams()
+    const { pathname } = useLocation()
+    const [query, setQuery] = useSearchParams()
 
-    const [comments, setComments] = useState([])
-
-    const [reviewEligibility, setReviewEligibilities] = useState({ isProductPurchased: false, isUserCommented: false })
 
     const userData = useSelector(state => state.user.userData)
-
-    const [product, setProduct] = useState()
     const idCommentToUpdate = useSelector(state => state.shared.idCommentToUpdate)
 
+    const [product, setProduct] = useState()
+    const [commentType, setCommentType] = useState(query.get('type') || 'review')
+    const [comments, setComments] = useState([])
+    const [reviewEligibility, setReviewEligibilities] = useState({ isProductPurchased: false, isUserCommented: false })
     const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => { setCommentType(query.get('type')) }, [query])
+
+    useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [pathname])
 
     useEffect(() => {
         getProduct(productId).then(res => setProduct(res.product)).catch(error => console.log(error))
     }, [productId])
 
+    const memoizedReviewEligibility = useCallback(() => {
+        userData?._id && productId && checkReviewEligibility(productId, userData._id).then(res => setReviewEligibilities({ ...res }))
+            .catch(error => console.log(error))
+    }, [userData?._id, productId, idCommentToUpdate])
+
+    useEffect(() => {
+        memoizedReviewEligibility()
+    }, [memoizedReviewEligibility])
 
     const onAddReviewButtonClick = () => {
-        userData && productId && checkReviewEligibility(productId, userData._id).then(res => {
-            res.isUserCommented ?
-                dispatch(togglePopup({ type: 'review', data: { type: 'update-review', commentId: reviewEligibility.isUserCommented._id } })) :
-                dispatch(togglePopup({ type: 'review', data: { type: 'review', productId: productId } }))
-        })
-            .catch(error => console.log(error))
+        reviewEligibility.isUserCommented ?
+            dispatch(togglePopup({ type: 'review', data: { type: 'update-review', commentId: reviewEligibility.isUserCommented._id } })) :
+            dispatch(togglePopup({ type: 'review', data: { type: 'review', productId: productId } }))
     }
 
     const onAddQuestionButtonClick = () => {
         userData && dispatch(togglePopup({ type: 'question', data: { type: 'question', productId: productId } }))
     }
-    const [commentType, setCommentType] = useState('review')
-
 
     useEffect(() => {
-
-        userData && productId && checkReviewEligibility(productId, userData._id).then(res => setReviewEligibilities({ ...res }))
-            .catch(error => console.log(error))
+        setIsLoading(true)
 
         getProductComments(productId, commentType).then(res => {
             setComments(res.comments)
@@ -64,9 +69,17 @@ export default function CommentsPage() {
         })
             .catch(error => console.log(error))
             .finally(() => setIsLoading(false))
+
+        const newQuery = new URLSearchParams(query)
+        newQuery.set('type', commentType)
+        setQuery(newQuery)
+        console.log('asadsads')
+
     }, [userData, productId, commentType, idCommentToUpdate])
 
+
     const backButtonRef = useRef(null)
+
     useEffect(() => {
         const handleEscDown = (e) => e.key === 'Escape' && backButtonRef.current.setAttribute('style', 'background-color:var(--ui---main);')
         const handleEscUp = (e) => e.key === 'Escape' && backButtonRef.current.click()
@@ -80,10 +93,15 @@ export default function CommentsPage() {
         }
     }, [])
 
+
+
     document.querySelector('title').innerHTML = 'Отзывы к товару'
 
     return (
-        <div className={`${styles['comments-page']} container`} onKeyUp={(e) => e.key === 'Escape' && alert('asd')}>
+        <div className={`${styles['comments-page']} container`} onClick={() => {
+            console.log('asd')
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}>
             <section className={styles['comments-page__layout']}>
                 <button className={styles['layout__back-button']}
                     ref={backButtonRef}
@@ -95,10 +113,11 @@ export default function CommentsPage() {
                         <p>Вернутся к товару</p>
                     </div>
                 </button>
-                {!isLoading ? <section className={styles['comments-page__resume']}>
+                <section className={styles['comments-page__resume']}>
                     <section className={styles['resume__header']}>
                         <RadioButtonGroup
                             className={styles['resume__mode']}
+                            initialValue={query.get('type') === 'review' ? 0 : 1}
                             options={['Отзывы', 'Вопросы']}
                             onSelect={(selected) => setCommentType(selected === 0 ? 'review' : 'question')} />
                         <p>Оценка покупателей: <strong>{product?.ratingValue ? getAverageRating(product?.starsValues) : 0}/5 ★</strong></p>
@@ -108,11 +127,19 @@ export default function CommentsPage() {
                         onClick={onAddReviewButtonClick} /> : null}
                     {commentType === 'review' && !reviewEligibility.isProductPurchased ? <p style={{ fontSize: 14, color: 'var(--typography---second)' }}>*Отзыв можно оставить только купив товар</p> : null}
                     {commentType === 'question' && <Button title='Задать вопрос' onClick={onAddQuestionButtonClick} />}
-                </section> : <Spinner />}
-                {!isLoading ? <section className={styles['comments-page__reviews']}>
-                    {comments?.map(comment => <Comment key={comment._id} commentData={comment} />)}
-                    {!comments.length && !isLoading ? <EmptyPlaceholder title={`${commentType === 'review' ? 'Отзывов' : 'Вопросов'} пока нет.`} /> : null}
-                </section> : <Spinner />}
+                </section>
+
+                {<section className={styles['comments-page__reviews']}>
+                    {comments?.sort((a, b) => a.userId.localeCompare(b.userId)).map(comment => <Comment key={comment._id} commentData={comment} />)}
+
+                    {!comments.length && !isLoading && commentType === 'question' && <EmptyPlaceholder
+                        title='Вопросов пока нет.'
+                        action={onAddQuestionButtonClick} actionTitle='У меня появился вопрос.👀' />}
+
+                    {!comments.length && !isLoading && commentType === 'review' && <EmptyPlaceholder
+                        title='Отзывов пока нет.'
+                        action={reviewEligibility.isProductPurchased && onAddReviewButtonClick} actionTitle='Оставить отзыв.✨' />}
+                </section>}
             </section>
         </div>
     )

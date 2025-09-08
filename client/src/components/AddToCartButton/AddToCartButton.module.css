@@ -1,0 +1,13 @@
+.add-to-cart-button {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: fit-content;
+    background-color: var(--ui---main);
+    padding: 10px 16px;
+    border-radius: 4px;
+    transition: 0.2s;
+    height: 53px;
+    text-wrap: nowrap;
+    color: #fff;
+}

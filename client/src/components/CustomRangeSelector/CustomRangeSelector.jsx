@@ -1,16 +1,9 @@
-import { useEffect, useRef, useState } from "react"
-import styles from "./CustomRangeSelector.module.css"
+import { useEffect, useRef, useState } from 'react'
+import styles from './CustomRangeSelector.module.css'
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
 
-const CustomRangeSelector = ({
-    min = 0,
-    max = 10000,
-    step = 5,
-    initialMin,
-    initialMax,
-    onValuesChange
-}) => {
+const CustomRangeSelector = ({ min = 0, max = 10000, step = 5, initialMin, initialMax, onValuesChange }) => {
     const trackRef = useRef(null)
     const [trackWidth, setTrackWidth] = useState(1)
 
@@ -18,6 +11,13 @@ const CustomRangeSelector = ({
         minValue: initialMin ?? min,
         maxValue: initialMax ?? max
     })
+
+    useEffect(() => {
+        setRange({
+            minValue: initialMin ?? min,
+            maxValue: initialMax ?? max
+        })
+    }, [initialMin, initialMax, min, max])
 
 
     useEffect(() => {
@@ -28,8 +28,8 @@ const CustomRangeSelector = ({
             if (trackRef.current) setTrackWidth(trackRef.current.offsetWidth)
         }
         onValuesChange((range))
-        window.addEventListener("resize", handleResize)
-        return () => window.removeEventListener("resize", handleResize)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
     }, [])
 
     const valueToPosition = (value) =>
@@ -41,7 +41,8 @@ const CustomRangeSelector = ({
     }
 
     const handleDrag = (thumb) => (e) => {
-        e.preventDefault()
+        if (e.cancelable)
+            e.preventDefault()
 
         const startX = e.clientX ?? e.touches?.[0]?.clientX
 
@@ -53,7 +54,7 @@ const CustomRangeSelector = ({
             const newValue = clamp(positionToValue(relativeX), min, max)
 
             setRange((prev) => {
-                if (thumb === "min") {
+                if (thumb === 'min') {
                     const validMin = Math.min(newValue, prev.maxValue - step)
                     return { ...prev, minValue: validMin }
                 } else {
@@ -64,25 +65,25 @@ const CustomRangeSelector = ({
         }
 
         const up = () => {
-            window.removeEventListener("mousemove", move)
-            window.removeEventListener("mouseup", up)
-            window.removeEventListener("touchmove", move)
-            window.removeEventListener("touchend", up)
+            window.removeEventListener('mousemove', move)
+            window.removeEventListener('mouseup', up)
+            window.removeEventListener('touchmove', move)
+            window.removeEventListener('touchend', up)
         }
 
-        window.addEventListener("mousemove", move)
-        window.addEventListener("mouseup", up)
-        window.addEventListener("touchmove", move)
-        window.addEventListener("touchend", up)
+        window.addEventListener('mousemove', move)
+        window.addEventListener('mouseup', up)
+        window.addEventListener('touchmove', move)
+        window.addEventListener('touchend', up)
     }
 
     const handleInputChange = (type) => (e) => {
         const value = Number(e.target.value)
         setRange((prev) => {
-            if (type === "min") {
+            if (type === 'min') {
                 return {
                     ...prev,
-                    minValue: clamp(Math.min(value, prev.maxValue - step), min, max)
+                    minValue: clamp(Math.min(value === 0 ? 1 : value, prev.maxValue - step), min, max)
                 }
             } else {
                 return {
@@ -93,6 +94,8 @@ const CustomRangeSelector = ({
         })
     }
 
+    useEffect(() => { onValuesChange(range) }, [range])
+
     const minX = valueToPosition(range.minValue)
     const maxX = valueToPosition(range.maxValue)
 
@@ -102,10 +105,10 @@ const CustomRangeSelector = ({
                 <label className={styles.inputGroup}>
                     Мин. цена:
                     <input
-                        type="number"
+                        type='number'
                         className={styles.inputField}
                         value={range.minValue}
-                        onChange={handleInputChange("min")}
+                        onChange={handleInputChange('min')}
                         min={min}
                         max={range.maxValue - step}
                     />
@@ -113,10 +116,10 @@ const CustomRangeSelector = ({
                 <label className={styles.inputGroup}>
                     Макс. цена:
                     <input
-                        type="number"
+                        type='number'
                         className={styles.inputField}
                         value={range.maxValue}
-                        onChange={handleInputChange("max")}
+                        onChange={handleInputChange('max')}
                         min={range.minValue + step}
                         max={max}
                     />
@@ -134,15 +137,15 @@ const CustomRangeSelector = ({
                 <div
                     className={styles.thumb}
                     style={{ left: `${minX}px` }}
-                    onMouseDown={handleDrag("min")}
-                    onTouchStart={handleDrag("min")}
+                    onMouseDown={handleDrag('min')}
+                    onTouchStart={handleDrag('min')}
                     onMouseUp={() => onValuesChange((range))}
                 />
                 <div
                     className={styles.thumb}
                     style={{ left: `${maxX}px` }}
-                    onMouseDown={handleDrag("max")}
-                    onTouchStart={handleDrag("max")}
+                    onMouseDown={handleDrag('max')}
+                    onTouchStart={handleDrag('max')}
                     onMouseUp={() => onValuesChange((range))}
                 />
             </div>

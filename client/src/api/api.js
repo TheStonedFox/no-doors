@@ -49,16 +49,17 @@ export const updatePaymentStatus = async (orderId, body) => apiRequest(`orders/$
 export const addComment = async (body) => apiRequest('comments/', 'POST', body)
 export const getComment = async (commentId) => apiRequest(`comments/${commentId}`, 'GET')
 export const editComment = async (commentId, body) => apiRequest(`comments/${commentId}`, 'PATCH', body)
-
 export const likeComment = async (commentId, body) => apiRequest(`comments/${commentId}/like`, 'PATCH', body)
-
-export const addReply = async (body) => apiRequest('replies/', 'POST', body)
 export const getAllReplies = async (commentId) => apiRequest(`comments/${commentId}/replies/`, 'GET')
+export const removeComment = async (commentId, commentType) => apiRequest(`comments/${commentId}?type=${commentType}`, 'DELETE')
 
+//#endregion
 export const getReply = async (replyId) => apiRequest(`replies/${replyId}`, 'GET')
+export const addReply = async (body) => apiRequest('replies/', 'POST', body)
 export const editReply = async (replyId, body) => apiRequest(`replies/${replyId}`, 'PATCH', body)
 export const likeReply = async (replyId, body) => apiRequest(`replies/${replyId}/like`, 'PATCH', body)
-export const removeReply = async (replyId) => apiRequest(`replies/${replyId}`, 'DELETE')
+//#region reply
+
 //#endregion
 
 //#region other

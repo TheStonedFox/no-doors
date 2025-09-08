@@ -5,13 +5,19 @@ import styles from './SearchResultItem.module.css'
 import BorderedButton from '../../BorderedButton/BorderedButton'
 import FavoriteButton from '../../FavoriteButton/FavoriteButton'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import useProductActions from '../../../hooks/useProductActions'
+
+import { BsCartPlusFill } from 'react-icons/bs'
+import { BsCartCheck } from 'react-icons/bs'
+import { toggleSearchResults } from '../../../redux/features/uiSlice'
+
 
 export default function SearchResultItem({ itemInfo }) {
     const [isInFavorite, setIsInFavorite] = useState(false)
     const [inCart, setInCart] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const userData = useSelector((state => state.user.userData))
     const { _id, title, price, wholesalePrice, inStock } = itemInfo || {}
@@ -35,13 +41,18 @@ export default function SearchResultItem({ itemInfo }) {
         setInCart(!inCart)
     }
 
+
+
     return (
-        <div className={styles['search-result__item']}>
-            <div className={styles['item__image']} style={{ opacity: inStock ? '1' : '0.5' }} onMouseDown={() => navigate(`products/${_id}`)}>
+        <div className={styles['search-result__item']} tabIndex={-1} onClick={() => {
+            dispatch(toggleSearchResults())
+            navigate(`/products/${_id}`)
+        }}>
+            <div className={styles['item__image']} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <img src="../../../../public/images/categories/03.png" alt="product image" />
             </div>
             <div className={styles['item_info']} style={{ opacity: inStock ? '1' : '0.5' }}>
-                <Link className={styles['item__title']} to={`products/${_id}`}>{title}</Link>
+                <Link className={styles['item__title']} to={`products/${_id}`} onClick={() => dispatch(toggleSearchResults())}>{title}</Link>
                 <div className={styles['sub-title']}>
                     <p>Артикул:  854236896ABC</p>
                     {inStock ? <p>{inStock} шт. в наличии</p> : <p style={{ color: 'var(--ui---red)' }}>Нет в наличии</p>}
@@ -62,7 +73,14 @@ export default function SearchResultItem({ itemInfo }) {
                 {inStock ? <BorderedButton className={styles['controls__add-to-cart-button']}
                     title={inCart ? 'В корзине' : 'В корзину'}
                     onClick={onCartButtonClick} /> : null}
-                <FavoriteButton isInFavorite={userData?.favoriteItems.includes(_id)} onClick={onFavoriteButtonClick} />
+
+                {inStock ? <button className={styles['controls__add-to-cart-icon-button']} onClick={onCartButtonClick}>
+                    {inCart ? <BsCartCheck /> : <BsCartPlusFill />}
+                </button> : null}
+
+                <FavoriteButton className={styles['controls__add-to-favorite-button']}
+                    isInFavorite={userData?.favoriteItems.includes(_id)}
+                    onClick={onFavoriteButtonClick} iconMode={true} />
             </div>
         </div >
     )

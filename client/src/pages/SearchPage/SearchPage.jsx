@@ -35,7 +35,6 @@ export default function SearchPage() {
     const [filterOptions, setFilterOptions] = useState({ brands: null, categories: null })
     const [isLoading, setIsLoading] = useState(true)
     const [productsList, setProductsList] = useState([])
-    const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 })
     const [isFiltersLoading, setIsFiltersLoading] = useState(false)
 
     const appliedFiltersOrder = {
@@ -64,14 +63,12 @@ export default function SearchPage() {
     }, [searchParams])
 
     useEffect(() => {
-        // !searchParams.get('sortType') && searchParams.set('sortType', 'decreasingPrice')
-        // setSortType(searchParams.get('sortType'))
         getStepChoices()
             .then(res => {
                 setIsFiltersLoading(true)
                 setFilterOptions({ brands: res.options?.brands, categories: res.options.categories })
             })
-            .catch(error => alert(error))
+            .catch(error => console.log(error))
             .finally(() => setIsFiltersLoading(false))
     }, [])
 
@@ -86,7 +83,7 @@ export default function SearchPage() {
             <h2 className={`section-title ${styles['search-page__title']}`}>{categories.length === 1 ? categories : 'Комплектующие'} {models.length === 1 && `для ${models}`}</h2>
 
             <section className={styles['search-page__applied-filters-box']}>
-                {searchParams ? <section className={styles['search-page__applied-filters']}>
+                {Boolean(searchParams.size) && <section className={styles['search-page__applied-filters']}>
                     <FilterItem onClick={() => setSearchParams('')} />
                     {Array.from(searchParams).map(param =>
                         param[1] !== '0' && param[1] !== '10000' && param[0] !== 'sortType' &&
@@ -100,14 +97,6 @@ export default function SearchPage() {
                             }
                             onClick={() => {
                                 const newParams = new URLSearchParams(searchParams)
-
-                                // newParams.delete('brand', param[1])
-                                // newParams.delete('category', param[1])
-                                // newParams.delete('model', param[1])
-                                // newParams.delete('minPrice', param[1])
-                                // newParams.delete('word', param[1])
-                                // newParams.delete('deviceType', param[1])
-
                                 deleteParamValue(newParams, 'brand', param[1])
                                 deleteParamValue(newParams, 'category', param[1])
                                 deleteParamValue(newParams, 'model', param[1])
@@ -115,15 +104,18 @@ export default function SearchPage() {
                                 deleteParamValue(newParams, 'word', param[1])
                                 deleteParamValue(newParams, 'deviceType', param[1])
 
-                                if (param[0] === 'maxPrice') setPriceRange(prev => ({ ...prev, max: 10000 }))
+                                deleteParamValue(newParams, 'maxPrice', param[1])
+                                deleteParamValue(newParams, 'minPrice', param[1])
 
-                                if (param[0] === 'minPrice') setPriceRange(prev => ({ ...prev, min: 0 }))
+                                // if (param[0] === 'maxPrice') newParams.set('maxPrice', 10000)
+
+                                // if (param[0] === 'minPrice') newParams.set('minPrice', 0)
 
                                 param[0] === 'brand' && hideUncheckBrandModels(param[1], newParams)
                                 setSearchParams(newParams)
 
                             }} />)}
-                </section> : null}
+                </section>}
             </section>
             <button className={styles['search-page__filters-button']} onClick={() => dispatch(toggleFiltersPanel())}>
                 <FaFilter color='#ffff' />
@@ -134,13 +126,13 @@ export default function SearchPage() {
             <div className={styles['search-page__layout']}>
                 <FiltersPanel isOpen={isFiltersPanelOpen} />
 
-                {!isLoading ? <ItemsList className={styles['search-page__search-items']}>
+                {!isLoading && <ItemsList className={styles['search-page__search-items']}>
                     {productsList?.map((product, index) => index < 20 && <ProductCard productData={product} key={product._id} />)}
-                </ItemsList> : null}
+                </ItemsList>}
 
-                {!productsList.length && !isLoading ? <EmptyPlaceholder title='Товаров не найдено.' /> : null}
+                {!productsList.length && !isLoading && <EmptyPlaceholder title='Товаров не найдено.' />}
 
-                {isLoading ? <Spinner /> : null}
+                {isLoading && <Spinner />}
             </div>
         </div >
     )

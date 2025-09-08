@@ -1,4 +1,6 @@
-.title {
+.empty-placeholder {
+    display: flex;
+    flex-direction: column;
     position: relative;
     top: 20%;
     display: flex;
@@ -13,3 +15,14 @@
     margin-bottom: 60px;
     cursor: default;
 }
+
+.empty-placeholder button {
+    font-size: 14px;
+}
+
+.empty-placeholder button:hover {
+    text-decoration: underline;
+    color: var(--ui---main);
+}
+
+.title {}

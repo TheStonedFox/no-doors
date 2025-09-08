@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './Slide.module.css'
+import Spinner from '../../components/Spinner/Spinner'
 
 
 export default function Slide({ onZoom, image }) {
@@ -12,7 +13,6 @@ export default function Slide({ onZoom, image }) {
     const [imageSize, setImageSize] = useState({ height: 0, width: 0 })
     const [visible, setVisible] = useState(false)
     const [shiftsValues, setShiftsValues] = useState({ top: 0, left: 0 })
-    const [fullScreenMode, setFullScreenMode] = useState(false)
 
     const handleMouseMove = (e) => {
 
@@ -28,7 +28,11 @@ export default function Slide({ onZoom, image }) {
         setPosition({ x, y })
     }
 
-    useEffect(() => { onZoom({ shiftsValues, visible, imageSize, fullScreenMode }) }, [visible, imageSize, shiftsValues])
+    useEffect(() => { onZoom({ shiftsValues, visible, imageSize }) }, [visible, imageSize, shiftsValues])
+
+    const onImageLoad = (e) => {
+        setImageSize({ height: e.currentTarget.clientHeight, width: e.currentTarget.clientWidth })
+    }
 
     return (
         <div className={`${styles['slide-wrapper']}`}
@@ -37,11 +41,9 @@ export default function Slide({ onZoom, image }) {
             onMouseMove={handleMouseMove}
             onMouseLeave={() => setVisible(false)}
         >
-            <img src={image} alt="slider image" onLoad={(e) =>
-                setImageSize({ height: e.currentTarget.clientHeight, width: e.currentTarget.clientWidth })} />
-
+            <img loading='lazy' src={image} alt="slider image" onLoad={onImageLoad} />
             {
-                visible && !fullScreenMode ? <div className={styles['zoom-area']}
+                visible ? <div className={styles['zoom-area']}
                     style={{ top: position.y, left: position.x, width: ZOOM_BOX_SIZE, height: ZOOM_BOX_SIZE, }}></div> : null
             }
         </div >

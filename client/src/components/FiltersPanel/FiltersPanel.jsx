@@ -15,6 +15,8 @@ import Spinner from '../Spinner/Spinner'
 import Button from '../Button/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleFiltersPanel } from '../../redux/features/uiSlice'
+import useSwipe from '../../hooks/useSwipe'
+import { generateId } from '../../utils/generateId'
 
 export default function FiltersPanel({ isOpen }) {
 
@@ -31,10 +33,20 @@ export default function FiltersPanel({ isOpen }) {
 
     const [isSortListOpen, setIsSortListOpen] = useState(false)
     const [sortType, setSortType] = useState('decreasingPrice')
-    const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 })
+    const [priceRange, setPriceRange] = useState({ min: searchParams.get('minPrice'), max: searchParams.get('maxPrice') })
+    const [disableSwipe, setDisableSwipe] = useState(false)
+    const [viewportWidth, setViewportWidth] = useState(window.innerWidth)
+
 
     const isFiltersPanelOpen = useSelector(state => state.ui.isFiltersPanelOpen)
     const dispatch = useDispatch()
+
+    const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipe(
+        isFiltersPanelOpen,
+        panelRef,
+        () => !disableSwipe && dispatch(toggleFiltersPanel(false))
+    )
+
 
     const sortTitles = {
         decreasingPrice: 'по цене (по убыв.)',
@@ -45,6 +57,8 @@ export default function FiltersPanel({ isOpen }) {
         increasingBrand: 'по бренду (я-а)',
         decreasingDiscount: 'по скидке',
         increasingDiscount: 'по скидке',
+        increasingModel: 'по модели (я-а)',
+        decreasingModel: 'по модели (а-я)',
     }
 
     const hideUncheckBrandModels = (brandTile, params) => {
@@ -92,15 +106,34 @@ export default function FiltersPanel({ isOpen }) {
         return () => link.removeEventListener('scroll', scrollHandler)
     }, [])
 
+
     useEffect(() => {
         !searchParams.get('sortType') && searchParams.set('sortType', 'decreasingPrice')
         setSortType(searchParams.get('sortType'))
 
         isFiltersError && alert(isFiltersError)
+
     }, [])
+
+    useEffect(() => {
+        const handleResize = () => setViewportWidth(window.innerWidth)
+        window.addEventListener('resize', handleResize)
+
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+
+
     return (
-        <section className={`${styles['filters-panel']} ${isFiltersPanelOpen ? styles['open'] : null}`} ref={panelRef}>
-            {!isFiltersLoading ? <section className={styles['filter']}>
+        <section
+            className={`${styles['filters-panel']}`}
+            ref={panelRef}
+            style={viewportWidth <= 550 ? isFiltersPanelOpen ? { transform: `translateX(0px)` } :
+                { transform: 'translate(-101%)', boxShadow: 'none' } : {}}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchMove={handleTouchMove}>
+            {!isFiltersLoading && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Сортировка:</h3>
                 <button className={styles['filters-panel__sort-dropdown']}
                     style={{ borderRadius: isSortListOpen ? '4px 4px 0 0' : '', transition: '0.2s' }}
@@ -115,53 +148,57 @@ export default function FiltersPanel({ isOpen }) {
                         style={['decreasingDate', 'increasingDate'].includes(sortType) ?
                             { backgroundColor: 'var(--ui---main)', color: 'var(--ui---bg-main)' } : {}}>
                         <p>Новинки</p>
-                        {sortType === 'increasingDate' ? <FaSortAmountUp color='var(--ui---bg-main)' /> : null}
-                        {sortType === 'decreasingDate' ? <FaSortAmountDown color='var(--ui---bg-main)' /> : null}
+                        {sortType === 'increasingDate' && <FaSortAmountUp color='var(--ui---bg-main)' />}
+                        {sortType === 'decreasingDate' && <FaSortAmountDown color='var(--ui---bg-main)' />}
                     </div>
                     <div className={styles['sort__option']}
                         onClick={() => setSortType(sortType === 'decreasingPrice' ? 'increasingPrice' : 'decreasingPrice')}
                         style={['decreasingPrice', 'increasingPrice'].includes(sortType) ?
                             { backgroundColor: 'var(--ui---main)', color: 'var(--ui---bg-main)' } : {}}>
                         <p>По цене</p>
-                        {sortType === 'increasingPrice' ? <FaSortAmountUp color='var(--ui---bg-main)' /> : null}
-                        {sortType === 'decreasingPrice' ? <FaSortAmountDown color='var(--ui---bg-main)' /> : null}
+                        {sortType === 'increasingPrice' && <FaSortAmountUp color='var(--ui---bg-main)' />}
+                        {sortType === 'decreasingPrice' && <FaSortAmountDown color='var(--ui---bg-main)' />}
                     </div>
                     <div className={styles['sort__option']}
                         onClick={() => setSortType(sortType === 'decreasingBrand' ? 'increasingBrand' : 'decreasingBrand')}
                         style={['decreasingBrand', 'increasingBrand'].includes(sortType) ?
                             { backgroundColor: 'var(--ui---main)', color: 'var(--ui---bg-main)' } : {}}>
                         <p>По бренду</p>
-                        {sortType === 'increasingBrand' ? <FaSortAmountUp color='var(--ui---bg-main)' /> : null}
-                        {sortType === 'decreasingBrand' ? <FaSortAmountDown color='var(--ui---bg-main)' /> : null}
+                        {sortType === 'increasingBrand' && <FaSortAmountUp color='var(--ui---bg-main)' />}
+                        {sortType === 'decreasingBrand' && <FaSortAmountDown color='var(--ui---bg-main)' />}
                     </div>
-                    <div className={styles['sort__option']}>
+                    <div className={styles['sort__option']}
+                        onClick={() => setSortType(sortType === 'decreasingModel' ? 'increasingModel' : 'decreasingModel')}
+                        style={['decreasingModel', 'increasingModel'].includes(sortType) ?
+                            { backgroundColor: 'var(--ui---main)', color: 'var(--ui---bg-main)' } : {}}>
                         <p>По модели</p>
-                        {sortType === 'increasingModel' ? <FaSortAmountUp color='var(--ui---bg-main)' /> : null}
-                        {sortType === 'decreasingModel' ? <FaSortAmountDown color='var(--ui---bg-main)' /> : null}
+                        {sortType === 'increasingModel' && <FaSortAmountUp color='var(--ui---bg-main)' />}
+                        {sortType === 'decreasingModel' && <FaSortAmountDown color='var(--ui---bg-main)' />}
                     </div>
+
                     <div className={styles['sort__option']}
                         onClick={() => setSortType(sortType === 'decreasingDiscount' ? 'increasingDiscount' : 'decreasingDiscount')}
                         style={['decreasingDiscount', 'increasingDiscount'].includes(sortType) ?
                             { backgroundColor: 'var(--ui---main)', color: 'var(--ui---bg-main)' } : {}}>
                         <p>По Скидке</p>
-                        {sortType === 'increasingDiscount' ? <FaSortAmountUp color='var(--ui---bg-main)' /> : null}
-                        {sortType === 'decreasingDiscount' ? <FaSortAmountDown color='var(--ui---bg-main)' /> : null}
+                        {sortType === 'increasingDiscount' && <FaSortAmountUp color='var(--ui---bg-main)' />}
+                        {sortType === 'decreasingDiscount' && <FaSortAmountDown color='var(--ui---bg-main)' />}
                     </div>
                 </div>
-            </section> : null}
+            </section>}
 
-            {!isFiltersLoading ? <section className={styles['filter']}>
+            {!isFiltersLoading && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Бренд</h3>
                 <div className={styles['filter__options']}>
-                    {brands?.map(brand => <Checkbox
+                    {brands?.map((brand) => <Checkbox
                         key={brand.title}
                         title={brand.title}
                         isChecked={params.brands.includes(brand.title)}
                         onClick={() => onCheckBoxClick(brand, 'brand')} />)}
                 </div>
-            </section> : null}
+            </section>}
 
-            {!isFiltersLoading && params.brands.length ? <section className={styles['filter']}>
+            {!isFiltersLoading && Boolean(params.brands.length) && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Тип устройства</h3>
                 <div className={styles['filter__options']}>
                     <Checkbox
@@ -177,9 +214,9 @@ export default function FiltersPanel({ isOpen }) {
                         isChecked={params.deviceTypes.includes('Часы')}
                         onClick={() => onCheckBoxClick('Часы', 'deviceType')} />
                 </div>
-            </section> : null}
+            </section>}
 
-            {params.brands.length && !isFiltersLoading ? <section className={styles['filter']}>
+            {Boolean(params.brands.length) && !isFiltersLoading && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Модель</h3>
                 <div className={styles['filter__options']}>
                     {brands?.map(brand => params.brands.includes(brand.title)
@@ -189,10 +226,10 @@ export default function FiltersPanel({ isOpen }) {
                             isChecked={params.models.includes(model.title)}
                             onClick={() => onCheckBoxClick(model, 'model')} />)))}
                 </div>
-            </section> : null}
+            </section>}
 
 
-            {!isFiltersLoading ? <section className={styles['filter']}>
+            {!isFiltersLoading && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Категория</h3>
                 <div className={styles['filter__options']}>
                     {categories?.map(category => <Checkbox
@@ -200,19 +237,20 @@ export default function FiltersPanel({ isOpen }) {
                         isChecked={params.categories.includes(category)}
                         onClick={() => onCheckBoxClick(category, 'category')} />)}
                 </div>
-            </section> : null}
+            </section>}
 
-            {!isFiltersLoading ? <section className={`${styles['filter']} ${styles['filter__price']}`}>
+            {!isFiltersLoading && <section className={`${styles['filter']} ${styles['filter__price']}`}
+                onTouchStart={() => setDisableSwipe(true)} onTouchEnd={() => setDisableSwipe(false)}>
                 <h3 className={styles['filter__title']}>Цена</h3>
                 <CustomRangeSelector
-                    initialMax={Number(searchParams.get('maxPrice')) || priceRange.max}
-                    initialMin={Number(searchParams.get('minPrice')) || priceRange.min}
+                    initialMax={Number(searchParams.get('maxPrice')) || 10000}
+                    initialMin={Number(searchParams.get('minPrice')) || 0}
                     onValuesChange={(range) => setPriceRange({ min: range.minValue, max: range.maxValue })} />
-            </section> : null}
-            {!isFiltersLoading ? <Button className={styles['filters-panel__close-button']} title='Закрыть'
-                onClick={() => dispatch(toggleFiltersPanel())} /> : null}
+            </section>}
+            {!isFiltersLoading && <Button className={styles['filters-panel__close-button']} title='Закрыть'
+                onClick={() => dispatch(toggleFiltersPanel())} />}
 
-            {isFiltersLoading ? <Spinner /> : null}
+            {isFiltersLoading && <Spinner />}
         </section>
     )
 }

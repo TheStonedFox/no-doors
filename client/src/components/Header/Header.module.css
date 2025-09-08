@@ -12,48 +12,6 @@
     align-items: center;
 }
 
-.header__top-content {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    /* margin-bottom: 15px; */
-    padding: 11px var(--safe-padding);
-}
-
-
-.header__top-links {
-    display: flex;
-    flex: 1 1 50%;
-    gap: 20px;
-}
-
-.header__top-links a {
-    display: flex;
-    text-align: center;
-    align-items: center;
-    font-family: var(--font-family);
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 100%;
-    color: var(--typography---main);
-    transition: 0.2s;
-}
-
-
-.header__top-buttons {
-    display: flex;
-    flex: 1 1 50%;
-    align-items: center;
-    justify-content: end;
-    gap: 30px;
-}
-
-.header__top-buttons__profile {
-    text-align: center;
-    text-wrap: nowrap;
-    max-width: min-content;
-}
-
 .header__phone-number {
     display: flex;
     align-items: center;
@@ -65,36 +23,8 @@
 }
 
 
-.header__middle-content {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding: 0 var(--safe-padding);
-}
-
 .header__logo {
     min-width: 99px;
-}
-
-.header__middle-buttons {
-    display: flex;
-    gap: 30px;
-}
-
-.header__middle-button {
-    display: flex;
-    gap: 10px;
-    text-align: center;
-    align-items: center;
-    text-wrap: nowrap;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    width: fit-content;
 }
 
 
@@ -102,24 +32,6 @@
     display: none;
 }
 
-.brands-list__link {}
-
-.header__price-link {}
-
-
-.header__middle-button div {
-    position: absolute;
-    border-radius: 10px;
-    padding: 2px 6px;
-    background: var(--ui---red);
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 100%;
-    text-align: center;
-    color: #fff;
-    top: -6px;
-    right: 15px;
-}
 
 .header__mobile-input {
     display: none;
@@ -135,15 +47,14 @@
     -webkit-box-shadow: 5px 6px 8px -4px rgba(34, 60, 80, 0.2);
     -moz-box-shadow: 5px 6px 8px -4px rgba(34, 60, 80, 0.2);
     box-shadow: 5px 6px 8px -4px rgba(34, 60, 80, 0.2);
-
 }
 
 .header__mobile-input .mobile-input__search-result {
-    /* top: 176px; */
     top: 46px;
-    left: -25px;
+    left: -10px;
     width: 100vw;
-    padding-top: 0px;
+    padding-top: 10px;
+    padding-right: 5px;
     border-radius: 0px 0px 6px 6px;
 }
 
@@ -169,28 +80,6 @@
 
 .header__mobile-input input::placeholder {
     color: #fff;
-}
-
-.header__middle-menu-button {
-    display: none;
-    z-index: 10;
-}
-
-.header__middle-catalog-button {
-    display: none;
-    z-index: 9;
-}
-
-
-.header__bottom-content {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    font-weight: 500;
-    font-size: 16px;
-    /* margin-bottom: 15px; */
-    padding: 0 var(--safe-padding);
-
 }
 
 .header__brands-list {
@@ -237,9 +126,9 @@
     z-index: 9;
 }
 
-.hide-burger {
+/* .hide-burger {
     width: 0;
-}
+} */
 
 .lines {
     display: flex;
@@ -284,117 +173,15 @@
 }
 
 
-@media(hover: hover) {
-    .header__top-content a:hover {
-        text-decoration: underline;
-        color: var(--ui---main);
-        transition: 0.2s;
-    }
-
-    .header__middle-button:hover {
-        color: var(--ui---main);
-        transition: 0.2s;
-    }
-
-}
-
-@media(hover: none) {
-    .header__top-content a:active {
-        text-decoration: underline;
-        color: var(--ui---main);
-        transition: 0.2s;
-    }
-
-    .header__middle-button:active {
-        color: var(--ui---main);
-        transition: 0.2s;
-    }
-}
-
-
-@media (max-width: 992px) {
-
-    .header__brands-list .brands-list__link {
-        display: none;
-        background-color: rebeccapurple;
-    }
-
-    .header__brands-list {
-        grid-template-columns: repeat(5, 1fr);
-    }
-
-    .header__middle-menu-button {
-        display: flex;
-    }
-
-    .header__middle-catalog-button {
-        display: flex;
-    }
-
-    .header .brands-list__more-item {
-        display: flex;
-    }
-
-}
-
-@media(max-width: 840px) {
-    .header .header__logo {
-        display: none;
-    }
-
-    .header__phone-number {
-        font-size: 0;
-        gap: 0;
-    }
-}
-
 @media(max-width: 800px) {
 
     .header__mobile-input {
         display: flex;
     }
 
-    .header__middle-buttons p {
-        display: none;
-    }
-
     .burger {
         display: flex;
     }
 
-    .header__bottom-content {
-        display: none;
-    }
 
-    .header__middle-content .header__search-input,
-    .header__top-content {
-        display: none;
-    }
-
-    .header__middle-content {
-        padding-top: 30px;
-        padding-bottom: 20px;
-        margin: 0;
-    }
-
-    .header .header__logo {
-        display: flex;
-    }
-
-
-}
-
-@media(max-width: 768px) {
-
-    .header__middle-content {
-        padding-top: 15px;
-        padding-bottom: 15px;
-    }
-
-}
-
-@media(max-width: 360px) {
-    .header__middle-content {
-        gap: 10px;
-    }
 }

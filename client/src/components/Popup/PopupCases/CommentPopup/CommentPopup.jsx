@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addNotification, togglePopup } from '../../../../redux/features/uiSlice'
 import { setIdCommentToUpdate } from '../../../../redux/features/sharedSlice'
 
-
 export default function CommentPopup({ type, productId, commentId }) {
     const dispatch = useDispatch()
 
@@ -22,7 +21,7 @@ export default function CommentPopup({ type, productId, commentId }) {
     const { _id, fio } = useSelector(state => state.user.userData)
 
     useEffect(() => {
-        if (type === 'update-review')
+        if (type === 'update-review' || type === 'edit-question')
             getComment(commentId).then(res => setCommentData(res.comment)).catch(error => console.log(error))
     }, [commentId, type])
 
@@ -37,8 +36,10 @@ export default function CommentPopup({ type, productId, commentId }) {
         if ((!isRatingChoose || rating === 0) && (type === 'review' || type === 'update-review'))
             return dispatch(addNotification({ type: 'error', text: 'Вы должны поставить свою оценку, перед отправкой отзыва' }))
 
+        dispatch(setIdCommentToUpdate(null))
+
         type === 'review' && addComment({ ...commentData, type, userId: _id, productId, userName: fio })
-            .then(res => dispatch(addNotification({ type: 'success', text: res.message })))
+            .then(res => onSuccessSubmit(res.message))
             .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
 
         type === 'update-review' && editComment(commentId, { ...commentData })
@@ -53,13 +54,20 @@ export default function CommentPopup({ type, productId, commentId }) {
         type === 'edit-question' && editComment(commentId, { text: commentData.text })
             .then(res => onSuccessSubmit(res.message))
             .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
+
+        dispatch(setIdCommentToUpdate(null))
+    }
+
+    const submitButtonTitles = {
+        'question': 'Задать вопрос',
+        'edit-question': 'Изменить',
+        'review': 'Отправить отзыв',
+        'update-review': 'Изменить отзыв',
     }
 
     return (
         <div className={styles['add-comment-popup']}>
-            {type === 'review' ? <h3>Написать отзыв</h3> : null}
-            {type === 'update-review' ? <h3>Изменить отзыв</h3> : null}
-            {type === 'question' || type === 'edit-question' ? <h3>Задать вопрос</h3> : null}
+            <h3>{submitButtonTitles[type]}</h3>
             <textarea
                 placeholder='Напишите текст тут.'
                 className={styles['add-comment-popup__text']}
@@ -98,13 +106,9 @@ export default function CommentPopup({ type, productId, commentId }) {
 
             </section> : null}
 
-            {type === 'review' || type === 'update-review' ? <Button className={styles['submit-comment-button']}
-                title={type === 'review' ? 'Оставить отзыв' : 'Обновить отзыв'}
-                onClick={onSubmitCommentButtonClick} /> : null}
-
-            {type === 'question' || type === 'edit-question' ? <Button className={styles['submit-comment-button']}
-                title='Отправить'
-                onClick={onSubmitCommentButtonClick} /> : null}
+            <Button className={styles['submit-comment-button']}
+                title={submitButtonTitles[type]}
+                onClick={onSubmitCommentButtonClick} />
         </div>
     )
 }

@@ -28,7 +28,12 @@ export const uiSlice = createSlice({
             state.isCatalogOpen = !state.isCatalogOpen
             state.isBurgerOpen = false
         },
-        toggleFiltersPanel: (state) => {
+        closeCatalog: (state) => {
+            state.isCatalogOpen = false
+        },
+        toggleFiltersPanel: (state, action) => {
+            if (action.payload)
+                return state.isFiltersPanelOpen = action.payload
             state.isFiltersPanelOpen = !state.isFiltersPanelOpen
             // state.isBurgerOpen = false
         },
@@ -68,4 +73,4 @@ export const uiSlice = createSlice({
     }
 })
 
-export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification } = uiSlice.actions
+export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification, closeCatalog } = uiSlice.actions

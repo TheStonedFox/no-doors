@@ -9,7 +9,6 @@ const ModelModel = new mongoose.Schema({
 
 const BrandModel = new mongoose.Schema({
     title: String,
-    models: [ModelModel]
 }, { _id: false, timestamps: false })
 
 const resetTokenModel = new mongoose.Schema({

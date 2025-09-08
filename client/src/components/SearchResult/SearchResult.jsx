@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 
 export default function SearchResult({ itemsList, className }) {
 
-    // const isSearchResultsOpen = useSelector((state) => state.ui.isSearchResultsOpen)
-
     const [visibleItems, setVisibleItems] = useState(20)
     const itemsListRef = useRef(null)
 

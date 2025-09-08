@@ -19,17 +19,17 @@ export const register = async (req, res) => {
         const errors = validationResult(req)
 
         if (!errors.isEmpty())
-            return res.status(400).json({ message: 'Ошибка валидации. Проверьте указанные поля.', code: 400, validationErrors: errors.errors })
+            return res.status(400).json({ message: 'Ошибка валидации. Проверьте указанные поля.', validationErrors: errors.errors })
 
         const captchaStatus = await checkCaptcha(req.body.reCaptchaToken)
 
         const isUser = await UserModel.findOne({ email: req.body.email })
 
         if (isUser)
-            return res.status(400).json({ message: 'Email уже используется.', code: 400, })
+            return res.status(400).json({ message: 'Email уже используется.', })
 
         if (!captchaStatus && req.body.emailConfirmCode)
-            return res.status(401).json({ message: 'Капча не пройдена.', code: 400, })
+            return res.status(401).json({ message: 'Капча не пройдена.', })
 
         const utilityLists = await UtilityListsModel.findOne()
 
@@ -39,18 +39,18 @@ export const register = async (req, res) => {
             await utilityLists.updateOne({ $push: { emailConfirmedCodes: { email: req.body.email, code: generatedCode, expires: Date.now() + 5 * 60 * 1000 } } })
 
             await sendEmail(req.body.email, 'Подтверждение электронной почты', confirmEmailTemplate(generatedCode))
-            return res.status(202).json({ message: 'Регистрация не завершена полностью.', code: 202 })
+            return res.status(202).json({ message: 'Регистрация не завершена полностью.' })
         }
 
         const emailCodes = await utilityLists.emailConfirmedCodes
         const code = emailCodes.find(item => item.code === req.body.emailConfirmCode)
 
         if (!code)
-            return res.status(404).json({ message: 'Код указан не верно.', code: 404 })
+            return res.status(404).json({ message: 'Код указан не верно.', })
 
         // if (!code.expires > Date.now() || !code.email === req.body.email)
         if (!code.expires > Date.now())
-            return res.status(400).json({ message: 'Срок действия кода истек.', code: 400 })
+            return res.status(400).json({ message: 'Срок действия кода истек.', })
 
         await UtilityListsModel.updateOne({}, { $pull: { emailConfirmedCodes: code } })
 
@@ -61,7 +61,7 @@ export const register = async (req, res) => {
 
         await doc.save()
 
-        res.status(200).json({ message: 'Регистрация завершена.', code: 200 })
+        res.status(200).json({ message: 'Регистрация завершена.' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -72,23 +72,23 @@ export const login = async (req, res) => {
         const user = await UserModel.findOne({ email: req.body.email })
 
         if (!user)
-            return res.status(400).json({ message: 'Не верные данные для входа.', code: 400 })
+            return res.status(400).json({ message: 'Не верные данные для входа.' })
 
         const isValidPassword = await bcrypt.compare(req.body.password, user.password)
 
         if (!isValidPassword)
-            return res.status(400).json({ message: 'Не верные данные для входа.', code: 400 })
+            return res.status(400).json({ message: 'Не верные данные для входа.' })
 
         if (req.body.isCaptchaNeed) {
             const captchaStatus = await checkCaptcha(req.body.reCaptchaToken)
 
             if (!captchaStatus)
-                return res.status(401).json({ message: 'Капча не пройдена.', code: 400, })
+                return res.status(401).json({ message: 'Капча не пройдена.' })
         }
 
         const token = await jwt.sign({ id: user._id }, process.env.JWT_WORD)
 
-        res.status(200).json({ token, message: `Добро пожаловать, ${user.fio.split(' ')[0]}`, code: 200 })
+        res.status(200).json({ token, message: `Добро пожаловать, ${user.fio.split(' ')[0]}` })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -99,12 +99,12 @@ export const resetPassword = async (req, res) => {
         const errors = validationResult(req)
 
         if (errors.errors.find(error => error.path === 'email'))
-            return res.status(400).json({ message: 'Введите корректный email.', code: 400, validationErrors: errors.errors })
+            return res.status(400).json({ message: 'Введите корректный email.', validationErrors: errors.errors })
 
         const user = await UserModel.findOne({ email: req.body.email })
 
         if (!user)
-            return res.status(404).json({ message: 'Пользователя с таким email не найдено.', code: 404 })
+            return res.status(404).json({ message: 'Пользователя с таким email не найдено.' })
 
         const token = crypto.randomBytes(32).toString("hex")
         const expires = Date.now() + 5 * 60 * 1000
@@ -115,7 +115,7 @@ export const resetPassword = async (req, res) => {
 
         await sendEmail(req.body.email, 'Восстановление пароля', resetPasswordEmailTemplate(`${process.env.API_URL}/auth/reset-password?token=${token}`))
 
-        res.status(200).json({ message: 'Ссылка для восстановления пароля выслана на почту.', code: 200 })
+        res.status(200).json({ message: 'Ссылка для восстановления пароля выслана на почту.' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -131,14 +131,14 @@ export const checkLink = async (req, res) => {
 
         const tokenItem = tokensList.find(token => token.token === req.query.token)
 
-        if (!tokenItem) return res.status(404).json({ message: `Ссылка не действительна или уже была использована.`, code: 404, })
+        if (!tokenItem) return res.status(404).json({ message: `Ссылка не действительна или уже была использована.`, })
 
         if (tokenItem.expires < Date.now()) {
             await UtilityListsModel.updateOne({}, { $pull: { resetPasswordTokens: tokenItem } })
-            return res.status(400).json({ message: 'Время действия ссылки истекло.', code: 400 })
+            return res.status(400).json({ message: 'Время действия ссылки истекло.' })
         }
 
-        res.status(200).json({ message: 'Ссылка действительна.', token: tokenItem.token, code: 200 })
+        res.status(200).json({ message: 'Ссылка действительна.', token: tokenItem.token })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -149,7 +149,7 @@ export const updatePassword = async (req, res) => {
         const errors = validationResult(req)
 
         if (errors.errors.find(error => error.path === 'password'))
-            return res.status(400).json({ message: 'Пароль не соответствует требованиям.', code: 400, validationErrors: errors.errors })
+            return res.status(400).json({ message: 'Пароль не соответствует требованиям.', validationErrors: errors.errors })
 
         const utilityLists = await UtilityListsModel.findOne()
 
@@ -161,15 +161,15 @@ export const updatePassword = async (req, res) => {
         const passwordHash = await bcrypt.hash(req.body.password, salt)
 
         const user = await UserModel.findOneAndUpdate(
-            { _id: tokenItem.user }, // Условие поиска
-            { $set: { password: passwordHash } }, // Что обновляем
+            { _id: tokenItem.user },
+            { $set: { password: passwordHash } },
         )
 
-        if (!user) return res.status(400).json({ message: 'Не удалось обновить данные.', code: 400 })
+        if (!user) return res.status(400).json({ message: 'Не удалось обновить данные.' })
 
         await UtilityListsModel.updateOne({}, { $pull: { resetPasswordTokens: tokenItem } })
 
-        res.status(200).json({ message: 'Пароль успешно изменен.', code: 200 })
+        res.status(200).json({ message: 'Пароль успешно изменен.' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -181,7 +181,7 @@ export const removeCodes = async (req, res) => {
         const emailCodes = await utilityLists.emailConfirmedCodes
         emailCodes.map(async (i) => i.email === req.body.email && await UtilityListsModel.updateOne({}, { $pull: { emailConfirmedCodes: i } }))
 
-        res.status(200).json({ message: 'Коды удалены', code: 200 })
+        res.status(200).json({ message: 'Коды удалены' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

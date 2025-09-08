@@ -7,6 +7,7 @@ import OrderDetailsPopup from './PopupCases/OrderDetailsPopup/OrderDetailsPopup'
 import CrossIcon from '@/svg/CrossIcon'
 import ReplyPopup from './PopupCases/ReplyPopup/ReplyPopup'
 import CommentPopup from './PopupCases/CommentPopup/CommentPopup'
+import RemoveCommentPopup from './PopupCases/RemoveCommentPopup/RemoveCommentPopup'
 
 export default function Popup() {
     const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
@@ -43,6 +44,7 @@ export default function Popup() {
                 {popup?.type === 'edit-question' && <CommentPopup {...popup?.data} type={popup?.type} />}
                 {popup?.type === 'reply' && <ReplyPopup {...popup?.data} type={popup?.type} />}
                 {popup?.type === 'edit-reply' && <ReplyPopup {...popup?.data} type={popup?.type} />}
+                {popup?.type === 'remove-comment' && <RemoveCommentPopup {...popup?.data} />}
             </div>
         </div>
     )

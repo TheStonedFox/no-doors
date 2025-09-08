@@ -4,8 +4,8 @@ import { useState } from 'react'
 import styles from './RadioButtonGroup.module.css'
 
 
-export default function RadioButtonGroup({ options, className, onSelect }) {
-    const [selectedOption, setSelectedOption] = useState(0)
+export default function RadioButtonGroup({ options, className, onSelect, initialValue }) {
+    const [selectedOption, setSelectedOption] = useState(initialValue || 0)
 
     useEffect(() => onSelect && onSelect(selectedOption), [selectedOption])
     return (

@@ -15,9 +15,12 @@ import useSearchResults from '../../hooks/useSearchResults'
 import HeaderTopContent from './HeaderTopContent/HeaderTopContent'
 import HeaderMiddleContent from './HeaderMiddleContent/HeaderMiddleContent'
 import HeaderBottomContent from './HeaderBottomContent/HeaderBottomContent'
+import { useNavigate } from 'react-router-dom'
 
-export default function Header() {
+function Header() {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
 
     const isCatalogOpen = useSelector((state) => state.ui.isCatalogOpen)
     const isSearchResultsOpen = useSelector((state) => state.ui.isSearchResultsOpen)
@@ -28,7 +31,6 @@ export default function Header() {
     const [searchList, isLoading, error] = useSearchResults(searchValue)
 
     const scrollHandler = () => setFixedMobileInput(window.scrollY > 160 ? true : false)
-
 
     useEffect(() => {
         dispatch(setUserData())
@@ -43,11 +45,12 @@ export default function Header() {
             <HeaderMiddleContent />
             <HeaderBottomContent />
 
-            <div className={styles['header__mobile-input']} style={{ position: fixedMobileInput ? 'fixed' : 'static' }}>
-                <button className={`${styles.burger} ${isSearchResultsOpen ? styles['hide-burger'] : ''}`}
+            <div className={styles['header__mobile-input']} style={{ position: fixedMobileInput ? 'fixed' : 'static', gap: isSearchResultsOpen && '0' }}>
+                <button className={styles['burger']}
+                    style={{ width: isSearchResultsOpen && '0px' }}
                     type="button"
                     onClick={() => dispatch(toggleCatalog())} >
-                    <div className={styles.lines}>
+                    <div className={styles['lines']}>
                         <span className={`${styles.line} ${isCatalogOpen ? styles['line_active'] : ''}`} style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
                         ></span>
                         <span className={`${styles.line} ${isCatalogOpen ? styles.hide : ''}`} style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
@@ -59,11 +62,20 @@ export default function Header() {
                 </button>
                 <div className={styles['input-container']} style={{ paddingLeft: isSearchResultsOpen ? '0' : '18px', border: isSearchResultsOpen ? '0' : '' }}>
                     <SearchIcon />
-                    <input id='search-input' type="text" placeholder="Поиск товара" autoComplete='off' value={searchValue}
-                        onChange={(event) => setSearchValue(event.target.value)}
-                        onFocus={() => searchValue && dispatch(toggleSearchResults(true))} />
-                    {<SearchResult className={styles['mobile-input__search-result']}
-                        itemsList={searchValue && isSearchResultsOpen ? searchList : []} />}
+                    <input id='mobile-search-input'
+                        type="search"
+                        placeholder="Поиск товара"
+                        autoComplete='off'
+                        value={searchValue}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                navigate(`/search?word=${searchValue}`)
+                            }
+                        }}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        onFocus={() => dispatch(toggleSearchResults(true))} />
+                    <SearchResult className={styles['mobile-input__search-result']}
+                        itemsList={searchValue && isSearchResultsOpen ? searchList : []} />
                 </div>
                 <CatalogMenu />
             </div>
@@ -71,3 +83,5 @@ export default function Header() {
         </header>
     )
 }
+
+export default Header

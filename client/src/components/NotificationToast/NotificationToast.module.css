@@ -26,10 +26,16 @@
     transition: 0.2s;
 }
 
+.notification-toast.info-type-colors svg:hover {
+    color: var(--ui---blue);
+    transition: 0.2s;
+}
+
 
 .notification-toast h3 {
     /* justify-self: start; */
     font-size: 0.9375rem;
+    color: var(--typography---main);
 }
 
 .notification-toast:active {

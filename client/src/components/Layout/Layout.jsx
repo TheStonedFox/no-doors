@@ -25,7 +25,6 @@ export default function Layout({ children }) {
 
     const notificationList = useSelector((state) => state.ui.notificationList)
 
-    // const scrollHandler = () => setScrollTop(document.documentElement.scrollTop)
     useEffect(() => {
         window.addEventListener('scroll', scrollHandler)
         return () => window.removeEventListener('scroll', scrollHandler)
@@ -48,7 +47,7 @@ export default function Layout({ children }) {
             <Popup />
             <div className={styles['scroll-up-button']}
                 id='#up-button'
-                // style={{ opacity: document.documentElement.scrollHeight / scrollTop < 5 ? '1' : '0', transition: '0.2s', bottom: '15px' }}
+                style={{ opacity: document.documentElement.scrollHeight / scrollTop < 5 ? '1' : '0', transition: '0.2s', bottom: '15px' }}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <FaChevronUp color='var( --ui---bg-main)' />
             </div>

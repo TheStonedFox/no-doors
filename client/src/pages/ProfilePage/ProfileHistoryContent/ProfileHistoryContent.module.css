@@ -1,0 +1,28 @@
+.orders-history {
+    display: flex;
+    flex-direction: column;
+}
+
+.orders-history__header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+
+.orders-history__header-title {
+    font-weight: 500;
+    font-size: 1.375rem;
+    line-height: 150%;
+    color: var(--typography---main);
+}
+
+.orders-history__list {
+    display: flex;
+    /* max-height: 300px; */
+    max-height: 500px;
+    gap: 30px;
+    overflow-y: auto;
+    flex-direction: column;
+    padding: 15px;
+
+}

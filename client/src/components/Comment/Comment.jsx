@@ -11,12 +11,12 @@ import { BiDislike } from 'react-icons/bi'
 
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { addReply, editComment, editReply, getComment, getReply, getUserInfo, likeComment, likeReply } from '../../api/api'
+import { useEffect, useState } from 'react'
+import { getComment, getReply, getUserInfo, likeComment, likeReply } from '../../api/api'
 
 import AvatarIcon from '../../svg/AvatarIcon'
 import { addNotification, togglePopup } from '../../redux/features/uiSlice'
-import { setIdCommentToUpdate } from '../../redux/features/sharedSlice'
+// import { setIdCommentToUpdate } from '../../redux/features/sharedSlice'
 import HistoryItem from './HistoryItem/HistoryItem'
 
 import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/SkeletonLadingShimmer'
@@ -28,6 +28,7 @@ export default function Comment({ commentData, type }) {
     const navigate = useNavigate()
 
     const userData = useSelector((state) => state.user.userData)
+    const isLogged = useSelector(state => state.user.isTokenValid)
 
     const [comment, setComment] = useState(commentData)
     const [userInfo, setUserInfo] = useState()
@@ -42,19 +43,19 @@ export default function Comment({ commentData, type }) {
     const idCommentToUpdate = useSelector(state => state.shared.idCommentToUpdate)
 
     useEffect(() => refreshComment(), [idCommentToUpdate])
-    // useEffect(() => alert('ss'), [idCommentToUpdate])
 
     const refreshComment = () => {
+        setIsLoading(true)
         type !== 'reply' &&
             getComment(commentId).then(res => {
                 setComment(res.comment)
             })
-                .catch(error => console.log(error))
+                .catch(error => console.log(error)).finally(() => setIsLoading(false))
         type === 'reply' &&
             getReply(commentId).then(res => {
                 setComment(res.reply)
             })
-                .catch(error => console.log(error))
+                .catch(error => console.log(error)).finally(() => setIsLoading(false))
     }
 
     useEffect(() => {
@@ -63,13 +64,12 @@ export default function Comment({ commentData, type }) {
             .catch(error => console.log(error))
     }, [])
 
-    const isLogged = useSelector(state => state.user.isTokenValid)
+
 
     const onCommentClick = (e) => {
         e.stopPropagation()
         !isPreviewMode && type !== 'reply' && navigate(`/comments/${commentId}`)
     }
-
 
     const onReplyButtonClick = (e) => {
         e.stopPropagation()
@@ -85,7 +85,6 @@ export default function Comment({ commentData, type }) {
 
         if (type !== 'reply' && commentType === 'question')
             dispatch(togglePopup({ type: 'edit-question', data: { commentId } }))
-
 
         if (type === 'reply')
             dispatch(togglePopup({ type: 'edit-reply', data: { replyId: commentId } }))
@@ -109,14 +108,20 @@ export default function Comment({ commentData, type }) {
 
     }
 
+    const onRemoveButtonClick = (e) => {
+        e.stopPropagation()
+        console.log(commentType)
+        dispatch(togglePopup({ type: 'remove-comment', data: { commentType: commentType || type, commentId } }))
+    }
+
     const [historyVisible, setHistoryVisible] = useState(true)
 
     const isPreviewMode = window.location.pathname.includes(commentId)
 
     return !isLoading ? (
-        <div
+        <article
             className={styles['comment']}
-            style={{ border: isPreviewMode && 0, maxHeight: isPreviewMode ? '100%' : '250px', order: comment?.userId === currentUser ? 0 : 1 }}
+            style={{ border: isPreviewMode && 0, maxHeight: isPreviewMode ? '100%' : '250px' }}
             onClick={onCommentClick}>
             <section className={styles['comment__header']}>
                 <section className={styles['header__right-box']}>
@@ -124,7 +129,7 @@ export default function Comment({ commentData, type }) {
                         {avatarUrl ? <img className='' src={avatarUrl} alt="" /> : <AvatarIcon />}
                         <section className={styles['right-box__name-section']}>
                             <h3>{commentUserId !== currentUser ? userName : 'Вы'}</h3>
-                            {commentType === 'review' ? <p>Отзыв от покупателя</p> : null}
+                            {commentType === 'review' && <p>Отзыв от покупателя</p>}
                         </section>
                     </div>
                     {commentType === 'review' && <ReviewStars ratingValue={ratingValue} />}
@@ -135,28 +140,27 @@ export default function Comment({ commentData, type }) {
             <section className={styles['comment__text']}>
                 <p className={!isPreviewMode ? styles['clamp'] : null}>{text}</p>
             </section>
-            {isPreviewMode && editHistory.length && historyVisible ? <h3>История обновлений:</h3> : null}
-            {
-                isPreviewMode && editHistory.length && historyVisible ? <section className={styles['comment__edit-history']} style={{ height: isPreviewMode && historyVisible ? '100%' : '0', transition: '0.2s' }}>
+            {Boolean(isPreviewMode && editHistory.length && historyVisible) && <h3>История обновлений:</h3>}
+            {Boolean(isPreviewMode && editHistory.length && historyVisible) && <section className={styles['comment__edit-history']}
+                style={{ height: isPreviewMode && historyVisible ? '100%' : '0', transition: '0.2s' }}>
 
-                    {editHistory?.map(editItem => <HistoryItem key={editItem._id} data={editItem} />)}
-                </section> : null
-            }
+                {editHistory?.map(editItem => <HistoryItem key={editItem._id} data={editItem} />)}
+            </section>}
             <section className={styles['comment__footer']}>
 
                 <section className={styles['user-actions-buttons']}>
-                    {currentUser !== commentUserId && type !== 'reply' ?
+                    {currentUser !== commentUserId && type !== 'reply' &&
                         <GoReply style={{ transform: 'rotate(180deg)', width: '20px' }}
                             className={styles['footer__comment-button']}
-                            onClick={onReplyButtonClick} /> : null}
+                            onClick={onReplyButtonClick} />}
 
-                    {currentUser === commentUserId ? <CiEdit
+                    {currentUser === commentUserId && <CiEdit
                         className={styles['footer__comment-button']}
                         style={{ width: '20px' }}
-                        onClick={onEditButtonClick} /> : null}
+                        onClick={onEditButtonClick} />}
                     <section className={styles['actions-buttons__left-box']}>
 
-                        {currentUser !== commentUserId ? <section className={styles['footer__likes-buttons']}>
+                        {currentUser !== commentUserId && <section className={styles['footer__likes-buttons']}>
                             <div className={styles['footer__comment-button']}
                                 style={likes?.includes(currentUser) ? { color: 'var(--ui---main)' } : {}}>
                                 <BiLike onClick={(e) => onLikeButtonClick('like', e)} />
@@ -168,23 +172,24 @@ export default function Comment({ commentData, type }) {
                                 <BiDislike onClick={(e) => onLikeButtonClick('dislike', e)} />
                                 <p>{dislikes?.length ? dislikes?.length : ''}</p>
                             </div>
-                        </section> : null}
+                        </section>}
 
+                        {currentUser === commentUserId && commentType !== 'review' && <RiDeleteBin6Line
+                            className={styles['footer__comment-remove-button']} onClick={onRemoveButtonClick} />}
 
+                        {Boolean(comment?.replies?.length && !window.location.pathname.includes(commentId)) &&
+                            <p onClick={() => navigate(`/comments/${commentId}`)}>Ответы ({comment?.replies.length})</p>}
 
-                        {currentUser === commentUserId && commentType !== 'review' ? <RiDeleteBin6Line className={styles['footer__comment-remove-button']} /> : null}
-
-                        {comment?.replies?.length && !window.location.pathname.includes(commentId) ? <p onClick={() => navigate(`/comments/${commentId}`)}>Ответы ({comment?.replies.length})</p> : null}
                         {/* {!isPreviewMode && commentType === 'review' && comment?.replies.length && editHistory.length ? '|' : ''} */}
-                        {commentType === 'review' && editHistory.length && isPreviewMode ?
+                        {Boolean(commentType === 'review' && editHistory.length && isPreviewMode) &&
                             <p onClick={(e) => {
                                 e.stopPropagation()
                                 setHistoryVisible(!historyVisible)
-                            }}>{historyVisible ? 'Скрыть историю' : 'Показать историю'}</p> : null}
+                            }}>{historyVisible ? 'Скрыть историю' : 'Показать историю'}</p>}
                     </section>
 
                 </section>
             </section>
-        </div >
-    ) : <SkeletonLadingShimmer style={{ width: '100%', height: 100 }} />
+        </article >
+    ) : <SkeletonLadingShimmer style={{ width: '100%', height: commentType === 'review' ? 152 : 121 }} />
 }

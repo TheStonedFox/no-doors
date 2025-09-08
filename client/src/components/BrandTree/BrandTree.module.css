@@ -1,0 +1,76 @@
+.brand-tree {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.models-list,
+.categories-list,
+.types-list {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* gap: 10px; */
+    transition: 0.2s;
+    justify-content: left;
+}
+
+.brand-tree h3 {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+
+.brand-tree p {
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--typography---second);
+    overflow: hidden;
+    max-width: 250px;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+
+.brand-tree p:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+
+
+.title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.models-list li {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@media(hover: hover) {
+    .brand-tree h3:hover {
+        text-decoration: underline;
+        color: var(--ui---main);
+    }
+
+    .brand-tree p:hover {
+        color: var(--ui---main);
+    }
+
+}
+
+@media(hover: none) {
+    .brand-tree h3:active {
+        text-decoration: underline;
+        color: var(--ui---main);
+    }
+
+    .brand-tree p:active {
+        color: var(--ui---main);
+    }
+}

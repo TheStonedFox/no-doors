@@ -13,22 +13,22 @@ export default function SearchInput({ className, value, onChange }) {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-    const [searchList, isLoading, error] = useSearchResults(value)
-
-    useEffect(() => { error && window.innerWidth <= 992 && alert(`Не удалось загрузить товары. ${error}`) }, [error, value])
-
     const isSearchResultsOpen = useSelector((state) => state.ui.isSearchResultsOpen)
+
+    const [searchList, error] = useSearchResults(value)
+
+    // useEffect(() => { error && window.innerWidth <= 992 && alert(`Не удалось загрузить товары. ${error}`) }, [error, value])
 
     return (
         <div id='search-input' className={`${styles['search-input']} ${className ? className : ''}`}
-            onFocus={() => { dispatch(toggleSearchResults(true)) }}>
+            onFocus={() => dispatch(toggleSearchResults(true))}>
             <div className={styles['wrapper']}>
                 <input id='search-input' className={styles.input}
-                    type="text"
-                    placeholder='Введите поисковой запрос..'
+                    type="search"
+                    placeholder='Введите поисковой запрос...'
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
+                    onKeyUp={(e) => e.key === 'Enter' && navigate(`/search?word=${value}`)}
                     autoComplete='off'
                 />
                 <button className={styles.button} onClick={() => value && navigate(`/search?word=${value}`)}>
@@ -36,7 +36,7 @@ export default function SearchInput({ className, value, onChange }) {
                     <p>Найти</p>
                 </button>
             </div>
-            {window.outerWidth > 992 ? <SearchResult itemsList={value && isSearchResultsOpen ? searchList : []} /> : null}
+            {window.outerWidth > 800 && <SearchResult itemsList={value && isSearchResultsOpen ? searchList : []} />}
         </div>
 
     )

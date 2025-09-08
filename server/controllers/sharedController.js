@@ -3,7 +3,7 @@ export const getChooseSteps = async (req, res) => {
     try {
         const doc = await UtilityListsModel.findOne()
         if (!doc)
-            return res.status(404).json({ message: 'Не удалось получить данные.', code: 404 })
+            return res.status(404).json({ message: 'Не удалось получить данные.' })
 
         res.status(200).json({ options: doc })
     } catch (error) {

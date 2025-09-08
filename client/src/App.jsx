@@ -26,16 +26,16 @@ import CommentPage from './pages/CommentPage/CommentPage'
 //#endregion
 
 import { useDispatch, useSelector } from 'react-redux'
-import { closeBurger } from './redux/features/uiSlice'
+import { closeBurger, closeCatalog, toggleCatalog, toggleSearchResults } from './redux/features/uiSlice'
 import { checkTokenThunk, resetUser, setUserData } from './redux/features/userSlice'
 import { useEffect, useState } from 'react'
 import { getChooseValues } from './redux/features/sharedSlice'
-
 function App() {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const tokenStatus = useSelector((state) => state.user.isTokenValid)
+  const isSearchResultsOpen = useSelector((state) => state.ui.isSearchResultsOpen)
   const [localToken, setLocalToken] = useState()
 
   window.addEventListener('storage', (e) => {
@@ -43,7 +43,6 @@ function App() {
       navigate('/')
     if (e.key === 'token')
       setLocalToken(localStorage.getItem('token') || sessionStorage.getItem('token'))
-
   })
 
   useEffect(() => {
@@ -60,11 +59,22 @@ function App() {
 
   useEffect(() => {
     dispatch(getChooseValues())
-    const handleScroll = () => dispatch(closeBurger())
+    const handleScroll = () => {
+      dispatch(closeBurger())
+      dispatch(closeCatalog())
+    }
+
+    const handleKeyPress = (e) => {
+      // if (/^[a-z0-9]$/i.test(e.key) && !isSearchResultsOpen) {
+      //   dispatch(toggleSearchResults())
+      // }
+    }
     window.addEventListener('scroll', handleScroll)
+    window.addEventListener('keypress', handleKeyPress)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('keypress', handleKeyPress)
     }
   }, [])
 

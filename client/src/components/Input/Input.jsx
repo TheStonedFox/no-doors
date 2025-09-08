@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import styles from './Input.module.css'
 
-export default function Input({ value, placeholder, type, onChange, id, className, errorFrame }) {
+export default function Input({ value, placeholder, type, onChange, id, className, errorFrame, autocomplete }) {
     const [active, setActive] = useState(false)
     const [validationError, setValidationError] = useState(errorFrame || false)
 
@@ -11,12 +11,11 @@ export default function Input({ value, placeholder, type, onChange, id, classNam
     return (
         <input id={id} style={{ borderColor: validationError ? 'red' : null }}
             className={`${styles['input']} ${className && className} ${active && styles['active']}`}
-            value={value !== null ? value : ''}
+            value={value ? value : ''}
             placeholder={placeholder}
             type={type}
-            onChange={(event) => {
-                onChange(event.target.value)
-            }}
+            autoComplete={autocomplete}
+            onChange={(event) => onChange(event.target.value)}
             onBlur={() => setActive(false)}
             onFocus={() => {
                 setActive(true)

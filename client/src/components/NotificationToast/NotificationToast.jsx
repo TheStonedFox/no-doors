@@ -20,7 +20,6 @@ export default function NotificationToast({ id, text, type, route }) {
     const [hide, setHide] = useState(false)
 
     useEffect(() => {
-
         const timer = setTimeout(() => {
             dispatch(removeNotification(id))
         }, 6000)
@@ -36,9 +35,9 @@ export default function NotificationToast({ id, text, type, route }) {
         route && redirect && navigate(`/${route}`)
     }
 
-
     return (
-        <aside className={styles['notification-toast']} id={`${id}`}
+        <aside className={`${styles['notification-toast']} ${type === 'info' && styles['info-type-colors']}`}
+            id={`${id}`}
             style={{ opacity: hide ? '0' : '1', transition: '0.5s' }}
             onClick={() => onNotificationClick(false)}>
             {type === 'success' && <GoCheckCircle color='var(--ui---main)' />}

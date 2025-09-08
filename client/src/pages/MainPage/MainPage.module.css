@@ -4,10 +4,11 @@ body .main-page {
     user-select: none;
     padding-top: var(--safe-padding);
     padding-bottom: 150px;
-    background-color: var(--ui---bg-main);
+    background-color: var(--ui---bg-amain);
 }
 
 .main-page__intro-section {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     gap: 30px;
@@ -17,9 +18,14 @@ body .main-page {
     position: relative;
     width: 100%;
     height: 230px;
-    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.377);
+    -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.8);
     background-color: transparent;
     border-radius: 8px;
+}
+
+.intro-section__popular-slider {
+    max-width: 100%;
 }
 
 .intro-section__slider .slide {
@@ -54,25 +60,20 @@ body .main-page {
     padding: 20px;
 }
 
-/*  Делаем глобальную стилизацию кнопок пагинации */
 .pagination .swiper-pagination-bullet {
     width: 20px;
     height: 4px;
-    /* Цвет кнопки */
     background: #fff;
     opacity: 0.4;
     border-radius: 99px;
     transition: all 0.3s ease;
 }
 
-/*  При наведении */
 :global(.swiper-pagination-bullet:hover) {
     opacity: 0.7;
 }
 
-/*  Активная кнопка */
 :global(.swiper-pagination-bullet-active) {
-    /* Активная кнопка */
     opacity: 1;
 }
 
@@ -206,11 +207,10 @@ body .main-page {
 }
 
 .main-page__popular-products-section {
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     gap: 60px;
-    padding: 100px 0;
-
+    padding: 100px 0px;
 }
 
 
@@ -223,23 +223,14 @@ body .main-page {
 
 }
 
+
+
 @media(max-width: 1050px) {
     .main-page__find-item-section .find-item__categories {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-@media(max-width: 850px) {
-    .main-page__intro-section {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-    }
-
-    .into-section__products {
-        display: none;
-    }
-
-}
 
 @media(max-width: 992px) {
     .main-page {
@@ -258,6 +249,19 @@ body .main-page {
         padding: 70px 0;
         gap: 30px;
     }
+
+}
+
+@media(max-width: 850px) {
+    .main-page__intro-section {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+
+    .into-section__products {
+        display: none;
+    }
+
 }
 
 @media(max-width: 800px) {
@@ -269,9 +273,6 @@ body .main-page {
 }
 
 @media(max-width: 768px) {
-
-
-
     .main-page__find-item-section {
         padding-top: 35px;
         gap: 20px;
@@ -297,6 +298,4 @@ body .main-page {
     .main-page__find-item-section .find-item__categories {
         grid-template-columns: 1fr;
     }
-
-
 }

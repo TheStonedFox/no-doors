@@ -10,8 +10,9 @@
     -moz-box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 7px -2px 7px 0px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     /* padding: 50px; */
+    width: 320px;
 }
 
 .box {
@@ -21,6 +22,8 @@
     top: 82px;
     flex-direction: column;
     gap: 60px;
+    max-height: 100vh;
+    overflow-y: scroll;
 }
 
 .links {
@@ -51,4 +54,63 @@
 
 .links .price-link {
     color: var(--ui---main);
+}
+
+
+.brand-item {
+    display: flex;
+    flex-direction: column;
+    /* background-color: rebeccapurple */
+}
+
+.brand-item__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.brand-item__header svg {
+    color: var(--typography---main);
+}
+
+.brand-item__category {
+    display: flex;
+    flex-direction: column;
+    height: 0;
+    overflow: hidden;
+}
+
+.brand-item__category h3 {
+    background-color: red;
+}
+
+.brand-item__category ul {
+    height: 0;
+    overflow: hidden;
+}
+
+.open {
+    height: fit-content;
+}
+
+@media(min-width: 767px) {
+    .catalog-menu {
+        top: 146px;
+    }
+
+    .fixed-input-shifts {
+        top: 0;
+    }
+}
+
+
+@media(max-width: 767px) {
+    .catalog-menu {
+        top: 126px;
+    }
+
+    .fixed-input-shifts {
+        top: 0;
+    }
 }

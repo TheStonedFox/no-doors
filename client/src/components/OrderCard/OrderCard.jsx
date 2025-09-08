@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import styles from './OrderCard.module.css'
@@ -21,22 +21,27 @@ export default function OrderCard({ orderId, orderNumber }) {
 
     const [order, setOrder] = useState()
     const [isLoading, setIsLoading] = useState(true)
-
+    const [params, setParams] = useSearchParams()
 
     const [paymentStatus, setPaymentStatus] = useState('')
 
     const date = new Date(order?.createdAt)
 
     useEffect(() => {
-
         getOrder(orderId)
             .then(res => setOrder(res.order))
             .catch(error => alert(error))
             .finally(() => setIsLoading(false))
     }, [])
 
+    const onOrderCardClick = () => {
+        dispatch(togglePopup({ type: 'order-card', data: orderId }))
+    }
+
+
+
     return (
-        <div className={styles['order-card']} onClick={() => dispatch(togglePopup({ type: 'order-card', data: orderId }))}>
+        <div className={styles['order-card']} onClick={onOrderCardClick}>
             {!isLoading ? <section className={styles['order-card__top-section']}>
                 <div>
                     <Link className={styles['order-card__order-id']}>{`Заказ #${orderNumber}`}</Link>

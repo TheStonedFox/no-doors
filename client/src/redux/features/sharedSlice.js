@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getStepChoices } from "@api/api"
+import { getProductComments } from "../../api/api"
 
 const initialState = {
     chooseValues: {
@@ -11,7 +12,7 @@ const initialState = {
     idCommentToUpdate: null
 }
 
-export const getChooseValues = createAsyncThunk('shared/getChooseValues', () => getStepChoices().then(res => res.options))
+export const getChooseValues = createAsyncThunk('shared/getChooseValues', () => getStepChoices())
 
 export const sharedSlice = createSlice({
     name: 'shared',
@@ -23,11 +24,12 @@ export const sharedSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getChooseValues.fulfilled, (state, payload) => {
+            // ChooseValues-------------------------------------------------------------------
+            .addCase(getChooseValues.fulfilled, (state, action) => {
                 state.chooseValues.error = false
                 state.chooseValues.isLoading = false
-                state.chooseValues.brands = payload.payload.brands
-                state.chooseValues.categories = payload.payload.categories
+                state.chooseValues.brands = action.payload.options.brands
+                state.chooseValues.categories = action.payload.options.categories
             })
             .addCase(getChooseValues.rejected, (state) => {
                 state.chooseValues.error = true

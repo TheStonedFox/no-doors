@@ -13,20 +13,23 @@ import ProductCard from '@components/ProductCard/ProductCard'
 import Advantages from '@components/Advantages/Advantages'
 import Gallery from '@components/Gallery/Gallery'
 import Button from '@components/Button/Button'
-import Spinner from '@components/Spinner/Spinner'
 
 import useProducts from '@hooks/useProducts'
 
 import { categoryImages } from '@utils/categoryImages'
 import { brandsImages } from '@utils/brandsImages'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+
+import { GrFormNext } from 'react-icons/gr'
+import { GrFormPrevious } from 'react-icons/gr'
+
 
 import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
+import PopularProductsList from '../../components/PopularProductsList/PopularProductsList'
 
 
 export default function MainPage() {
     const [loadedItemsCount, setLoadedItemsCount] = useState(4)
-    // const [isLoading, setLoadingStatus] = useState(true)
     const navigate = useNavigate()
 
     const [choosesStep, setChoosesStep] = useState('brand')
@@ -51,10 +54,11 @@ export default function MainPage() {
     }, [choosesValues.category, navigate, choosesValues, filterValue])
 
     const paginationRef = useRef(null)
+    const swiperRef = useRef(null)
 
     return (
         <div className={`${styles['main-page']} container`} >
-            {choosesStep !== 'result' ? <section className={styles['main-page__intro-section']}>
+            {choosesStep !== 'result' && <section className={styles['main-page__intro-section']}>
                 <Swiper
                     modules={[Pagination]}
                     className={styles['intro-section__slider']}
@@ -62,6 +66,7 @@ export default function MainPage() {
                     slidesPerView={1}
                     autoplay={{ delay: 1000 }}
                     loop={true}
+                    onSwiper={(swiper) => swiperRef.current = swiper}
                     pagination={{ clickable: true, el: paginationRef.current }}>
                     <SwiperSlide className={styles.slide}>
                         <h2>Защитное стекло на
@@ -87,6 +92,7 @@ export default function MainPage() {
 
                     <div className={styles.pagination} ref={paginationRef}></div>
                 </Swiper>
+
                 <div className={styles['into-section__products']}>
                     <div className={styles['into-section__product']}>
                         <h2>Silicone Case
@@ -112,7 +118,7 @@ export default function MainPage() {
                         <img src="/images/intro-slider/03.png" alt="product image" />
                     </div>
                 </div>
-            </section> : null}
+            </section>}
 
             <section className={styles['main-page__find-item-section']}>
                 <section className={styles['find-item__header']}>
@@ -144,7 +150,7 @@ export default function MainPage() {
                         setChoosesStep('model')
                     }} />)}
 
-                    {choosesStep === 'model' && chooseOptions.brands.find(brand => brand.title === choosesValues.brand)[filterValue].map(model => <ChooseCard key={model.title} title={model.title} picture='https://placehold.co/165x165/transparent/black/png' onClick={() => {
+                    {choosesStep === 'model' && chooseOptions.brands?.find(brand => brand.title === choosesValues.brand)[filterValue].map(model => <ChooseCard key={model.title} title={model.title} picture='https://placehold.co/165x165/transparent/black/png' onClick={() => {
                         setChoosesValues(prev => ({ ...prev, model: model.title }))
                         setChoosesStep('category')
                     }} />)}
@@ -167,24 +173,14 @@ export default function MainPage() {
                     }}
                 />}
             </section >
-            {choosesStep !== 'result' && <section className={styles['main-page__popular-products-section']}>
-                <h2 className='section-title'>Популярные товары</h2>
-                {!isLoading ? <ItemsList>
-                    {!error && products?.map((product, index) => index < 4 && < ProductCard productData={product} key={product._id} />)}
-                </ItemsList> : <Spinner />}
-                {error && !isLoading ? <h2>Не удалось загрузить товары!</h2> : null}
-            </section>}
-            <section className={styles['main-page__advantages-section']}>
-                <Advantages />
-            </section>
+            {choosesStep !== 'result' && <PopularProductsList products={products} />}
+            <Advantages />
             <section className={styles['main-page__about-section']}>
                 <h2>No Doors Technology - продажа аксессуаров и запчастей для мобильных телефонов оптом</h2>
                 <p>Товарищи! постоянное информационно-пропагандистское обеспечение нашей деятельности представляет собой интересный эксперимент проверки существенных финансовых и административных условий. С другой стороны укрепление и развитие структуры требуют от нас анализа новых предложений. Таким образом рамки и место обучения кадров позволяет оценить значение системы обучения кадров, соответствует насущным потребностям. </p>
                 <p>Товарищи! дальнейшее развитие различных форм деятельности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Задача организации, в особенности же постоянный количественный рост и сфера нашей активности влечет за собой процесс внедрения и модернизации позиций, занимаемых участниками в отношении поставленных задач. Задача организации, в особенности же начало повседневной работы по формированию позиции в значительной степени обуславливает создание дальнейших направлений.</p>
             </section>
-            <section className={styles['main-page__gallery-section']}>
-                <Gallery />
-            </section>
-        </div>
+            <Gallery />
+        </div >
     )
 }

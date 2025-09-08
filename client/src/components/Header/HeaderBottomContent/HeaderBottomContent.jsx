@@ -3,13 +3,10 @@ import styles from './HeaderBottomContent.module.css'
 import DropDownMenu from '../../DropDownMenu/DropDownMenu'
 import MoreArrowIcon from '@/svg/MoreArrowIcon'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-
-
 
 
 export default function HeaderBottomContent() {
-    const { brands, categories, error: dropDownValuesError, isLoading: dropDownValuesLoadingStatus } = useSelector(state => state.shared.chooseValues)
+    const { brands, categories } = useSelector(state => state.shared.chooseValues)
 
     return (
         <section className={styles['header__bottom-content']}>
@@ -37,13 +34,7 @@ export default function HeaderBottomContent() {
                     <DropDownMenu title='Еще' list={['Питание и кабели', 'Powerbank', 'Акции', 'Прайс-лист']} />
                     <MoreArrowIcon />
                 </li>
-                {/* 
-                <Link className={styles['brands-list__link']}>Питание и кабели</Link>
-                <Link className={styles['brands-list__link']}>Powerbank</Link>
-                <Link className={styles['brands-list__link']}>Акции</Link>
-                <div className={styles['brands-list__link']}>
-                    <Link className={styles['header__price-link']}>Прайс-лист</Link>
-                </div> */}
+
             </ul>
         </section>
 

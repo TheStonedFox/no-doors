@@ -13,6 +13,7 @@ import Counter from '@components/Counter/Counter'
 import FavoriteButton from '@components/FavoriteButton/FavoriteButton'
 import ReviewStars from '../../components/ReviewStars/ReviewStars'
 import Slide from './Slide'
+import Comment from '../../components/Comment/Comment'
 
 import CrossIcon from '../../svg/CrossIcon.jsx'
 
@@ -20,17 +21,23 @@ import { getProduct, getProducts } from '@api/api'
 import getPrice from '@utils/getPrice'
 import useProductActions from '@hooks/useProductActions'
 
-import { GrFormNext } from "react-icons/gr"
-import { GrFormPrevious } from "react-icons/gr"
 
-import { BsCartPlusFill } from "react-icons/bs"
-import { BsCartCheck } from "react-icons/bs"
+
 import useScrollUpButton from '../../hooks/useScrollUpButton'
-
 import getWordEnding from '../../utils/getWordEnding.js'
-import { getAverageRating } from '../../utils/getAvrrageRating.js'
+import { getAverageRating } from '../../utils/getAverageRating.js'
+import AddToCartButton from '../../components/AddToCartButton/AddToCartButton.jsx'
 
-import CommentsPage from '../CommentsPage/CommentsPage.jsx'
+import { BsCartPlusFill } from 'react-icons/bs'
+import { BsCartCheck } from 'react-icons/bs'
+import { GrFormNext } from 'react-icons/gr'
+import { GrFormPrevious } from 'react-icons/gr'
+import { MdOutlineReadMore } from "react-icons/md"
+
+
+import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/SkeletonLadingShimmer.jsx'
+import PopularProductsList from '../../components/PopularProductsList/PopularProductsList.jsx'
+import { getProductComments } from '../../api/api.js'
 
 
 export default function ProductPage() {
@@ -79,8 +86,13 @@ export default function ProductPage() {
                 alert(error)
             }).finally(() => setLadingStatus(false))
 
-        onSlideChange(0)
+
+        !loadingStatus && onSlideChange(0)
     }, [dispatch, id, userData])
+
+    useEffect(() => {
+        getProductComments(id, 'review').then(res => setComments(res.comments)).catch(error => console.log(error))
+    }, [id])
 
     useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [id])
 
@@ -105,13 +117,16 @@ export default function ProductPage() {
     //#endregion
 
     const [averageRating, setAverageRating] = useState(0)
+    const [comments, setComments] = useState([])
+    const [isFullScreenMode, setIsFullScreenMode] = useState(false)
+
     const { inStock, discount, title, model, price, wholesalePrice, ratingValue, starsValues } = product || {}
 
     const entries = Object.entries(starsValues || {})
     const reviewsTotal = entries.reduce((acc, i) => acc + i[1], 0)
 
     useEffect(() => {
-        setAverageRating(getAverageRating(starsValues))
+        ratingValue && setAverageRating(getAverageRating(starsValues))
     }, [starsValues, reviewsTotal, entries])
 
     //#region handlers
@@ -144,9 +159,6 @@ export default function ProductPage() {
         setZoomProperties({ imageSize: e.imageSize, shiftsValues: e.shiftsValues, visible: e.visible, })
     }
 
-    const [isFullScreenMode, setIsFullScreenMode] = useState(false)
-
-
     const onSlideChange = (slideIndex) => {
         if (swiperRef.current) {
             swiperRef.current.slideTo(slideIndex, 400)
@@ -157,8 +169,11 @@ export default function ProductPage() {
         }
         document.querySelector('#photos-list').querySelectorAll('div').forEach((photo, index) => {
             photo.setAttribute('style', 'border: solid 1px transparent; background-color: 0')
-            if (index === slideIndex)
+            if (index === slideIndex) {
+                photo.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
                 photo.setAttribute('style', 'border: solid 1px var(--ui---main); background-color: var( --ui---bg-main-darker)')
+            }
+
         })
     }
     //#endregion
@@ -178,7 +193,7 @@ export default function ProductPage() {
     return (
         <div className={`${styles['product-page']} container`}>
             <section className={styles['product-page__product-card']}>
-                <section className={styles['product-card__photos']}>
+                {!loadingStatus ? <section className={styles['product-card__photos']}>
                     {inStock ? <div className={styles['product-card__tags']}>
                         {new Date().getUTCDate() - date?.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
 
@@ -206,14 +221,12 @@ export default function ProductPage() {
                         </button>
                     </Swiper>
 
-
-                    {isFullScreenMode ? <Swiper
+                    {isFullScreenMode && <Swiper
                         className={`${styles['product-card__full-screen-slider']}`}
                         onSwiper={(swiper) => fullScreenSwiperRef.current = swiper}
                         onSlideChange={(swiper) => onSlideChange(swiper.realIndex)}
                         spaceBetween={50}
-                        slidesPerView={1}
-                        pagination={{ clickable: true, el: `.${styles.pagination}` }}>
+                        slidesPerView={1}>
 
                         <button onClick={() => setIsFullScreenMode(false)}
                             style={{ position: 'absolute', zIndex: 200, top: 10, right: 10 }}>
@@ -221,7 +234,7 @@ export default function ProductPage() {
                         </button>
 
                         {images && images.map((image, i) => <SwiperSlide key={i} className={`${styles['product-card__slide']}`} >
-                            <img src={image} alt="product-image" />
+                            <img src={image} alt='product-image' />
                         </SwiperSlide>)}
 
                         <button className={`swiper-button-prev ${styles['swiper__prev-button']} ${styles['swiper__button']}`} onClick={() => fullScreenSwiperRef.current.slidePrev()}>
@@ -230,32 +243,32 @@ export default function ProductPage() {
                         <button className={`swiper-button-next ${styles['swiper__next-button']} ${styles['swiper__button']}`} onClick={() => fullScreenSwiperRef.current.slideNext()}>
                             <GrFormNext />
                         </button>
-                    </Swiper> : null}
+                    </Swiper>}
 
                     <div className={`${styles['product-info__photos-list']} ${isFullScreenMode ? styles['full-screen'] : null}`} id='photos-list'>
                         {images && images.map((image, i) =>
                             <div key={i} className={styles['product-info__photos-item']} onClick={() => onSlideChange(i)}>
-                                <img src={image} alt="product image" />
+                                <img src={image} alt='product image' />
                             </div>)}
                     </div>
                     {zoomProperties.visible ? <section className={styles['product-page__zoom-image']}>
-                        <img src={images[0]} alt="slider image"
+                        <img src={images[0]} alt='slider image'
                             style={{ transform: `translate(-${zoomProperties?.shiftsValues?.left}px, -${zoomProperties?.shiftsValues?.top}px)`, width: zoomProperties.imageSize.width }} />
                     </section> : null}
-                </section>
+                </section> : <SkeletonLadingShimmer style={{ width: '100%', aspectRatio: '1.085' }} />}
 
                 <section className={styles['product-card__info']}>
-                    <h2 className={styles['info__title']}>{title}</h2>
+                    {!loadingStatus ? <h2 className={styles['info__title']}>{title}</h2> : <SkeletonLadingShimmer style={{ width: '100%', height: '20px', marginBottom: 15 }} />}
 
-                    <section className={styles['info__sub-title']}>
+                    {!loadingStatus ? <section className={styles['info__sub-title']}>
                         <section className={styles['sub-title__rating']}>
                             <ReviewStars ratingValue={averageRating} /> |
-                            <Link to={`/products/${id}/comments`}>{reviewsTotal ? `${reviewsTotal} Отзыв${getWordEnding(reviewsTotal)}` : 'Отзывов нет'}</Link>
+                            <Link to={`/products/${id}/comments?type=review`}>{reviewsTotal ? `${reviewsTotal} Отзыв${getWordEnding(reviewsTotal)}` : 'Отзывов нет'}</Link>
                         </section>
                         <p className={styles['sub-title__article']}>Артикул: 854236896ABC</p>
-                    </section>
+                    </section> : <SkeletonLadingShimmer style={{ width: '100%', height: '20px', marginBottom: 15 }} />}
 
-                    <section className={styles['info__fields']}>
+                    {!loadingStatus ? <section className={styles['info__fields']}>
 
                         {inStock ? <p className={styles['sub-title__in-stock']}>{`В наличии: ${inStock} шт.`}</p> :
                             <p className={styles['sub-title__in-stock_no-in-stock']}>{`Нет в наличии.`}</p>}
@@ -263,43 +276,62 @@ export default function ProductPage() {
                         <Field className={styles['info__field']} title='Совместимость:' value={model} onClick={onModelFieldClick} />
                         <Field className={styles['info__field']} title='Розница: ' value={`${getPrice(discount, price)} ₴`} />
                         <Field className={styles['info__field']} title='Оптом (от 5 шт.): ' value={`${getPrice(discount, wholesalePrice)} ₴`} />
-                    </section>
+                    </section> : <SkeletonLadingShimmer style={{ with: '100%', height: '120px' }} />}
 
-                    {inStock ? <Counter onCounterChange={(value) => setQuantity(value)} /> : null}
-                    <section className={styles['info__controls']}>
-
-                        {inStock ? <button
-                            className={styles['controls__add-to-cart-icon-button']}
-                            onClick={onAddToCartButtonClick}>
-                            {inCart ? <BsCartCheck /> : <BsCartPlusFill />}
-                            <p>{inCart ? 'В корзине' : 'Добавить в корзину'}</p>
-                        </button> : null}
+                    {inStock ? <Counter maxValue={inStock} onCounterChange={(value) => setQuantity(value)} /> : null}
+                    {!loadingStatus ? <section className={styles['info__controls']}>
+                        <AddToCartButton onClick={onAddToCartButtonClick} inCart={inCart} />
 
                         <FavoriteButton
                             className={styles['controls__add-to-favorite-button']}
                             isInFavorite={inFavorite}
                             onClick={onAddToFavoriteButtonClick} />
-                    </section>
+                    </section> : <SkeletonLadingShimmer style={{ height: 63, maxWidth: 220, marginTop: 10 }} />}
                 </section>
             </section >
 
-            <section className={styles['product-page__comments']}>
-                <h2 className='section-title'>Отзывы к товару</h2>
-            </section>
+            {Boolean(comments?.length) && <section className={styles['product-page__comments']}>
+                <section className={styles['comments-header']}>
+                    <h2 className='section-title'>Отзывы к товару</h2>
+                    <Link to={`/products/${id}/comments?type=review`} className='header-link'>Смотреть все отзывы</Link>
+                </section>
 
-            <section className={styles['product-page__popular-products']}>
-                <h2 className='section-title'>Популярные товары</h2>
-                {!loadingStatus ? <ItemsList>
-                    {products?.map((product, index) => index < 4 && < ProductCard productData={product} key={product._id} />)}
-                </ItemsList> : <Spinner />}
-            </section>
+                <section className={styles['comments-slider-wrapper']}>
+                    <Swiper
+                        className={`${styles['comments-slider']}`}
+                        // onSwiper={(swiper) => swiperRef.current = swiper}
+                        // onSlideChange={(swiper) => onSlideChange(swiper.realIndex)}
+                        spaceBetween={50}
+                        slidesPerView={1}
+                        pagination={{ clickable: true, el: `.${styles.pagination}` }}>
+
+                        {comments.map(comment => <SwiperSlide className={styles['comments-slider__slide']} key={comment._id}>
+                            <Comment commentData={comment} />
+                        </SwiperSlide>)}
+
+                        {/* <button className={`swiper-button-prev ${styles['swiper__prev-button']} ${styles['swiper__button']}`} onClick={() => swiperRef.current.slidePrev()}>
+                            <GrFormPrevious />
+                        </button>
+                        <button className={`swiper-button-next ${styles['swiper__next-button']} ${styles['swiper__button']}`} onClick={() => swiperRef.current.slideNext()}>
+                            <GrFormNext />
+                        </button> */}
+                        <button title='Смотреть все отзывы' className={`${styles['comments-slider__more-button']} button`}
+                            onClick={() => navigate(`/products/${id}/comments?type=review`)}>
+                            <MdOutlineReadMore />
+                        </button>
+                    </Swiper>
+                </section>
+
+            </section>}
+
+            <PopularProductsList products={products}></PopularProductsList>
             <section className={styles['product-page__actions-panel']}
                 style={actionsPanelVisible ?
                     { transform: 'translateY(0%)', transition: '0.2s' } :
                     { transform: 'translateY(100%)', transition: '0.2s', boxShadow: 'none' }}>
 
                 <section className={styles['actions-panel__left-box']}>
-                    <img src={images[0]} alt="product-image" className={styles['actions-panel__image']} />
+                    <img src={images[0]} alt='product-image' className={styles['actions-panel__image']} />
                     <h3 className={styles['actions-panel__title']} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>{title}</h3>
                 </section>
                 <section className={styles['actions-panel__right-box']}>

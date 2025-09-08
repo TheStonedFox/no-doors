@@ -1,0 +1,37 @@
+.info {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+}
+
+.info__title {
+    font-weight: 500;
+    font-size: 1.375rem;
+    line-height: 150%;
+    color: var(--typography---main);
+}
+
+.info__field {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-weight: 400;
+
+}
+
+.info__field>h5 {
+    font-size: 0.875rem;
+    line-height: 150%;
+    color: var(--typography---second);
+}
+
+.info__field>p {
+    line-height: 150%;
+    color: var(--typography---main);
+}
+
+@media(max-width: 992px) {
+    .info {
+        padding: 20px;
+    }
+}

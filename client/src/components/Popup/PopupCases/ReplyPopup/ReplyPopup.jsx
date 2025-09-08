@@ -21,6 +21,7 @@ export default function ReplyPopup({ ...data }) {
     }, [])
 
     const onSuccessSubmit = (text) => {
+
         dispatch(addNotification({ type: 'success', text: text }))
         dispatch(setIdCommentToUpdate(commentId))
         dispatch(togglePopup())
@@ -28,7 +29,7 @@ export default function ReplyPopup({ ...data }) {
 
     const onSubmitReplyButtonClick = () => {
         if (!replyData.text) return dispatch(addNotification({ type: 'error', text: 'Поле с тексом обязательно для заполнения.' }))
-
+        dispatch(setIdCommentToUpdate(null))
 
         type === 'reply' && addReply({ text: replyData.text, commentId, userId })
             .then(res => onSuccessSubmit(res.message))
@@ -51,7 +52,7 @@ export default function ReplyPopup({ ...data }) {
 
             <Button
                 className={styles['submit-reply-button']}
-                title={`${type === 'edit-reply' ? 'Обновить отзыв' : 'Отправить отзыв'}`}
+                title={`${type === 'edit-reply' ? 'Изменить' : 'Ответить'}`}
                 onClick={onSubmitReplyButtonClick} />
         </div>
     )

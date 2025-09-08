@@ -1,51 +1,63 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 export const usePostInfo = ({ selectedCity }) => {
-    // alert(selectedCity)
     const [postOfficeData, setPostOfficeData] = useState({ city: null, departments: [] })
+    const [cities, setCities] = useState([])
+    const [isCitiesLoading, setIsCitiesLoading] = useState(false)
+    const [isDepartmentsLoading, setIsDepartmentsLoading] = useState(false)
 
-    const [cities, setCities] = useState([{ cityRef: null, title: null }])
-
+    // Загружаем список городов
     useEffect(() => {
-        fetch("https://api.novaposhta.ua/v2.0/json/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        setIsCitiesLoading(true)
+        fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 apiKey: import.meta.env.VITE_NOVA_POSHTA_API_KEY,
-                modelName: "Address",
-                calledMethod: "getCities",
+                modelName: 'Address',
+                calledMethod: 'getCities',
             })
         })
             .then(res => res.json())
             .then(data => {
-                const citiesData = data.data?.filter(city => city.SettlementTypeDescription === 'місто').map(city => {
-                    return { cityRef: city.Ref, title: city.Description }
-                })
-                setCities(citiesData)
+                const citiesData = data.data
+                    ?.filter(city => city.SettlementTypeDescription === 'місто')
+                    .map(city => ({ cityRef: city.Ref, title: city.Description }))
+                setCities(citiesData || [])
             })
+            .finally(() => setIsCitiesLoading(false))
     }, [])
 
+    // Загружаем отделения для выбранного города
     useEffect(() => {
-        if (!cities.find(city => city.title === selectedCity))
-            return
+        if (!selectedCity || cities.length === 0) return
 
-        fetch("https://api.novaposhta.ua/v2.0/json/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        const selectedCityRef = cities.find(c => c.title === selectedCity)?.cityRef
+        if (!selectedCityRef) return
+
+        setIsDepartmentsLoading(true)
+        fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 apiKey: import.meta.env.VITE_NOVA_POSHTA_API_KEY,
-                modelName: "Address",
-                calledMethod: "getWarehouses",
+                modelName: 'Address',
+                calledMethod: 'getWarehouses',
+                methodProperties: {
+                    CityRef: selectedCityRef,
+                }
             })
         })
             .then(res => res.json())
             .then(json => {
-                const departments = json.data.
-                    filter(department => department.CityRef === cities.find(city => city.title === selectedCity)?.cityRef &&
-                        department.CategoryOfWarehouse === 'Branch').map(department => department.Description)
-                setPostOfficeData(prev => ({ ...prev, departments: departments }))
-            })
-    }, [selectedCity])
+                const departments = json.data
+                    ?.filter(d => d.CategoryOfWarehouse === 'Branch')
+                    .map(d => d.Description) || []
 
-    return [postOfficeData, cities]
+                setPostOfficeData(prev => ({ ...prev, departments }))
+            })
+            .finally(() => setIsDepartmentsLoading(false))
+    }, [selectedCity, cities])
+
+    return [postOfficeData, cities, isCitiesLoading, isDepartmentsLoading]
 }

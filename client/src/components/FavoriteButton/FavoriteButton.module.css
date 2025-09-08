@@ -16,6 +16,10 @@
     padding: 0px 15px;
 }
 
+.favorite-button:focus-visible {
+    outline: auto;
+}
+
 .favorite-button>p {
     display: flex;
     text-align: left;
