@@ -8,10 +8,13 @@ import { useDispatch } from 'react-redux'
 import styles from './BurgerMenu.module.css'
 import { useEffect, useRef, useState } from 'react'
 import useSwipe from '../../hooks/useSwipe'
+import AvatarIcon from '../../svg/AvatarIcon'
 export default function BurgerMenu() {
 
     const dispatch = useDispatch()
     const isBurgerOpen = useSelector((state) => state.ui.isBurgerOpen)
+
+    const userData = useSelector(state => state.user.userData)
 
 
     const menuRef = useRef(null)
@@ -19,6 +22,8 @@ export default function BurgerMenu() {
         isBurgerOpen,
         menuRef,
         () => dispatch(toggleBurger(false)))
+
+
 
     return (
 
@@ -31,7 +36,16 @@ export default function BurgerMenu() {
             <ThemeToggle className={styles['burger-menu__theme-toggle']} mode={localStorage.getItem('theme') || null} />
 
             <div className={styles.box}>
+                <img className={styles['bg-avatar-blur-img']} src={userData?.avatarUrl} />
                 <ul className={styles.links}>
+                    <Link className={styles['profile-link']}
+                        to='/profile'
+                        onClick={() => dispatch(toggleBurger())}
+                    >
+                        {userData?.avatarUrl ? <img src={userData?.avatarUrl} alt="avatar" /> : <AvatarIcon />}
+                        <p>{userData?.fio ? userData?.fio.split(' ').slice(0, 2).join(' ') : 'Личный кабинет'}</p>
+
+                    </Link>
                     <Link
                         to='/about'
                         onClick={() => dispatch(toggleBurger())}
@@ -48,10 +62,7 @@ export default function BurgerMenu() {
                         to='/contacts'
                         onClick={() => dispatch(toggleBurger())}
                     >Контакты</Link>
-                    <Link
-                        to='/profile'
-                        onClick={() => dispatch(toggleBurger())}
-                    >Личный кабинет</Link>
+
                 </ul>
                 <BorderedButton title='+380 (965) 237-44-49' onClick={() => {
                     window.location.href = "tel:+3809652374449"

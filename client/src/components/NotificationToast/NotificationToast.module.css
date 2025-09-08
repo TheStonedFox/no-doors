@@ -15,7 +15,7 @@
     overflow: hidden;
     user-select: none;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.2s ease-in;
     opacity: 1;
     animation: fadeOutAtEnd 5s linear forwards;
 }

@@ -36,6 +36,8 @@ export const removeCartItem = async (userId, productId) => apiRequest(`cart-item
 
 export const updateCartItem = async (userId, productId, quantity) => apiRequest(`cart-items/${productId}`, 'PATCH',
     { id: userId, quantity })
+
+export const clearCart = async (userId) => apiRequest(`cart/${userId}`, 'PUT',)
 //#endregion
 
 //#region order

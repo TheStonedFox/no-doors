@@ -5,9 +5,13 @@
     user-select: none;
 }
 
-.cart-page__title {
+.cart-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding-top: 45px;
-    margin-bottom: 60px;
+    padding-bottom: 60px;
+    /* margin-bottom: 60px; */
 }
 
 .cart-page__cart-items {

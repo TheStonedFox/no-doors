@@ -13,6 +13,7 @@ const initialState = {
     cartCounter: 0,
     favoriteCounter: 0,
     notificationList: [],
+    isProductActionPanelOpen: false
 }
 
 
@@ -69,8 +70,11 @@ export const uiSlice = createSlice({
             state.notificationList = state.notificationList.filter(
                 notification => notification.id !== action.payload
             )
+        },
+        toggleProductActionsPanel: (state, action) => {
+            state.isProductActionPanelOpen = action.payload
         }
     }
 })
 
-export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification, closeCatalog } = uiSlice.actions
+export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification, closeCatalog, toggleProductActionsPanel } = uiSlice.actions

@@ -5,9 +5,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import styles from './ProductPage.module.css'
 
-import ItemsList from '@components/ItemsList/ItemsList'
-import Spinner from '@components/Spinner/Spinner'
-import ProductCard from '@components/ProductCard/ProductCard'
 import Field from '@components/Field/Field'
 import Counter from '@components/Counter/Counter'
 import FavoriteButton from '@components/FavoriteButton/FavoriteButton'
@@ -21,9 +18,6 @@ import { getProduct, getProducts } from '@api/api'
 import getPrice from '@utils/getPrice'
 import useProductActions from '@hooks/useProductActions'
 
-
-
-import useScrollUpButton from '../../hooks/useScrollUpButton'
 import getWordEnding from '../../utils/getWordEnding.js'
 import { getAverageRating } from '../../utils/getAverageRating.js'
 import AddToCartButton from '../../components/AddToCartButton/AddToCartButton.jsx'
@@ -38,6 +32,7 @@ import { MdOutlineReadMore } from "react-icons/md"
 import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/SkeletonLadingShimmer.jsx'
 import PopularProductsList from '../../components/PopularProductsList/PopularProductsList.jsx'
 import { getProductComments } from '../../api/api.js'
+import { addNotification, toggleProductActionsPanel } from '../../redux/features/uiSlice.js'
 
 
 export default function ProductPage() {
@@ -45,14 +40,13 @@ export default function ProductPage() {
     const navigate = useNavigate()
     const { id } = useParams()
     const userData = useSelector((state => state.user.userData))
+    const isProductActionPanelOpen = useSelector(state => state.ui.isProductActionPanelOpen)
+    const isTokenValid = useSelector(state => state.user.isTokenValid)
 
-    const [isScrolled, setIsScrolled] = useState(false)
-    const scrollUp = useScrollUpButton({ offset: isScrolled ? 85 : 15 })
-
+    const [favoriteItemAction, cartItemAction] = useProductActions()
 
     const swiperRef = useRef(null)
     const fullScreenSwiperRef = useRef(null)
-    const [favoriteItemAction, cartItemAction] = useProductActions()
 
     //#region useStates
     const [loadingStatus, setLadingStatus] = useState(true)
@@ -60,7 +54,6 @@ export default function ProductPage() {
     const [product, setProduct] = useState()
     const [quantity, setQuantity] = useState(0)
     const [date, setDate] = useState()
-    const [actionsPanelVisible, setActionsPanelVisible] = useState(false)
     const [inCart, setInCart] = useState(false)
     const [inFavorite, setInFavorite] = useState(false)
     const [zoomProperties, setZoomProperties] = useState({
@@ -69,6 +62,9 @@ export default function ProductPage() {
         visible: false,
         fullScreenMode: false
     })
+    const [averageRating, setAverageRating] = useState(0)
+    const [comments, setComments] = useState([])
+    const [isFullScreenMode, setIsFullScreenMode] = useState(false)
     //#endregion
 
     //#region useEffects
@@ -98,9 +94,8 @@ export default function ProductPage() {
 
     useEffect(() => {
         window.addEventListener('scroll', scrollHandler)
-
         return () => removeEventListener('scroll', scrollHandler)
-    }, [dispatch])
+    }, [])
 
     useEffect(() => {
         // setProduct(products?.find(product => product?._id === id))
@@ -108,45 +103,32 @@ export default function ProductPage() {
         setInFavorite(userData?.favoriteItems.includes(id))
         setInCart(userData?.cartItems?.map(item => item?.productId).includes(id))
     }, [products, id, product, userData])
-
-    useEffect(() => {
-        swiperRef.current?.slides.forEach(slide => {
-            // slide.querySelector('div').style.height = zoomProperties.fullScreenMode ? '100vh' : ''
-        })
-    }, [zoomProperties.fullScreenMode])
     //#endregion
 
-    const [averageRating, setAverageRating] = useState(0)
-    const [comments, setComments] = useState([])
-    const [isFullScreenMode, setIsFullScreenMode] = useState(false)
+
 
     const { inStock, discount, title, model, price, wholesalePrice, ratingValue, starsValues } = product || {}
 
     const entries = Object.entries(starsValues || {})
     const reviewsTotal = entries.reduce((acc, i) => acc + i[1], 0)
 
-    useEffect(() => {
-        ratingValue && setAverageRating(getAverageRating(starsValues))
-    }, [starsValues, reviewsTotal, entries])
-
     //#region handlers
     const scrollHandler = () => {
         const isScrollEnd = (window.scrollY > 300) &&
             (window.scrollY + window.innerHeight < document.documentElement.scrollHeight)
-
-        setIsScrolled(isScrollEnd)
-
-        // document.getElementById('#up-button').style = `${isScrolled ? 'bottom: 85px; opacity: 1' : 'bottom: 15px;'}`
-        scrollUp
-        setActionsPanelVisible(isScrollEnd)
+        dispatch(toggleProductActionsPanel(isScrollEnd))
     }
 
     const onAddToFavoriteButtonClick = () => {
+        if (!isTokenValid)
+            return dispatch(addNotification({ text: 'Нужно войти в аккаунт для этого действия', type: 'info', route: 'auth/' }))
         favoriteItemAction(id)
         setInFavorite(!inFavorite)
     }
 
     const onAddToCartButtonClick = () => {
+        if (!isTokenValid)
+            return dispatch(addNotification({ text: 'Нужно войти в аккаунт для этого действия', type: 'info', route: 'auth/' }))
         cartItemAction(id, quantity)
         setInCart(!inCart)
     }
@@ -178,9 +160,28 @@ export default function ProductPage() {
     }
     //#endregion
 
+
+    useEffect(() => {
+        const handleEscapeKeyDown = (e) => e.key === 'Escape' && setIsFullScreenMode(false)
+        document.addEventListener('keyup', handleEscapeKeyDown)
+
+        return () => document.removeEventListener('keyup', handleEscapeKeyDown)
+    }, [])
+
+    useEffect(() => {
+        ratingValue && setAverageRating(getAverageRating(starsValues))
+    }, [starsValues, reviewsTotal, entries])
+
     useEffect(() => {
         document.querySelector('html').setAttribute('style', ` ${isFullScreenMode ? 'overflow-y: hidden' : ''}`)
     }, [isFullScreenMode])
+
+    useEffect(() => {
+        if (isFullScreenMode && fullScreenSwiperRef.current) {
+            setTimeout(() => fullScreenSwiperRef.current.update(), 50)
+        }
+    }, [isFullScreenMode, fullScreenSwiperRef.current])
+
 
     const images = [
         '/images/categories/03.png',
@@ -191,7 +192,7 @@ export default function ProductPage() {
     ]
 
     return (
-        <div className={`${styles['product-page']} container`}>
+        <div className={`${styles['product-page']} container`} style={isFullScreenMode ? { transform: 'none', animation: 'none' } : {}}>
             <section className={styles['product-page__product-card']}>
                 {!loadingStatus ? <section className={styles['product-card__photos']}>
                     {inStock ? <div className={styles['product-card__tags']}>
@@ -251,10 +252,10 @@ export default function ProductPage() {
                                 <img src={image} alt='product image' />
                             </div>)}
                     </div>
-                    {zoomProperties.visible ? <section className={styles['product-page__zoom-image']}>
+                    {Boolean(zoomProperties.visible && !isFullScreenMode) && <section className={styles['product-page__zoom-image']}>
                         <img src={images[0]} alt='slider image'
                             style={{ transform: `translate(-${zoomProperties?.shiftsValues?.left}px, -${zoomProperties?.shiftsValues?.top}px)`, width: zoomProperties.imageSize.width }} />
-                    </section> : null}
+                    </section>}
                 </section> : <SkeletonLadingShimmer style={{ width: '100%', aspectRatio: '1.085' }} />}
 
                 <section className={styles['product-card__info']}>
@@ -299,8 +300,6 @@ export default function ProductPage() {
                 <section className={styles['comments-slider-wrapper']}>
                     <Swiper
                         className={`${styles['comments-slider']}`}
-                        // onSwiper={(swiper) => swiperRef.current = swiper}
-                        // onSlideChange={(swiper) => onSlideChange(swiper.realIndex)}
                         spaceBetween={50}
                         slidesPerView={1}
                         pagination={{ clickable: true, el: `.${styles.pagination}` }}>
@@ -309,12 +308,6 @@ export default function ProductPage() {
                             <Comment commentData={comment} />
                         </SwiperSlide>)}
 
-                        {/* <button className={`swiper-button-prev ${styles['swiper__prev-button']} ${styles['swiper__button']}`} onClick={() => swiperRef.current.slidePrev()}>
-                            <GrFormPrevious />
-                        </button>
-                        <button className={`swiper-button-next ${styles['swiper__next-button']} ${styles['swiper__button']}`} onClick={() => swiperRef.current.slideNext()}>
-                            <GrFormNext />
-                        </button> */}
                         <button title='Смотреть все отзывы' className={`${styles['comments-slider__more-button']} button`}
                             onClick={() => navigate(`/products/${id}/comments?type=review`)}>
                             <MdOutlineReadMore />
@@ -325,8 +318,9 @@ export default function ProductPage() {
             </section>}
 
             <PopularProductsList products={products}></PopularProductsList>
+
             <section className={styles['product-page__actions-panel']}
-                style={actionsPanelVisible ?
+                style={isProductActionPanelOpen ?
                     { transform: 'translateY(0%)', transition: '0.2s' } :
                     { transform: 'translateY(100%)', transition: '0.2s', boxShadow: 'none' }}>
 

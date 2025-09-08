@@ -177,6 +177,11 @@
   height: 100vh;
 }
 
+.button {
+  background-color: var(--ui---main);
+  border-radius: 4px;
+}
+
 @media(hover: hover) {
   .button:hover {
     background-color: var(--ui---main-hover);

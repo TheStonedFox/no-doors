@@ -8,49 +8,36 @@ import Footer from '../Footer/Footer'
 import Popup from '../Popup/Popup'
 
 import { toggleSearchResults } from '../../redux/features/uiSlice'
-import { FaChevronUp } from "react-icons/fa"
 import NotificationToast from '../NotificationToast/NotificationToast'
-import useScrollUpButton from '../../hooks/useScrollUpButton'
+import ScrollUpButton from '../ScrollUpButton/ScrollUpButton'
+
+
 
 export default function Layout({ children }) {
 
     const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
-
     const notificationsRef = useRef(null)
-
-    const scrollUp = useScrollUpButton({ offset: 15 })
-    const scrollHandler = () => scrollUp
 
     useEffect(() => { document.querySelector('html').style = `${isPopupOpen ? 'overflow-y: hidden' : ''}` }, [isPopupOpen])
 
     const notificationList = useSelector((state) => state.ui.notificationList)
 
-    useEffect(() => {
-        window.addEventListener('scroll', scrollHandler)
-        return () => window.removeEventListener('scroll', scrollHandler)
-    }, [])
-
-    const [scrollTop, setScrollTop] = useState(0)
-
     const dispatch = useDispatch()
+
+    const onLayoutClick = () => {
+        if (!document.querySelector('#search-result').contains(event.target)
+            && event.target.id !== 'search-input'
+            && event.target.id !== 'popup' && event.target.id !== 'mobile-search-input') {
+            dispatch(toggleSearchResults(false))
+        }
+    }
     return (
-        <div className={styles.layout} onClick={(event) => {
-            if (!document.querySelector('#search-result').contains(event.target)
-                && event.target.id !== 'search-input'
-                && event.target.id !== 'popup' && event.target.id !== 'mobile-search-input') {
-                dispatch(toggleSearchResults(false))
-            }
-        }}>
-            <div className={styles.header}><Header></Header></div>
-            <main className={styles.main}>{children}</main>
-            <div className={styles.footer}><Footer></Footer></div>
+        <div className={styles['layout']} onClick={onLayoutClick}>
+            <div className={styles['header']}><Header></Header></div>
+            <main className={styles['main']}>{children}</main>
+            <div className={styles['footer']}><Footer></Footer></div>
             <Popup />
-            <div className={styles['scroll-up-button']}
-                id='#up-button'
-                style={{ opacity: document.documentElement.scrollHeight / scrollTop < 5 ? '1' : '0', transition: '0.2s', bottom: '15px' }}
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                <FaChevronUp color='var( --ui---bg-main)' />
-            </div>
+            <ScrollUpButton />
             <section
                 className={`${styles['notifications-list']} ${notificationList.length > 3 ? styles['fade'] : null}`} ref={notificationsRef}
                 style={!notificationList.length ? { padding: '0' } : {}}>

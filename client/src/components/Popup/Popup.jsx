@@ -8,6 +8,7 @@ import CrossIcon from '@/svg/CrossIcon'
 import ReplyPopup from './PopupCases/ReplyPopup/ReplyPopup'
 import CommentPopup from './PopupCases/CommentPopup/CommentPopup'
 import RemoveCommentPopup from './PopupCases/RemoveCommentPopup/RemoveCommentPopup'
+import { OrderStatusContext } from '../../contexts/orderStatusContext'
 
 export default function Popup() {
     const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
@@ -33,19 +34,22 @@ export default function Popup() {
                 e.target === e.currentTarget && dispatch(togglePopup())
             }}
         >
-            <div className={style['popup__content']} style={{ maxWidth: popup?.type === 'order-card' ? '800px' : '400px' }}>
-                <button className={style['popup__close-button']} onClick={() => dispatch(togglePopup())}>
-                    <CrossIcon />
-                </button>
-                {popup?.type === 'order-card' && <OrderDetailsPopup orderId={popup?.data} />}
-                {popup?.type === 'review' && <CommentPopup {...popup?.data} />}
-                {popup?.type === 'update-review' && <CommentPopup {...popup?.data} type={popup?.type} />}
-                {popup?.type === 'question' && <CommentPopup {...popup?.data} type={popup?.type} />}
-                {popup?.type === 'edit-question' && <CommentPopup {...popup?.data} type={popup?.type} />}
-                {popup?.type === 'reply' && <ReplyPopup {...popup?.data} type={popup?.type} />}
-                {popup?.type === 'edit-reply' && <ReplyPopup {...popup?.data} type={popup?.type} />}
-                {popup?.type === 'remove-comment' && <RemoveCommentPopup {...popup?.data} />}
-            </div>
+            <OrderStatusContext.Provider>
+                <div className={style['popup__content']} style={{ maxWidth: popup?.type === 'order-card' ? '800px' : '400px' }}>
+                    <button className={style['popup__close-button']} onClick={() => dispatch(togglePopup())}>
+                        <CrossIcon />
+                    </button>
+                    {popup?.type === 'order-card' && <OrderDetailsPopup orderId={popup?.data} />}
+                    {popup?.type === 'review' && <CommentPopup {...popup?.data} />}
+                    {popup?.type === 'update-review' && <CommentPopup {...popup?.data} type={popup?.type} />}
+                    {popup?.type === 'question' && <CommentPopup {...popup?.data} type={popup?.type} />}
+                    {popup?.type === 'edit-question' && <CommentPopup {...popup?.data} type={popup?.type} />}
+                    {popup?.type === 'reply' && <ReplyPopup {...popup?.data} type={popup?.type} />}
+                    {popup?.type === 'edit-reply' && <ReplyPopup {...popup?.data} type={popup?.type} />}
+                    {popup?.type === 'remove-comment' && <RemoveCommentPopup {...popup?.data} />}
+                </div>
+            </OrderStatusContext.Provider>
+
         </div>
     )
 }

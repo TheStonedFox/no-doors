@@ -79,7 +79,7 @@ export default function CommentPage() {
 
                 {replies && replies?.map(reply => <Comment commentData={reply} type='reply' key={reply._id} />)}
 
-                {!replies.length && !isLoading && <EmptyPlaceholder title='Ответов нет.' action={userId !== userData._id && onReplyButtonClick} actionTitle='Будьте первым, кто оставит ответит. 😉' />}
+                {!replies.length && !isLoading && <EmptyPlaceholder title='Ответов нет.' action={userId !== userData?._id && isLogged && onReplyButtonClick} actionTitle='Будьте первым, кто оставит ответит. 😉' />}
             </section>
         </section>
     )

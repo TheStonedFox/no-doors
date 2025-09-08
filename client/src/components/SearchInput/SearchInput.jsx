@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './SearchInput.module.css'
 
 import SearchResult from '../SearchResult/SearchResult'
@@ -17,11 +17,9 @@ export default function SearchInput({ className, value, onChange }) {
 
     const [searchList, error] = useSearchResults(value)
 
-    // useEffect(() => { error && window.innerWidth <= 992 && alert(`Не удалось загрузить товары. ${error}`) }, [error, value])
-
     return (
         <div id='search-input' className={`${styles['search-input']} ${className ? className : ''}`}
-            onFocus={() => dispatch(toggleSearchResults(true))}>
+            onFocus={() => dispatch(toggleSearchResults(true))} >
             <div className={styles['wrapper']}>
                 <input id='search-input' className={styles.input}
                     type="search"

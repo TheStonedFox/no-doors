@@ -54,6 +54,23 @@ export const updateCartItem = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
-
-
 }
+
+
+export const clearCart = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.params.userId)
+
+        if (!user)
+            return res.status(404).json({ message: 'Пользователь не найден.' })
+
+        user.cartItems = []
+        await user.save()
+
+        res.status(200).json({ message: 'Корзина очищена.' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+}
+
+

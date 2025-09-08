@@ -7,8 +7,10 @@ import CartItem from '../CartItem/CartItem'
 
 import styles from './CartItems.module.css'
 import { getOrder } from '@api/api'
+import { OrderStatusContext } from '../../contexts/orderStatusContext'
+import { useContext } from 'react'
 
-export default function CartItems({ orderId, className }) {
+export default function CartItems({ orderId, className, viewOnly }) {
 
     const [products, userData, sum, loadingStatus] = useCart()
 
@@ -24,7 +26,7 @@ export default function CartItems({ orderId, className }) {
                 <p className={styles['cart-items__title']}>Название товара</p>
                 <p className={styles['cart-items__title']}>Цена (Розница)</p>
                 <p className={styles['cart-items__title']}>Цена (Опт от 5)</p>
-                <p className={styles['cart-items__title']}>Остаток</p>
+                {!viewOnly && <p className={styles['cart-items__title']}>Остаток</p>}
                 <p className={styles['cart-items__title']}>Количество</p>
                 <p className={styles['cart-items__title']}>Сумма</p>
 
@@ -35,7 +37,7 @@ export default function CartItems({ orderId, className }) {
 
                 {order?.products?.map(orderProduct => {
                     const item = products?.find(item => item._id === orderProduct.productId)
-                    return item ? <CartItem key={item._id} productData={item} initialQuantityValue={orderProduct.quantity} viewOnly={true}></CartItem> : null
+                    return item ? <CartItem key={item._id} productData={item} initialQuantityValue={orderProduct.quantity} viewOnly={true} reviewButton={order?.status === 'paid'}></CartItem> : null
                 })}
 
             </div>

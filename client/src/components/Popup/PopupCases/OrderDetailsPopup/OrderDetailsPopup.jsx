@@ -13,6 +13,7 @@ import * as api from '@api/api'
 
 import { togglePopup } from '../../../../redux/features/uiSlice'
 
+
 export default function OrderDetailsPopup({ orderId }) {
 
     const dispatch = useDispatch()
@@ -20,7 +21,6 @@ export default function OrderDetailsPopup({ orderId }) {
     const [order, setOrder] = useState()
     const [payData, setPayData] = useState()
     const date = new Date(order?.createdAt)
-
     const [paymentStatus, setPaymentStatus] = useState()
 
     useEffect(() => {
@@ -56,13 +56,13 @@ export default function OrderDetailsPopup({ orderId }) {
         <div className={styles['order-details-popup']}>
             <section className={styles['order-details-popup__header']}>
                 <div>
-                    <h3 className={styles['order-details-popup__id']}>{`Заказ #${userData?.orders.findIndex(order => order === orderId) + 1}`}</h3>
-                    ·
+                    <h3 className={styles['order-details-popup__id']}>{`Заказ #${userData?.orders.findIndex(order => order === orderId) + 1}`}  ·</h3>
+
                     <p className={styles['order-details-popup__status']} style={{ color: statusColors[paymentStatus] }}>{statusTitles[paymentStatus]}</p>
                 </div>
                 <p className={styles['order-details-popup__date']}>{`Заказ от ${date.toLocaleDateString('ru-RU')}`}</p>
             </section>
-            <CartItems orderId={orderId} />
+            <CartItems orderId={orderId} viewOnly={true} />
             <section className={styles['order-details-popup__result']}>
                 <Field title='Общая скидка:' value={<p className={styles['field-value']}>10%</p>} />
                 <Field title='Итого:' value={<p className={styles['field-value']}>{order?.sum} ₴</p>} />

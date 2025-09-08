@@ -9,13 +9,17 @@ import { updateCartItem } from '@api/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserData } from '../../redux/features/userSlice'
 
+import { IoIosStar } from "react-icons/io"
+
+
 import Spinner from '../Spinner/Spinner'
 import RemoveIcon from './RemoveIcon'
 
 import getPrice from '@utils/getPrice'
 import useProductActions from '@hooks/useProductActions'
+import { togglePopup } from '../../redux/features/uiSlice'
 
-export default function CartItem({ productData, initialQuantityValue, getTotalPriceValue, viewOnly, className }) {
+export default function CartItem({ productData, initialQuantityValue, viewOnly, reviewButton }) {
 
     const { title, price, wholesalePrice, inStock, _id, discount } = productData || {}
 
@@ -34,6 +38,11 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
         return () => dispatch(setUserData())
     }, [])
 
+    const onReviewButtonClick = () => {
+        navigate(`/products/${_id}/comments?type=review`)
+        dispatch(togglePopup())
+    }
+
     return (
         <div className={styles['cart-item']} >
             <div className={styles['cart-item__img']}>
@@ -48,7 +57,7 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
             <div className={styles['cart-item__fields']}>
                 <Field title='Цена (Розница)' value={`${getPrice(discount, price)} ₴`} />
                 <Field title='Цена (Опт от 5)' value={`${getPrice(discount, wholesalePrice)} ₴`} />
-                <Field title='Остаток' value={`${inStock} шт.`} />
+                {!viewOnly && <Field title='Остаток' value={`${inStock} шт.`} />}
                 <Field title='Сумма' value={discount === 0 ?
                     quantity < 5 ?
                         price * quantity : wholesalePrice * quantity
@@ -58,7 +67,8 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
             </div>
             <p>{`${getPrice(discount, price)} ₴`}</p>
             <p>{`${getPrice(discount, wholesalePrice)} ₴`}</p>
-            <p>{`${inStock} шт.`}</p>
+            {!viewOnly && <p>{`${inStock} шт.`}</p>}
+
             <div className={styles['cart-item__controls']}>
                 {!viewOnly ? <Counter
                     className={styles['cart-item__counter']}
@@ -77,6 +87,10 @@ export default function CartItem({ productData, initialQuantityValue, getTotalPr
                         (wholesalePrice - wholesalePrice / 100 * discount) * quantity} ₴
                 </p>
                 {!viewOnly && <RemoveIcon onClick={() => cartItemAction(_id)} />}
+                {viewOnly && reviewButton && <button className={`${styles['cart-item__review-button']} button`} onClick={onReviewButtonClick}
+                    title='Оставить отзыв'>
+                    <IoIosStar />
+                </button>}
             </div>
         </div >
     )

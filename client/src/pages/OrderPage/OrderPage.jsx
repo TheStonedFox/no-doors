@@ -18,13 +18,14 @@ import { usePostInfo } from '@hooks/usePostInfo'
 import { useCart } from '@hooks/useCart'
 
 import { makeOrder } from '@api/api'
+import { useNavigate } from 'react-router-dom'
 
 
 
 export default function OrderPage() {
 
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
     const [selectedOptions, setSelectedOptions] = useState({ deliveryMethod: 0, payMethod: 0 })
     const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null, city: null, postOffice: null, address: null })
     const [validationErrors, setValidationErrors] = useState([])
@@ -67,6 +68,7 @@ export default function OrderPage() {
                 setValidationErrors([])
                 dispatch(setUserData())
                 dispatch(addNotification({ type: 'success', text: res.message, route: 'profile?mode=history' }))
+                navigate('/profile?mode=history')
             })
             .catch(error => {
                 setValidationErrors(error.data.validationErrors || '')
