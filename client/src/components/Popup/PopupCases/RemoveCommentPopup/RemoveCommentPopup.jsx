@@ -8,11 +8,12 @@ import { setIdCommentToUpdate } from "../../../../redux/features/sharedSlice"
 
 
 
-export default function RemoveCommentPopup({ commentType, commentId }) {
+export default function RemoveCommentPopup({ commentType, commentId, documentId }) {
     const dispatch = useDispatch()
 
     const onRemoveButtonClick = () => {
-        removeComment(commentId, commentType)
+        dispatch(setIdCommentToUpdate(null))
+        removeComment(documentId, commentType)
             .then(res => {
                 dispatch(addNotification({ type: 'success', text: res.message }))
                 dispatch(setIdCommentToUpdate(commentId))

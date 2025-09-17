@@ -7,12 +7,11 @@ import CartItem from '../CartItem/CartItem'
 
 import styles from './CartItems.module.css'
 import { getOrder } from '@api/api'
-import { OrderStatusContext } from '../../contexts/orderStatusContext'
-import { useContext } from 'react'
+import EmptyPlaceholder from '../EmptyPlaceholder/EmptyPlaceholder'
 
 export default function CartItems({ orderId, className, viewOnly }) {
 
-    const [products, userData, sum, loadingStatus] = useCart()
+    const { products, userData, isLoading, error, refetch } = useCart()
 
     const [order, setOrder] = useState()
 
@@ -30,7 +29,7 @@ export default function CartItems({ orderId, className, viewOnly }) {
                 <p className={styles['cart-items__title']}>Количество</p>
                 <p className={styles['cart-items__title']}>Сумма</p>
 
-                {Boolean(!loadingStatus && userData.cartItems.length) && !orderId && userData?.cartItems.map(cartItem => {
+                {Boolean(!isLoading && !error && userData?.cartItems.length) && !orderId && userData.cartItems.map(cartItem => {
                     const item = products?.find(item => item._id === cartItem.productId)
                     return item ? <CartItem key={item._id} productData={item} initialQuantityValue={cartItem.quantity}></CartItem> : null
                 })}
@@ -41,7 +40,9 @@ export default function CartItems({ orderId, className, viewOnly }) {
                 })}
 
             </div>
-            {loadingStatus && <Spinner />}
+            {error && !isLoading &&
+                <EmptyPlaceholder title=' Не удалось загрузить список товаров.' actionTitle='Попробовать еще раз.' action={refetch} />}
+            {isLoading && <Spinner />}
         </div>
 
     )

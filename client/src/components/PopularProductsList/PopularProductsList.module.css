@@ -3,6 +3,7 @@
     flex-direction: column;
     overflow: hidden;
     padding-bottom: 50px;
+    max-height: 648px;
 }
 
 .products-section__header {

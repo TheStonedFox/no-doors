@@ -22,12 +22,12 @@ const CommentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    editHistory: { type: [editHistorySchema], default: [] }, // лучше указать тип
+    editHistory: { type: [editHistorySchema], default: [] },
     reviewsCount: { type: Number },
     ratingValue: { type: Number },
     likes: { type: [Types.ObjectId], default: [] },
     dislikes: { type: [Types.ObjectId], default: [] },
-    replies: { type: [String], default: [] } // тоже лучше явно
+    replies: { type: [String], default: [] }
 }, { timestamps: true })
 
 export default mongoose.model('Comments', CommentSchema)

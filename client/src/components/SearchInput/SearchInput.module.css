@@ -45,10 +45,31 @@
     transition: 0.2s;
 }
 
-.button:hover {
-    background-color: var(--ui---main-hover);
-    transition: 0.2s;
+@media(hover: hover) {
+    .button:hover {
+        background-color: var(--ui---main-hover);
+        transition: 0.2s;
+    }
+
+    .wrapper:hover .input {
+        transition: 0.2s;
+        border: 2px solid var(--ui---main-hover);
+    }
 }
+
+@media(hover: none) {
+    .button:active {
+        background-color: var(--ui---main-hover);
+        transition: 0.2s;
+    }
+
+    .wrapper:active .input {
+        transition: 0.2s;
+        border: 2px solid var(--ui---main-hover);
+    }
+}
+
+
 
 .button svg {
     min-width: 18px;

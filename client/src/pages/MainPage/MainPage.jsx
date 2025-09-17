@@ -4,7 +4,7 @@ import 'swiper/css/bundle'
 
 import { Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 import ChooseCard from '@components/ChooseCard/ChooseCard'
@@ -14,30 +14,26 @@ import Advantages from '@components/Advantages/Advantages'
 import Gallery from '@components/Gallery/Gallery'
 import Button from '@components/Button/Button'
 
-import useProducts from '@hooks/useProducts'
+
 
 import { categoryImages } from '@utils/categoryImages'
 import { brandsImages } from '@utils/brandsImages'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import { GrFormNext } from 'react-icons/gr'
-import { GrFormPrevious } from 'react-icons/gr'
-
-
 import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 import PopularProductsList from '../../components/PopularProductsList/PopularProductsList'
+import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
+import { getChooseValues } from '../../redux/features/sharedSlice'
 
 
 export default function MainPage() {
-    const [loadedItemsCount, setLoadedItemsCount] = useState(4)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const [choosesStep, setChoosesStep] = useState('brand')
     const [choosesValues, setChoosesValues] = useState({ brand: null, model: null, category: null })
     const [chooseOptions, setChooseOptions] = useState({ brands: null, categories: null })
     const [filterValue, setFilterValue] = useState('phones')
-
-    const [products, isLoading, error] = useProducts()
 
     const { brands, categories, error: chooseValuesError, isLoading: chooseValuesIsLoading } = useSelector(state => state.shared.chooseValues)
 
@@ -55,6 +51,25 @@ export default function MainPage() {
 
     const paginationRef = useRef(null)
     const swiperRef = useRef(null)
+
+    const onChooseCardClick = (value) => {
+        if (choosesStep === 'brand') {
+            setChoosesValues(prev => ({ ...prev, brand: value }))
+            setChoosesStep('model')
+        }
+
+        if (choosesStep === 'model') {
+            setChoosesValues(prev => ({ ...prev, model: value }))
+            setChoosesStep('category')
+        }
+
+        if (choosesStep === 'category') {
+            setChoosesStep('result')
+            setChoosesValues(prev => ({ ...prev, category: value }))
+        }
+    }
+
+
 
     return (
         <div className={`${styles['main-page']} container`} >
@@ -92,32 +107,6 @@ export default function MainPage() {
 
                     <div className={styles.pagination} ref={paginationRef}></div>
                 </Swiper>
-
-                <div className={styles['into-section__products']}>
-                    <div className={styles['into-section__product']}>
-                        <h2>Silicone Case
-                            для iPhone Xr</h2>
-                        <Button className={styles['product__more-button']} title='Подробнее'>
-                            <p>Подробнее</p>
-                            <svg width="25" height="12" viewBox="0 0 25 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M24.5303 6.53033C24.8232 6.23744 24.8232 5.76256 24.5303 5.46967L19.7574 0.696699C19.4645 0.403806 18.9896 0.403806 18.6967 0.696699C18.4038 0.989593 18.4038 1.46447 18.6967 1.75736L22.9393 6L18.6967 10.2426C18.4038 10.5355 18.4038 11.0104 18.6967 11.3033C18.9896 11.5962 19.4645 11.5962 19.7574 11.3033L24.5303 6.53033ZM0 6.75H24V5.25H0V6.75Z" fill="#399A3A" />
-                            </svg>
-                        </Button>
-                        <img src="/images/intro-slider/02.png" alt="product image" />
-                    </div>
-
-                    <div className={styles['into-section__product']}>
-                        <h2>Silicone Case
-                            для iPhone Xr</h2>
-                        <Button className={styles['product__more-button']} title='Подробнее'>
-                            <p>Подробнее</p>
-                            <svg width="25" height="12" viewBox="0 0 25 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M24.5303 6.53033C24.8232 6.23744 24.8232 5.76256 24.5303 5.46967L19.7574 0.696699C19.4645 0.403806 18.9896 0.403806 18.6967 0.696699C18.4038 0.989593 18.4038 1.46447 18.6967 1.75736L22.9393 6L18.6967 10.2426C18.4038 10.5355 18.4038 11.0104 18.6967 11.3033C18.9896 11.5962 19.4645 11.5962 19.7574 11.3033L24.5303 6.53033ZM0 6.75H24V5.25H0V6.75Z" fill="#399A3A" />
-                            </svg>
-                        </Button>
-                        <img src="/images/intro-slider/03.png" alt="product image" />
-                    </div>
-                </div>
             </section>}
 
             <section className={styles['main-page__find-item-section']}>
@@ -126,9 +115,7 @@ export default function MainPage() {
                     {choosesStep === 'category' && <div className={styles['find-item__header-path']}>
                         <p onClick={() => setChoosesStep('brand')}>Главная</p>
                         /
-                        <p onClick={() => {
-                            setChoosesStep('model')
-                        }}>{choosesValues.brand}</p>
+                        <p onClick={() => setChoosesStep('model')}>{choosesValues.brand}</p>
                         /
                         <p>{choosesValues.model}</p>
                     </div>}
@@ -144,36 +131,26 @@ export default function MainPage() {
                     </ul>}
                 </section>
 
-                <ItemsList className={styles['find-item__categories']}>
-                    {choosesStep === 'brand' && chooseOptions.brands?.map(brand => <ChooseCard title={brand.title} key={brand.title} picture={`/images/brands/${brandsImages[brand.title]}`} onClick={async () => {
-                        setChoosesValues(prev => ({ ...prev, brand: brand.title }))
-                        setChoosesStep('model')
-                    }} />)}
+                {!chooseValuesError ? <ItemsList className={styles['find-item__categories']}>
+                    {choosesStep === 'brand' && chooseOptions.brands?.map(brand =>
+                        <ChooseCard title={brand.title} key={brand.title}
+                            picture={`/images/brands/${brandsImages[brand.title]}`}
+                            onClick={() => onChooseCardClick(brand.title)} />)}
 
-                    {choosesStep === 'model' && chooseOptions.brands?.find(brand => brand.title === choosesValues.brand)[filterValue].map(model => <ChooseCard key={model.title} title={model.title} picture='https://placehold.co/165x165/transparent/black/png' onClick={() => {
-                        setChoosesValues(prev => ({ ...prev, model: model.title }))
-                        setChoosesStep('category')
-                    }} />)}
+                    {choosesStep === 'model' && chooseOptions.brands?.find(brand => brand.title === choosesValues.brand)[filterValue].map(model => <ChooseCard key={model.title} title={model.title}
+                        picture='https://placehold.co/165x165/transparent/black/png'
+                        onClick={() => onChooseCardClick(model.title)} />)}
 
-                    {choosesStep === 'category' && chooseOptions.categories.map(category => <ChooseCard title={category} key={category} picture={`/images/categories/${categoryImages[category]}`} onClick={() => {
-                        setChoosesStep('result')
-                        setChoosesValues(prev => ({ ...prev, category: category }))
-                    }} />)}
-                    {choosesStep === 'result' && products?.map((product, index) => index < loadedItemsCount && <ProductCard productData={product} key={product._id} />)}
+                    {choosesStep === 'category' && chooseOptions.categories.map(category =>
+                        <ChooseCard title={category} key={category} picture={`/images/categories/${categoryImages[category]}`} onClick={() => onChooseCardClick(category)} />)}
 
-                </ItemsList>
-                {choosesStep === 'result' && products?.length > 8 && <Button
-                    className={styles['find-item__more-button']}
-                    title={loadedItemsCount !== products?.length ? 'Показать еще' : 'Показать меньше'}
-                    onClick={() => {
-                        if (loadedItemsCount !== products?.length)
-                            setLoadedItemsCount(prev => prev + 4 <= products?.length - 4 ? prev + 4 : products?.length)
-                        else
-                            setLoadedItemsCount(4)
-                    }}
-                />}
+                </ItemsList> : <EmptyPlaceholder
+                    title='Не удалось получить данные.'
+                    actionTitle='Попробовать еще раз.'
+                    action={() => dispatch(getChooseValues())} />}
             </section >
-            {choosesStep !== 'result' && <PopularProductsList products={products} />}
+            {choosesStep !== 'result' && <PopularProductsList />}
+
             <Advantages />
             <section className={styles['main-page__about-section']}>
                 <h2>No Doors Technology - продажа аксессуаров и запчастей для мобильных телефонов оптом</h2>

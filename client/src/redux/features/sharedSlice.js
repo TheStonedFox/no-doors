@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { getStepChoices } from "@api/api"
-import { getProductComments } from "../../api/api"
 
 const initialState = {
     chooseValues: {
@@ -24,7 +23,6 @@ export const sharedSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // ChooseValues-------------------------------------------------------------------
             .addCase(getChooseValues.fulfilled, (state, action) => {
                 state.chooseValues.error = false
                 state.chooseValues.isLoading = false

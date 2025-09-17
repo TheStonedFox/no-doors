@@ -14,7 +14,7 @@ import Comment from '../../components/Comment/Comment'
 
 import CrossIcon from '../../svg/CrossIcon.jsx'
 
-import { getProduct, getProducts } from '@api/api'
+import { getProduct } from '@api/api'
 import getPrice from '@utils/getPrice'
 import useProductActions from '@hooks/useProductActions'
 
@@ -33,6 +33,7 @@ import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/Skelet
 import PopularProductsList from '../../components/PopularProductsList/PopularProductsList.jsx'
 import { getProductComments } from '../../api/api.js'
 import { addNotification, toggleProductActionsPanel } from '../../redux/features/uiSlice.js'
+import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder.jsx'
 
 
 export default function ProductPage() {
@@ -49,8 +50,7 @@ export default function ProductPage() {
     const fullScreenSwiperRef = useRef(null)
 
     //#region useStates
-    const [loadingStatus, setLadingStatus] = useState(true)
-    const [products, setProducts] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const [product, setProduct] = useState()
     const [quantity, setQuantity] = useState(0)
     const [date, setDate] = useState()
@@ -65,32 +65,33 @@ export default function ProductPage() {
     const [averageRating, setAverageRating] = useState(0)
     const [comments, setComments] = useState([])
     const [isFullScreenMode, setIsFullScreenMode] = useState(false)
+    const [error, setError] = useState(null)
     //#endregion
 
     //#region useEffects
-
     useEffect(() => { document.querySelector('title').innerHTML = product?.title || 'No Doors' }, [product])
 
-    useEffect(() => {
+    useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [id])
+
+    const fetchProduct = () => {
+        setIsLoading(true)
+        setError(null)
         getProduct(id).then(res => setProduct(res.product))
             .catch(error => {
-                alert(error)
-            }).finally(() => setLadingStatus(false))
+                setError(error)
+                dispatch(addNotification({ type: 'error', text: 'Не удалось загрузить информацию о товаре' }))
+            }).finally(() => setIsLoading(false))
+    }
 
-        getProducts().then(res => setProducts(res.products))
-            .catch(error => {
-                alert(error)
-            }).finally(() => setLadingStatus(false))
-
-
-        !loadingStatus && onSlideChange(0)
-    }, [dispatch, id, userData])
+    useEffect(() => {
+        fetchProduct()
+        !isLoading && onSlideChange(0)
+    }, [dispatch, id])
 
     useEffect(() => {
         getProductComments(id, 'review').then(res => setComments(res.comments)).catch(error => console.log(error))
     }, [id])
 
-    useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [id])
 
     useEffect(() => {
         window.addEventListener('scroll', scrollHandler)
@@ -98,14 +99,11 @@ export default function ProductPage() {
     }, [])
 
     useEffect(() => {
-        // setProduct(products?.find(product => product?._id === id))
         setDate(new Date(product?.createdAt))
         setInFavorite(userData?.favoriteItems.includes(id))
         setInCart(userData?.cartItems?.map(item => item?.productId).includes(id))
-    }, [products, id, product, userData])
+    }, [id, product, userData])
     //#endregion
-
-
 
     const { inStock, discount, title, model, price, wholesalePrice, ratingValue, starsValues } = product || {}
 
@@ -114,7 +112,7 @@ export default function ProductPage() {
 
     //#region handlers
     const scrollHandler = () => {
-        const isScrollEnd = (window.scrollY > 300) &&
+        const isScrollEnd = (window.scrollY > 300) && window.scrollY > window.innerHeight * 1.1 &&
             (window.scrollY + window.innerHeight < document.documentElement.scrollHeight)
         dispatch(toggleProductActionsPanel(isScrollEnd))
     }
@@ -138,6 +136,7 @@ export default function ProductPage() {
     }
 
     const onSlideZoom = (e) => {
+        if (error) return
         setZoomProperties({ imageSize: e.imageSize, shiftsValues: e.shiftsValues, visible: e.visible, })
     }
 
@@ -193,8 +192,9 @@ export default function ProductPage() {
 
     return (
         <div className={`${styles['product-page']} container`} style={isFullScreenMode ? { transform: 'none', animation: 'none' } : {}}>
+
             <section className={styles['product-page__product-card']}>
-                {!loadingStatus ? <section className={styles['product-card__photos']}>
+                {!isLoading ? <section className={styles['product-card__photos']}>
                     {inStock ? <div className={styles['product-card__tags']}>
                         {new Date().getUTCDate() - date?.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
 
@@ -258,10 +258,10 @@ export default function ProductPage() {
                     </section>}
                 </section> : <SkeletonLadingShimmer style={{ width: '100%', aspectRatio: '1.085' }} />}
 
-                <section className={styles['product-card__info']}>
-                    {!loadingStatus ? <h2 className={styles['info__title']}>{title}</h2> : <SkeletonLadingShimmer style={{ width: '100%', height: '20px', marginBottom: 15 }} />}
+                {!error ? <section className={styles['product-card__info']}>
+                    {!isLoading ? <h2 className={styles['info__title']}>{title}</h2> : <SkeletonLadingShimmer style={{ width: '100%', height: '20px', marginBottom: 15 }} />}
 
-                    {!loadingStatus ? <section className={styles['info__sub-title']}>
+                    {!isLoading && !error ? <section className={styles['info__sub-title']}>
                         <section className={styles['sub-title__rating']}>
                             <ReviewStars ratingValue={averageRating} /> |
                             <Link to={`/products/${id}/comments?type=review`}>{reviewsTotal ? `${reviewsTotal} Отзыв${getWordEnding(reviewsTotal)}` : 'Отзывов нет'}</Link>
@@ -269,7 +269,7 @@ export default function ProductPage() {
                         <p className={styles['sub-title__article']}>Артикул: 854236896ABC</p>
                     </section> : <SkeletonLadingShimmer style={{ width: '100%', height: '20px', marginBottom: 15 }} />}
 
-                    {!loadingStatus ? <section className={styles['info__fields']}>
+                    {!isLoading ? <section className={styles['info__fields']}>
 
                         {inStock ? <p className={styles['sub-title__in-stock']}>{`В наличии: ${inStock} шт.`}</p> :
                             <p className={styles['sub-title__in-stock_no-in-stock']}>{`Нет в наличии.`}</p>}
@@ -279,16 +279,19 @@ export default function ProductPage() {
                         <Field className={styles['info__field']} title='Оптом (от 5 шт.): ' value={`${getPrice(discount, wholesalePrice)} ₴`} />
                     </section> : <SkeletonLadingShimmer style={{ with: '100%', height: '120px' }} />}
 
-                    {inStock ? <Counter maxValue={inStock} onCounterChange={(value) => setQuantity(value)} /> : null}
-                    {!loadingStatus ? <section className={styles['info__controls']}>
-                        <AddToCartButton onClick={onAddToCartButtonClick} inCart={inCart} />
+                    {Boolean(inStock && !error) && <Counter maxValue={inStock} onCounterChange={(value) => setQuantity(value)} />}
 
-                        <FavoriteButton
+                    {!isLoading ? <section className={styles['info__controls']}>
+                        {!error && <AddToCartButton onClick={onAddToCartButtonClick} inCart={inCart} />}
+
+                        {!error && <FavoriteButton
                             className={styles['controls__add-to-favorite-button']}
                             isInFavorite={inFavorite}
-                            onClick={onAddToFavoriteButtonClick} />
+                            onClick={onAddToFavoriteButtonClick} />}
                     </section> : <SkeletonLadingShimmer style={{ height: 63, maxWidth: 220, marginTop: 10 }} />}
-                </section>
+                </section> : <EmptyPlaceholder title='Не удалось загрузить информацию о товаре' actionTitle='Попробовать снова'
+                    action={fetchProduct} />}
+
             </section >
 
             {Boolean(comments?.length) && <section className={styles['product-page__comments']}>
@@ -317,7 +320,7 @@ export default function ProductPage() {
 
             </section>}
 
-            <PopularProductsList products={products}></PopularProductsList>
+            <PopularProductsList />
 
             <section className={styles['product-page__actions-panel']}
                 style={isProductActionPanelOpen ?

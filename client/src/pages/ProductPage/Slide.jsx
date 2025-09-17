@@ -15,7 +15,6 @@ export default function Slide({ onZoom, image }) {
     const [shiftsValues, setShiftsValues] = useState({ top: 0, left: 0 })
 
     const handleMouseMove = (e) => {
-
         const rect = e.currentTarget.getBoundingClientRect()
 
         let x = e.clientX - rect.left - ZOOM_BOX_SIZE / 2

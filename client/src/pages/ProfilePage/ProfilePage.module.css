@@ -27,7 +27,24 @@
     padding: 30px;
     justify-content: space-between;
     height: 460px;
+    animation: shiftActions .1s ease-in-out forwards;
+    transform: translateX(-100%);
+
 }
+
+
+
+@keyframes shiftActions {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0%);
+    }
+}
+
+
 
 .actions__avatar {
     position: relative;

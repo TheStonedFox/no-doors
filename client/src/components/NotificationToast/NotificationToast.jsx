@@ -52,7 +52,6 @@ export default function NotificationToast({ id, text, type, route }) {
         isSwipeToRight && route && redirect && navigate(`/${route}`)
         dispatch(removeNotification(id))
         setHide(true)
-        console.log('ccll')
     }
 
     const onTouchEnd = () => {
@@ -80,7 +79,9 @@ export default function NotificationToast({ id, text, type, route }) {
         <aside className={`${styles['notification-toast']} ${type === 'info' && styles['info-type-colors']}`}
             ref={notificationRef}
             id={`${id}`}
-            style={{ opacity: hide ? '0' : '1', transition: '0.5s  ease-out', transform: `translateX(${x}px)` }}
+            style={{
+                opacity: hide ? '0' : '1', transition: '0.5s  ease-out', transform: `translateX(${x}px)`
+            }}
             onClick={() => onNotificationClick(false)}
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}

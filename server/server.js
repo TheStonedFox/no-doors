@@ -75,6 +75,7 @@ app.get('/products/:id/comments', productController.getAllComments)
 //#region favorites
 app.post('/favorites/:productId', CheckAuth, favoriteController.addFavoriteItem)
 app.delete('/favorites/:productId', CheckAuth, favoriteController.removeFavoriteItem)
+app.put(`/favorites/:userId`, CheckAuth, favoriteController.clearFavorites)
 //#endregion
 
 //#region cart

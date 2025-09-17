@@ -36,13 +36,13 @@ export default function BurgerMenu() {
             <ThemeToggle className={styles['burger-menu__theme-toggle']} mode={localStorage.getItem('theme') || null} />
 
             <div className={styles.box}>
-                <img className={styles['bg-avatar-blur-img']} src={userData?.avatarUrl} />
+                <img className={styles['bg-avatar-blur-img']} src={userData?.avatar?.url} />
                 <ul className={styles.links}>
                     <Link className={styles['profile-link']}
                         to='/profile'
                         onClick={() => dispatch(toggleBurger())}
                     >
-                        {userData?.avatarUrl ? <img src={userData?.avatarUrl} alt="avatar" /> : <AvatarIcon />}
+                        {userData?.avatar?.url ? <img src={userData.avatar.url} alt="avatar" /> : <AvatarIcon />}
                         <p>{userData?.fio ? userData?.fio.split(' ').slice(0, 2).join(' ') : 'Личный кабинет'}</p>
 
                     </Link>

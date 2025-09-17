@@ -8,7 +8,7 @@ export const addReply = async (req, res) => {
         const doc = await reply.save()
 
         await CommentModel.findOneAndUpdate({ _id: req.body.commentId }, { $push: { replies: doc._id } })
-        res.status(200).json({ message: 'Ответ отправлен.' })
+        res.status(200).json({ message: 'Ответ отправлен.', reply: doc })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

@@ -5,9 +5,12 @@ export const usePostInfo = ({ selectedCity }) => {
     const [cities, setCities] = useState([])
     const [isCitiesLoading, setIsCitiesLoading] = useState(false)
     const [isDepartmentsLoading, setIsDepartmentsLoading] = useState(false)
+    const [error, setError] = useState(null)
+
 
     // Загружаем список городов
-    useEffect(() => {
+
+    const fetchCities = () => {
         setIsCitiesLoading(true)
         fetch('https://api.novaposhta.ua/v2.0/json/', {
             method: 'POST',
@@ -24,11 +27,14 @@ export const usePostInfo = ({ selectedCity }) => {
                     ?.filter(city => city.SettlementTypeDescription === 'місто')
                     .map(city => ({ cityRef: city.Ref, title: city.Description }))
                 setCities(citiesData || [])
-            })
+            }).catch((error) => setError(error))
             .finally(() => setIsCitiesLoading(false))
+    }
+
+    useEffect(() => {
+        fetchCities()
     }, [])
 
-    // Загружаем отделения для выбранного города
     useEffect(() => {
         if (!selectedCity || cities.length === 0) return
 
@@ -55,9 +61,9 @@ export const usePostInfo = ({ selectedCity }) => {
                     .map(d => d.Description) || []
 
                 setPostOfficeData(prev => ({ ...prev, departments }))
-            })
+            }).catch((error) => setError(error))
             .finally(() => setIsDepartmentsLoading(false))
     }, [selectedCity, cities])
 
-    return [postOfficeData, cities, isCitiesLoading, isDepartmentsLoading]
+    return { postOfficeData, cities, isCitiesLoading, isDepartmentsLoading, error, refetch: fetchCities }
 }

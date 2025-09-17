@@ -2,6 +2,7 @@ import UserModel from "../models/UserModel.js"
 import OrderModel from "../models/OrderModel.js"
 import { validationResult } from "express-validator"
 import { v2 as cloudinary } from 'cloudinary'
+
 export const profile = async (req, res) => {
     try {
         const user = await UserModel.findById({ _id: req.id })
@@ -22,9 +23,9 @@ export const getUserInfo = async (req, res) => {
         if (!user)
             return res.status(404).json({ message: 'Пользователь не найден!' })
 
-        const { fio, avatarUrl } = user
+        const { fio, avatar } = user
 
-        res.status(200).json({ fio, avatarUrl })
+        res.status(200).json({ fio, avatar })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
@@ -48,6 +49,13 @@ export const orders = async (req, res) => {
 export const update = async (req, res) => {
     try {
         const user = await UserModel.findById({ _id: req.id })
+
+        const oldAvatarId = req.body.oldAvatar
+
+        if (oldAvatarId) {
+            await cloudinary.uploader.destroy(oldAvatarId)
+            console.log("Old avatar deleted:", oldAvatarId)
+        }
 
         if (req.body.productId) {
             if (!user.viewedProducts.some(product => product.productId === req.body.productId)) {
@@ -74,7 +82,7 @@ export const update = async (req, res) => {
         user.email = req.body.email || user.email
         user.city = req.body.city || user.city
         user.postOffice = req.body.postOffice || user.postOffice
-        user.avatarUrl = req.body.avatarUrl || user.avatarUrl
+        user.avatar = req.body.avatar || user.avatar
 
         await user.save()
 
@@ -89,13 +97,13 @@ export const uploadAvatar = async (req, res) => {
     try {
         const file = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`
 
+
         const result = await cloudinary.uploader.upload(file, {
             folder: "avatars", // Папка в Cloudinary
         })
 
-        res.json({ url: result.secure_url, message: 'Загрузка завершена.' })
+        res.json({ url: result.secure_url, publicId: result.public_id, message: 'Загрузка завершена.' })
     } catch (err) {
-        console.error(err)
-        res.status(500).json({ message: "Ошибка загрузки." })
+        res.status(500).json({ message: "Ошибка загрузки.", err })
     }
 }

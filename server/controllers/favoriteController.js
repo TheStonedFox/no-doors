@@ -42,3 +42,19 @@ export const removeFavoriteItem = async (req, res) => {
 
 }
 
+export const clearFavorites = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.params.userId)
+        if (!user)
+            return res.status(404).json({ message: 'Пользователь не найден.' })
+
+        user.favoriteItems = []
+
+        await user.save()
+
+        res.status(200).json({ message: 'Список избранного очищен.' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+}
+

@@ -31,6 +31,24 @@ export default function Layout({ children }) {
             dispatch(toggleSearchResults(false))
         }
     }
+
+    // useEffect(() => {
+
+    //     const handleKeyDown = (e) => {
+    //         let isFocus = false
+    //         if (e.key === 'Backspace' && !isFocus) {
+    //             e.preventDefault()
+    //             const input = document.querySelector('#search-input>div>input')
+    //             if (input) input.focus()
+    //             isFocus = true
+    //         }
+    //     }
+    //     document.addEventListener('keydown', handleKeyDown)
+
+    //     return () => document.removeEventListener('keypress', handleKeyDown)
+
+    // }, [])
+
     return (
         <div className={styles['layout']} onClick={onLayoutClick}>
             <div className={styles['header']}><Header></Header></div>

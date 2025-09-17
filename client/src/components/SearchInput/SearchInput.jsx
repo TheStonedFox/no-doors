@@ -21,7 +21,7 @@ export default function SearchInput({ className, value, onChange }) {
         <div id='search-input' className={`${styles['search-input']} ${className ? className : ''}`}
             onFocus={() => dispatch(toggleSearchResults(true))} >
             <div className={styles['wrapper']}>
-                <input id='search-input' className={styles.input}
+                <input id='search-input' className={styles['input']}
                     type="search"
                     placeholder='Введите поисковой запрос...'
                     value={value}
@@ -29,7 +29,7 @@ export default function SearchInput({ className, value, onChange }) {
                     onKeyUp={(e) => e.key === 'Enter' && navigate(`/search?word=${value}`)}
                     autoComplete='off'
                 />
-                <button className={styles.button} onClick={() => value && navigate(`/search?word=${value}`)}>
+                <button className={styles['button']} onClick={() => value && navigate(`/search?word=${value}`)}>
                     <SearchIcon />
                     <p>Найти</p>
                 </button>

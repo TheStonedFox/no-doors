@@ -1,9 +1,9 @@
 import styles from './ProfilePage.module.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { updateUserInfo } from '@api/api'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import BorderedButton from '@components/BorderedButton/BorderedButton'
 import Button from '@components/Button/Button'
@@ -12,8 +12,8 @@ import AvatarIcon from '../../svg/AvatarIcon'
 import Spinner from '@components/Spinner/Spinner'
 
 import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
-import { addNotification, togglePopup } from '../../redux/features/uiSlice'
-import { uploadAvatar } from '../../api/api'
+import { addNotification } from '../../redux/features/uiSlice'
+import { getUserInfo, uploadAvatar } from '../../api/api'
 
 import ProfileInfoContent from './ProfileInfoContent/ProfileInfoContent'
 import ProfileEditInfoContent from './ProfileEditInfoContent/ProfileEditInfoContent'
@@ -29,13 +29,20 @@ export default function ProfilePage() {
     const dispatch = useDispatch()
     const userData = useSelector((state => state.user.userData))
 
+    const { phone, email, city, fio, postOffice, avatar } = userData || {}
+    const oldUserInfo = { fio, phone, email, city, postOffice, avatar }
+
+
     const [onAvatarUploading, setOnAvatarUploading] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
+    const [avatarLocalFile, setAvatarLocalFile] = useState('')
+    const [userInfo, setUserInfo] = useState({ phone: null, email: null, city: null, postOffice: null, avatar: { publicId: null, url: null } })
     const [action, setAction] = useState('info')
-    const [userInfo, setUserInfo] = useState({ phone: null, email: null, city: null, postOffice: null, avatarUrl: null })
     const [validationErrors, setValidationErrors] = useState([])
 
+    const formData = useMemo(() => new FormData(), [])
+    const isDataNoChange = JSON.stringify(oldUserInfo) === JSON.stringify(userInfo)
     useEffect(() => {
         const newParams = new URLSearchParams(params)
         newParams.set('mode', action)
@@ -47,22 +54,22 @@ export default function ProfilePage() {
         setAction(params.get('mode') || 'info')
     }, [params])
 
-    const onSaveChangesButtonClick = async () => {
-        setValidationErrors([])
-        const { phone, email, city, fio, postOffice, avatarUrl } = userData || {}
-        const oldUserInfo = { fio, phone, email, city, postOffice, avatarUrl }
-        if (JSON.stringify(userInfo) === JSON.stringify(oldUserInfo)) {
-            setAction('info')
-            return dispatch(addNotification({ type: 'info', text: 'Данные не были изменены.' }))
-        }
+    const uploadAndSaveAvatar = async () => {
+        if (!formData) return
+        setOnAvatarUploading(true)
+        const oldAvatarId = await getUserInfo(userData?._id).then(res => res.avatar.publicId)
 
-        if (userInfo.city && !userInfo.postOffice)
-            return setValidationErrors(['postOffice'])
+        uploadAvatar(formData)
+            .then(res => {
+                dispatch(addNotification({ type: 'success', text: res.message }))
+                updateInfo({ ...userInfo, oldAvatar: oldAvatarId, avatar: { url: res.url, publicId: res.publicId } })
+            })
+            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
+            .finally(() => setOnAvatarUploading(false))
+    }
 
-        if (!userInfo.city)
-            return setValidationErrors(['city'])
-
-        updateUserInfo(userInfo)
+    const updateInfo = (info) => {
+        updateUserInfo(info)
             .then(res => {
                 dispatch(setUserData())
                 setAction('info')
@@ -78,20 +85,36 @@ export default function ProfilePage() {
             })
     }
 
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0]
-        if (!file) return
+    const onSaveChangesButtonClick = async () => {
+        setValidationErrors([])
 
-        const formData = new FormData()
-        formData.append("avatar", file)
-        setOnAvatarUploading(true)
-        uploadAvatar(formData)
-            .then(res => {
-                setUserInfo((prev) => ({ ...prev, avatarUrl: res.url }))
-                dispatch(addNotification({ type: 'success', text: res.message }))
-            })
-            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
-            .finally(() => setOnAvatarUploading(false))
+        if (isDataNoChange) {
+            setAction('info')
+            return dispatch(addNotification({ type: 'info', text: 'Данные не были изменены.' }))
+        }
+
+        if (userInfo.city && !userInfo.postOffice)
+            return setValidationErrors(['postOffice'])
+
+        if (!userInfo.city)
+            return setValidationErrors(['city'])
+
+        if (avatarLocalFile)
+            uploadAndSaveAvatar()
+        else
+            updateInfo(userInfo)
+    }
+
+    const onDiscardChangesButtonClick = () => {
+        setAction('info')
+        setAvatarLocalFile(null)
+    }
+
+    const handleFileChange = (e) => {
+        setAvatarLocalFile(URL.createObjectURL(e.target.files[0]))
+        setUserInfo(prev => ({ ...prev, avatar: {} }))
+        formData.delete('avatar')
+        formData.append('avatar', e.target.files[0])
     }
 
     const onLogOutButtonClick = () => {
@@ -101,8 +124,8 @@ export default function ProfilePage() {
     }
 
     useEffect(() => {
-        const { fio, phone, email, city, postOffice, avatarUrl } = userData || {}
-        setUserInfo({ fio, phone, email, city, postOffice, avatarUrl })
+        const { fio, phone, email, city, postOffice, avatar } = userData || {}
+        setUserInfo({ fio, phone, email, city, postOffice, avatar })
     }, [userData])
 
     useEffect(() => {
@@ -114,7 +137,6 @@ export default function ProfilePage() {
     const onChangeInfo = (data) => {
         setUserInfo(prev => ({ ...prev, ...data.userInfo }))
         setIsLoading(data.isPostDataLoading.isCitiesLoading)
-
     }
 
     return (
@@ -126,9 +148,9 @@ export default function ProfilePage() {
             <section className={styles['profile-page__layout']}>
                 {!isLoading ? <section className={styles['profile-page__actions']}>
                     {!onAvatarUploading ? <div className={styles['actions__avatar']}>
-                        {userData?.avatarUrl ? <img
+                        {userData?.avatar?.url || avatarLocalFile ? <img
                             className={styles['avatar-image']}
-                            src={userData?.avatarUrl} alt='avatar'
+                            src={avatarLocalFile ? avatarLocalFile : userData?.avatar?.url} alt='avatar'
                             style={action === 'edit' ? { opacity: '0.1', filter: 'grayscale()' } : {}} /> : <AvatarIcon />}
                         <input type="file" id='select-image' accept="image/*" onChange={handleFileChange} />
                         {action === 'edit' && <a href='' onClick={(event) => {
@@ -149,11 +171,10 @@ export default function ProfilePage() {
                         }} />}
                         {action !== 'edit' && action !== 'history' && < BorderedButton className={styles['actions__action-button']} title='История заказов' onClick={() => setAction('history')} />}
                         {action === 'edit' && < div className={styles['action__edit-mode-buttons']}>
-                            <Button title='Сохранить изменения' disabled={onAvatarUploading} onClick={onSaveChangesButtonClick} />
+                            <Button title='Сохранить изменения' disabled={onAvatarUploading || isDataNoChange} onClick={onSaveChangesButtonClick} />
                             <BorderedButton disabled={onAvatarUploading} className={styles['actions__action-button']}
                                 title='Отменить редактирование'
-                                style={{}}
-                                onClick={() => setAction('info')} />
+                                onClick={onDiscardChangesButtonClick} />
                         </div>}
                     </div>
                 </section> : <SkeletonLadingShimmer style={{ width: '100%', height: '460px' }} />}

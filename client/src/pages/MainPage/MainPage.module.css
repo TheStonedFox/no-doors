@@ -202,11 +202,6 @@ body .main-page {
     color: var(--typography---main);
 }
 
-.main-page__find-item-section .find-item__more-button {
-    width: fit-content;
-    align-self: center;
-}
-
 .main-page__popular-products-section {
     /* display: flex; */
     flex-direction: column;

@@ -19,6 +19,7 @@ import { getStepChoices, searchProducts } from '@api/api'
 import { FaFilter } from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleFiltersPanel } from '../../redux/features/uiSlice'
+import Button from '../../components/Button/Button'
 
 export default function SearchPage() {
 
@@ -36,6 +37,8 @@ export default function SearchPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [productsList, setProductsList] = useState([])
     const [isFiltersLoading, setIsFiltersLoading] = useState(false)
+    const [loadedItemsCount, setLoadedItemsCount] = useState(4)
+
 
     const appliedFiltersOrder = {
         minPrice: 1,
@@ -78,12 +81,27 @@ export default function SearchPage() {
         values.forEach(v => params.append(key, v))
     }
 
+    const hasAppliedFilters = (searchParams) => {
+        const paramsArray = Array.from(searchParams).filter(
+            ([key]) => key !== 'sortType'
+        )
+
+        if (paramsArray.length === 0) return false
+
+        const isOnlyDefaultPrice =
+            paramsArray.length === 2 &&
+            searchParams.get('minPrice') === '0' &&
+            searchParams.get('maxPrice') === '10000'
+
+        return !isOnlyDefaultPrice
+    }
+
     return (
         <div className={`${styles['search-page']} container`}>
             <h2 className={`section-title ${styles['search-page__title']}`}>{categories.length === 1 ? categories : 'Комплектующие'} {models.length === 1 && `для ${models}`}</h2>
 
             <section className={styles['search-page__applied-filters-box']}>
-                {Boolean(searchParams.size) && <section className={styles['search-page__applied-filters']}>
+                {hasAppliedFilters(searchParams) && <section className={styles['search-page__applied-filters']}>
                     <FilterItem onClick={() => setSearchParams('')} />
                     {Array.from(searchParams).map(param =>
                         param[1] !== '0' && param[1] !== '10000' && param[0] !== 'sortType' &&
@@ -104,12 +122,8 @@ export default function SearchPage() {
                                 deleteParamValue(newParams, 'word', param[1])
                                 deleteParamValue(newParams, 'deviceType', param[1])
 
-                                deleteParamValue(newParams, 'maxPrice', param[1])
-                                deleteParamValue(newParams, 'minPrice', param[1])
-
-                                // if (param[0] === 'maxPrice') newParams.set('maxPrice', 10000)
-
-                                // if (param[0] === 'minPrice') newParams.set('minPrice', 0)
+                                if (param[0] === 'maxPrice') newParams.set('maxPrice', 10000)
+                                if (param[0] === 'minPrice') newParams.set('minPrice', 0)
 
                                 param[0] === 'brand' && hideUncheckBrandModels(param[1], newParams)
                                 setSearchParams(newParams)
@@ -127,13 +141,26 @@ export default function SearchPage() {
                 <FiltersPanel isOpen={isFiltersPanelOpen} />
 
                 {!isLoading && <ItemsList className={styles['search-page__search-items']}>
-                    {productsList?.map((product, index) => index < 20 && <ProductCard productData={product} key={product._id} />)}
+                    {productsList?.map((product, index) => index < loadedItemsCount && <ProductCard productData={product} key={product._id} />)}
+
+
                 </ItemsList>}
+
 
                 {!productsList.length && !isLoading && <EmptyPlaceholder title='Товаров не найдено.' />}
 
                 {isLoading && <Spinner />}
             </div>
+            {productsList?.length > 4 && !isLoading && <Button
+                className={styles['favorites-page__more-button']}
+                title={loadedItemsCount !== productsList.length ? 'Показать еще' : 'Скрыть'}
+                onClick={() => {
+                    if (loadedItemsCount !== productsList.length)
+                        setLoadedItemsCount(prev => prev + 4 <= productsList.length - 4 ? prev + 4 : productsList.length)
+                    else
+                        setLoadedItemsCount(4)
+                }}
+            />}
         </div >
     )
 }

@@ -20,8 +20,6 @@ import { useCart } from '@hooks/useCart'
 import { makeOrder } from '@api/api'
 import { useNavigate } from 'react-router-dom'
 
-
-
 export default function OrderPage() {
 
     const dispatch = useDispatch()
@@ -30,8 +28,8 @@ export default function OrderPage() {
     const [userInfo, setUserInfo] = useState({ fio: null, phone: null, email: null, city: null, postOffice: null, address: null })
     const [validationErrors, setValidationErrors] = useState([])
 
-    const [, userData, sum,] = useCart()
-    const [postOfficeData, cities] = usePostInfo({ selectedCity: userInfo.city })
+    const { userData, sum } = useCart()
+    const { postOfficeData, cities } = usePostInfo({ selectedCity: userInfo.city })
 
     useEffect(() => {
         const { fio, phone, email, city, postOffice } = userData || {}
@@ -160,7 +158,7 @@ export default function OrderPage() {
                             onSelect={(value) => setSelectedOptions(prev => ({ ...prev, payMethod: value }))} />
                         <Button title='Подтвердить заказ' onClick={onOrderButtonClick} />
                         <p className={styles['pay-methods__policy']}>Нажимая на кнопку «Подтвердить заказ», Вы подтверждаете,
-                            что даете согласие на <a href="#">обработку персональных данных.</a></p>
+                            что даете согласие на <a href="#" className={styles['policy__link']}>обработку персональных данных.</a></p>
                     </div>
                 </section>
             </div >

@@ -61,6 +61,13 @@ export default function FiltersPanel({ isOpen }) {
         decreasingModel: 'по модели (а-я)',
     }
 
+    const deleteParamValue = (params, key, value) => {
+        const values = params.getAll(key).filter(v => v !== value)
+        params.delete(key)
+        values.forEach(v => params.append(key, v))
+    }
+
+
     const hideUncheckBrandModels = (brandTile, params) => {
         if (searchParams.getAll(`brand`).includes(brandTile))
             brands?.map(brand => brand.title === brandTile && brand.models?.map(m => params.delete('model', m.title)))
@@ -69,8 +76,13 @@ export default function FiltersPanel({ isOpen }) {
     const onCheckBoxClick = (type, paramStr) => {
         const newParams = new URLSearchParams(searchParams)
         const checkParam = paramStr !== 'category' && paramStr !== 'deviceType'
+        // if (searchParams.getAll(`${paramStr}`).includes(checkParam ? type.title : type))
+        //     newParams.delete(`${paramStr}`, checkParam ? type.title : type)
+        // else
+        //     newParams.append(`${paramStr}`, checkParam ? type.title : type)
+
         if (searchParams.getAll(`${paramStr}`).includes(checkParam ? type.title : type))
-            newParams.delete(`${paramStr}`, checkParam ? type.title : type)
+            deleteParamValue(newParams, `${paramStr}`, checkParam ? type.title : type)
         else
             newParams.append(`${paramStr}`, checkParam ? type.title : type)
 

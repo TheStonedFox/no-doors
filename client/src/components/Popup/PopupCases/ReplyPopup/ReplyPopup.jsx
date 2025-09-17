@@ -21,9 +21,7 @@ export default function ReplyPopup({ ...data }) {
     }, [])
 
     const onSuccessSubmit = (text) => {
-
         dispatch(addNotification({ type: 'success', text: text }))
-        dispatch(setIdCommentToUpdate(commentId))
         dispatch(togglePopup())
     }
 
@@ -32,11 +30,17 @@ export default function ReplyPopup({ ...data }) {
         dispatch(setIdCommentToUpdate(null))
 
         type === 'reply' && addReply({ text: replyData.text, commentId, userId })
-            .then(res => onSuccessSubmit(res.message))
+            .then(res => {
+                onSuccessSubmit(res.message)
+                dispatch(setIdCommentToUpdate(commentId))
+            })
             .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
 
         type === 'edit-reply' && editReply(replyId, replyData)
-            .then(res => onSuccessSubmit(res.message))
+            .then(res => {
+                onSuccessSubmit(res.message)
+                dispatch(setIdCommentToUpdate(replyId))
+            })
             .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
     }
 

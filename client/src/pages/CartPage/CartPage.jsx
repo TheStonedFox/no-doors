@@ -16,7 +16,7 @@ export default function CartPage() {
     document.querySelector('title').innerHTML = 'Корзина'
     const navigate = useNavigate()
 
-    const [, userData, sum, loadingStatus] = useCart()
+    const { userData, sum, isLoading, error } = useCart()
 
     const onCartClearButtonClick = () => {
         clearCart(userData._id).then((res) => {
@@ -29,16 +29,18 @@ export default function CartPage() {
         <div className={`${styles['cart-page']} container`} >
             <section className={styles['cart-page__header']}>
                 <h2 className={`${'section-title'} ${styles['cart-page__title']}`}>Ваша корзина</h2>
-                <a href='#' className='header-link header-link_clear' onClick={onCartClearButtonClick}>Очистить корзину</a>
+                {Boolean(userData?.cartItems.length) &&
+                    <a href='#' className='header-link header-link_clear' onClick={onCartClearButtonClick}>Очистить корзину</a>}
             </section>
             <CartItems className={styles['cart-page__cart-items']} />
             {userData?.cartItems.length ? <div className={styles['cart-page__result']}>
-                <div className={styles['result__make-order']}>
+                {!error && !isLoading && <div className={styles['result__make-order']}>
                     <p>Итого: <strong>{sum} грн.</strong></p>
                     <Button title='Оформить заказ' onClick={() => navigate('/order')} />
-                </div>
+                </div>}
             </div> : null}
-            {!userData?.cartItems.length && !loadingStatus ? <EmptyPlaceholder title='Корзина пуста.' /> : null}
+            {/* {error && <EmptyPlaceholder title=' Не удалось загрузить данные.' actionTitle='Попробовать еще раз.' action={refetch} />} */}
+            {!userData?.cartItems.length && !isLoading && !error ? <EmptyPlaceholder title='Корзина пуста.' /> : null}
         </div>
     )
 }

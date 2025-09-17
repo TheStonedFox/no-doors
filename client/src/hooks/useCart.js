@@ -8,9 +8,8 @@ export const useCart = () => {
 
     const [products, setProducts] = useState([])
     const [sum, setSum] = useState(0)
-    const [loadingStatus, setLoadingStatus] = useState(true)
-
-    // const [order, setOrder] = useState()
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     const getSum = () => {
         return userData?.cartItems.reduce((result, cartItem) => {
@@ -27,14 +26,20 @@ export const useCart = () => {
         }, 0)
     }
 
+    const fetchProducts = () => {
+        setIsLoading(true)
+        setError(null)
+        getProducts().then(res => setProducts(res.products)).catch(error => setError(error))
+            .finally(() => setIsLoading(false))
+    }
+
     useEffect(() => {
-        getProducts().then(res => setProducts(res.products)).catch(error => alert(error))
-            .finally(() => setLoadingStatus(false))
+        fetchProducts()
     }, [])
 
     useEffect(() => {
         setSum(getSum())
     }, [products, userData?.cartItems])
 
-    return [products, userData, sum, loadingStatus]
+    return { products, userData, sum, isLoading, error, refetch: fetchProducts }
 }

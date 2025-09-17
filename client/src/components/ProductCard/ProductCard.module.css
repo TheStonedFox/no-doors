@@ -95,9 +95,9 @@
     font-weight: 500;
     font-size: 1.125rem;
     line-height: 120%;
-
     overflow: hidden;
     display: -webkit-box;
+    text-overflow: ellipsis;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
 }
@@ -166,6 +166,7 @@
         transition: 0.2s ease-in;
         border: 1px solid var(--ui---main);
         transform: scale(1.02);
+        background-color: var(--ui---bg-main-darker);
         z-index: 10;
     }
 }

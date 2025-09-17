@@ -15,6 +15,7 @@ import RadioButtonGroup from '../../components/RadioButtonGroup/RadioButtonGroup
 import { getAverageRating } from '../../utils/getAverageRating.js'
 import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder.jsx'
 
+import Spinner from '../../components/Spinner/Spinner'
 export default function CommentsPage() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -32,6 +33,7 @@ export default function CommentsPage() {
     const [comments, setComments] = useState([])
     const [reviewEligibility, setReviewEligibilities] = useState({ isProductPurchased: false, isUserCommented: false })
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => { setCommentType(query.get('type')) }, [query])
 
@@ -43,8 +45,8 @@ export default function CommentsPage() {
 
     const memoizedReviewEligibility = useCallback(() => {
         userData?._id && productId && checkReviewEligibility(productId, userData._id).then(res => setReviewEligibilities({ ...res }))
-            .catch(error => console.log(error))
-    }, [userData?._id, productId, idCommentToUpdate])
+            .catch(error => setError(error))
+    }, [userData?._id, productId])
 
     useEffect(() => {
         memoizedReviewEligibility()
@@ -60,22 +62,26 @@ export default function CommentsPage() {
         userData && dispatch(togglePopup({ type: 'question', data: { type: 'question', productId: productId } }))
     }
 
-    useEffect(() => {
+    const fetchComments = () => {
         setIsLoading(true)
-
+        setError(null)
         getProductComments(productId, commentType).then(res => {
             setComments(res.comments)
             setIsLoading(true)
         })
-            .catch(error => console.log(error))
+            .catch(error => setError(error))
             .finally(() => setIsLoading(false))
+    }
+
+    useEffect(() => {
+
+        fetchComments()
 
         const newQuery = new URLSearchParams(query)
         newQuery.set('type', commentType)
         setQuery(newQuery)
-        console.log('asadsads')
 
-    }, [userData, productId, commentType, idCommentToUpdate])
+    }, [userData, productId, commentType, query, setQuery, idCommentToUpdate])
 
 
     const backButtonRef = useRef(null)
@@ -93,15 +99,10 @@ export default function CommentsPage() {
         }
     }, [])
 
-
-
     document.querySelector('title').innerHTML = 'Отзывы к товару'
 
     return (
-        <div className={`${styles['comments-page']} container`} onClick={() => {
-            console.log('asd')
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-        }}>
+        <div className={`${styles['comments-page']} container`}>
             <section className={styles['comments-page__layout']}>
                 <button className={styles['layout__back-button']}
                     ref={backButtonRef}
@@ -114,14 +115,14 @@ export default function CommentsPage() {
                     </div>
                 </button>
                 <section className={styles['comments-page__resume']}>
-                    <section className={styles['resume__header']}>
+                    {!isLoading && !error ? <section className={styles['resume__header']}>
                         <RadioButtonGroup
                             className={styles['resume__mode']}
                             initialValue={query.get('type') === 'review' ? 0 : 1}
                             options={['Отзывы', 'Вопросы']}
                             onSelect={(selected) => setCommentType(selected === 0 ? 'review' : 'question')} />
                         <p>Оценка покупателей: <strong>{product?.ratingValue ? getAverageRating(product?.starsValues) : 0}/5 ★</strong></p>
-                    </section>
+                    </section> : <p style={{ fontSize: 14, color: 'var(--typography---second)' }}>Не удалось получить данные.</p>}
                     <StarCount data={product?.starsValues} />
                     {reviewEligibility.isProductPurchased && commentType === 'review' ? <Button title={reviewEligibility.isUserCommented ? 'Обновить отзыв' : 'Оставить отзыв'} className={styles['resume__add-comment-button']}
                         onClick={onAddReviewButtonClick} /> : null}
@@ -129,17 +130,19 @@ export default function CommentsPage() {
                     {commentType === 'question' && <Button title='Задать вопрос' onClick={onAddQuestionButtonClick} />}
                 </section>
 
-                {<section className={styles['comments-page__reviews']}>
+                {!isLoading ? <section className={styles['comments-page__reviews']}>
                     {comments?.sort((a, b) => a.userId.localeCompare(b.userId)).map(comment => <Comment key={comment._id} commentData={comment} />)}
 
-                    {!comments.length && !isLoading && commentType === 'question' && <EmptyPlaceholder
+                    {!comments.length && !error && !isLoading && commentType === 'question' && <EmptyPlaceholder
                         title='Вопросов пока нет.'
                         action={onAddQuestionButtonClick} actionTitle='У меня появился вопрос.👀' />}
 
-                    {!comments.length && !isLoading && commentType === 'review' && <EmptyPlaceholder
+                    {!comments.length && !error && !isLoading && commentType === 'review' && <EmptyPlaceholder
                         title='Отзывов пока нет.'
                         action={reviewEligibility.isProductPurchased && onAddReviewButtonClick} actionTitle='Оставить отзыв.✨' />}
-                </section>}
+
+                    {error && <EmptyPlaceholder title='Не удалось загрузить отзывы.' actionTitle='Попробовать еще раз.' action={fetchComments} />}
+                </section> : <Spinner />}
             </section>
         </div>
     )

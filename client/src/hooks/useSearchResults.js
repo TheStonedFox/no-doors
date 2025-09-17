@@ -6,7 +6,7 @@ export default function useSearchResults(value) {
     const [searchList, setSearchList] = useState([])
     const location = useLocation()
 
-    const [products, isLoading, error] = useProducts()
+    const { products, isLoading, error } = useProducts()
 
     useEffect(() => {
         setSearchList(() => products?.filter(item => item?.title.toLowerCase().includes(value.toLowerCase())))

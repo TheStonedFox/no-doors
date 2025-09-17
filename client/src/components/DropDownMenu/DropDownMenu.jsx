@@ -20,8 +20,6 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
         setDeviceType()
     }
 
-
-
     const onDropDownTitleClick = () => {
 
         if (step === 'model') {
@@ -62,7 +60,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
                 <p>{subtitle}</p>
             </section>
 
-            <div className={styles['dropdown-menu__content']}>
+            {brandModels && categories ? <div className={styles['dropdown-menu__content']}>
                 {list && <section className={styles['dropdown-menu__list']} style={{ height: deviceType ? '0px' : '100%' }}>
                     {list?.map(item => <p
                         key={generateId()}
@@ -72,7 +70,6 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
                             item === 'Powerbank' && navigate('/search?category=Разное&word=Powerbank')
                             item === 'Питание и кабели' && navigate('/search?category=Разное&word=Кабель')
                             item === 'Акции' && navigate('/search?sortType=decreasingDiscount')
-                            item === 'Прайс-лист' && alert('price')
                         }}>{item}</p>)}
                 </section>}
 
@@ -109,7 +106,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
                         }}>{category}</p>)}
                 </section>}
 
-            </div>
+            </div> : <p>Пусто.</p>}
 
         </div >
     )

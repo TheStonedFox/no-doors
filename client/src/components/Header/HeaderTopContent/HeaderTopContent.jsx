@@ -27,7 +27,7 @@ export default function HeaderTopContent() {
                     to={useSelector((state) => state.user.isTokenValid) ? '/profile' : '/auth'}>
                     Личный кабинет
                     <div>
-                        {userData?.avatarUrl ? <img src={userData?.avatarUrl} alt='profile-image' /> : <AvatarIcon />}
+                        {userData?.avatar?.url ? <img src={userData?.avatar.url} alt='profile-image' /> : <AvatarIcon />}
                     </div>
                 </Link>
 

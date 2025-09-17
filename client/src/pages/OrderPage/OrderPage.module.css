@@ -97,9 +97,13 @@
     color: var(--typography---main);
 }
 
+
+.delivery-method__title {
+    margin-bottom: 10px;
+}
+
 .pay-methods__radio-buttons {
     display: flex;
-    /* justify-content: space-between; */
     gap: 30px;
     margin-bottom: 20px;
 }
@@ -115,6 +119,20 @@
 .result button {
     width: 100%;
     margin-bottom: 20px;
+}
+
+@media(hover: hover) {
+    .policy__link:hover {
+        text-decoration: underline;
+    }
+
+}
+
+@media(hover: none) {
+    .policy__link:active {
+        text-decoration: underline;
+    }
+
 }
 
 @media(max-width: 992px) {
