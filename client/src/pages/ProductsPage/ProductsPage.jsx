@@ -23,7 +23,7 @@ export default function ProductsPage() {
             <section className={styles['products-list__section']}>
                 <h2 className={`${'section-title'} ${styles['products-list__title']}`}>Шлейфы для iPhone XS Max</h2>
                 <ItemsList className={styles['products-list__items']}>
-                    {products.map((product, index) => index < 8 && <ProductCard productData={product} key={product._id} />)}
+                    {products?.map((product, index) => index < 8 && <ProductCard productData={product} key={product._id} />)}
                 </ItemsList>
                 <Button className={styles['products-list__more-button']}>Показать еще</Button>
             </section>

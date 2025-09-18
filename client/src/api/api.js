@@ -14,6 +14,8 @@ export const getUser = async () => apiRequest('profile', 'GET')
 export const getUserInfo = async (userId) => apiRequest(`profile/${userId}`, 'GET')
 export const updateUserInfo = async (data) => apiRequest('profile', 'PATCH', data)
 export const uploadAvatar = async (body) => apiRequest('profile/upload', 'POST', body)
+export const addViewedProduct = async (body) => apiRequest('profile/viewed-products', 'POST', body)
+export const clearViewedProduct = async (userId) => apiRequest(`profile/viewed-products/${userId}`, 'DELETE')
 //#endregion
 
 export const checkReviewEligibility = async (productId, userId) => apiRequest(`products/review-eligibility?userId=${userId}&productId=${productId}`, 'GET')

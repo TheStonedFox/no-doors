@@ -19,6 +19,9 @@ import ProfileInfoContent from './ProfileInfoContent/ProfileInfoContent'
 import ProfileEditInfoContent from './ProfileEditInfoContent/ProfileEditInfoContent'
 import ProfileHistoryContent from './ProfileHistoryContent/ProfileHistoryContent'
 import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/SkeletonLadingShimmer'
+import ProfileViewedProductsContent from './ProfileViewedProductsContent/ProfileViewedProductsContent'
+
+
 
 
 export default function ProfilePage() {
@@ -31,7 +34,6 @@ export default function ProfilePage() {
 
     const { phone, email, city, fio, postOffice, avatar } = userData || {}
     const oldUserInfo = { fio, phone, email, city, postOffice, avatar }
-
 
     const [onAvatarUploading, setOnAvatarUploading] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -163,13 +165,17 @@ export default function ProfilePage() {
                         {action === 'info' && <p className={styles['actions__discount-value']}>Ваша скидка составляет: 10%</p>}
                     </div>
                     <div className={styles['actions__buttons']}>
-                        {action === 'history' && <Button title='Вернуться в личный кабинет' onClick={() => setAction('info')} />}
+
+                        {Boolean(action === 'history' | action === 'products') && <Button title='Вернуться в личный кабинет' onClick={() => setAction('info')} />}
                         {action !== 'edit' && <BorderedButton className={styles['actions__action-button']} title='Редактировать профиль' onClick={() => setAction('edit')} />}
-                        {action !== 'history' && action !== 'edit' && <BorderedButton className={styles['actions__action-button']} title='Просмотренные товары' onClick={() => {
+
+                        {action === 'info' && <BorderedButton className={styles['actions__action-button']} title='Просмотренные товары' onClick={() => {
                             setAction('products')
                             navigate('/profile/viewed-products')
                         }} />}
-                        {action !== 'edit' && action !== 'history' && < BorderedButton className={styles['actions__action-button']} title='История заказов' onClick={() => setAction('history')} />}
+
+                        {action !== 'edit' && action !== 'history' && action !== 'products' && < BorderedButton className={styles['actions__action-button']} title='История заказов' onClick={() => setAction('history')} />}
+
                         {action === 'edit' && < div className={styles['action__edit-mode-buttons']}>
                             <Button title='Сохранить изменения' disabled={onAvatarUploading || isDataNoChange} onClick={onSaveChangesButtonClick} />
                             <BorderedButton disabled={onAvatarUploading} className={styles['actions__action-button']}
@@ -184,6 +190,7 @@ export default function ProfilePage() {
                     onChangeInfo={onChangeInfo}
                     validationErrors={validationErrors} />}
                 {action === 'history' && <ProfileHistoryContent />}
+                {action === 'products' && <ProfileViewedProductsContent />}
             </section>
         </div >
     )

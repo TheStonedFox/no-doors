@@ -28,13 +28,12 @@ import { GrFormNext } from 'react-icons/gr'
 import { GrFormPrevious } from 'react-icons/gr'
 import { MdOutlineReadMore } from "react-icons/md"
 
-
 import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/SkeletonLadingShimmer.jsx'
 import PopularProductsList from '../../components/PopularProductsList/PopularProductsList.jsx'
-import { getProductComments } from '../../api/api.js'
+import { addViewedProduct, getProductComments } from '../../api/api.js'
 import { addNotification, toggleProductActionsPanel } from '../../redux/features/uiSlice.js'
 import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder.jsx'
-
+import { setUserData } from '../../redux/features/userSlice.js'
 
 export default function ProductPage() {
     const dispatch = useDispatch()
@@ -157,15 +156,18 @@ export default function ProductPage() {
 
         })
     }
+
     //#endregion
-
-
     useEffect(() => {
         const handleEscapeKeyDown = (e) => e.key === 'Escape' && setIsFullScreenMode(false)
         document.addEventListener('keyup', handleEscapeKeyDown)
 
         return () => document.removeEventListener('keyup', handleEscapeKeyDown)
     }, [])
+
+    useEffect(() => {
+        addViewedProduct({ id: userData?._id, productId: id }).catch((error) => console.log(error)).then(() => dispatch(setUserData()))
+    }, [id])
 
     useEffect(() => {
         ratingValue && setAverageRating(getAverageRating(starsValues))

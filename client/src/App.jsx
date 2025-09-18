@@ -18,7 +18,6 @@ import ProductsPage from './pages/ProductsPage/ProductsPage'
 import ProductPage from './pages/ProductPage/ProductPage'
 import OrderPage from './pages/OrderPage/OrderPage'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
-import ViewedProductsPage from './pages/ViewedProductsPage/ViewedProductsPage'
 import SearchPage from './pages/SearchPage/SearchPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import CommentsPage from './pages/CommentsPage/CommentsPage'
@@ -26,7 +25,7 @@ import CommentPage from './pages/CommentPage/CommentPage'
 //#endregion
 
 import { useDispatch, useSelector } from 'react-redux'
-import { closeBurger, closeCatalog, toggleCatalog, toggleSearchResults } from './redux/features/uiSlice'
+import { closeBurger, closeCatalog } from './redux/features/uiSlice'
 import { checkTokenThunk, resetUser, setUserData } from './redux/features/userSlice'
 import { useEffect, useState } from 'react'
 import { getChooseValues } from './redux/features/sharedSlice'
@@ -35,7 +34,6 @@ function App() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const tokenStatus = useSelector((state) => state.user.isTokenValid)
-  const isSearchResultsOpen = useSelector((state) => state.ui.isSearchResultsOpen)
   const [localToken, setLocalToken] = useState()
 
   window.addEventListener('storage', (e) => {
@@ -84,7 +82,6 @@ function App() {
         <Routes>
           {tokenStatus ? <>
             <Route path='/profile' element={<ProfilePage />}></Route>
-            <Route path='/profile/viewed-products' element={<ViewedProductsPage />}></Route>
             <Route path='/order' element={<OrderPage />}></Route>
             <Route path='/favorites' element={<FavoritesPage />}></Route>
             <Route path='/payment' element={<PaymentPage />}></Route>

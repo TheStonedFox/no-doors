@@ -15,6 +15,7 @@ import useProductActions from '../../hooks/useProductActions'
 import { setUserData } from '../../redux/features/userSlice'
 import Spinner from '../Spinner/Spinner'
 import { addNotification } from '../../redux/features/uiSlice'
+import { getProduct } from '../../api/api'
 
 export default function ProductCard({ productData, ref }) {
 
@@ -22,6 +23,9 @@ export default function ProductCard({ productData, ref }) {
     const [inFavorite, setInFavorite] = useState(false)
     const [quantity, setQuantity] = useState(null)
     const [imageLoading, setImageLoading] = useState(true)
+
+    const [product, setProduct] = useState()
+
 
     const userData = useSelector((state) => state.user.userData)
     const { favoriteItems = [], cartItems = [], _id } = userData || {}

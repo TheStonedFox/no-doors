@@ -43,6 +43,11 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
         dispatch(togglePopup())
     }
 
+    const onTitleClick = () => {
+        navigate(`/products/${_id}`)
+        dispatch(togglePopup())
+    }
+
     return (
         <div className={styles['cart-item']} >
             <div className={styles['cart-item__img']}>
@@ -50,7 +55,7 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
                 {imageLoading && <Spinner />}
             </div>
 
-            <div className={styles['cart-item__title']} onClick={() => navigate(`/products/${_id}`)}>
+            <div className={styles['cart-item__title']} onClick={onTitleClick}>
                 <Link>{title}</Link>
                 <p>Артикул: 854236896ABC</p>
             </div>

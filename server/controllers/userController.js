@@ -1,5 +1,6 @@
 import UserModel from "../models/UserModel.js"
 import OrderModel from "../models/OrderModel.js"
+import ProductModel from '../models/ProductModel.js'
 import { validationResult } from "express-validator"
 import { v2 as cloudinary } from 'cloudinary'
 
@@ -105,5 +106,42 @@ export const uploadAvatar = async (req, res) => {
         res.json({ url: result.secure_url, publicId: result.public_id, message: 'Загрузка завершена.' })
     } catch (err) {
         res.status(500).json({ message: "Ошибка загрузки.", err })
+    }
+}
+
+export const addViewedProduct = async (req, res) => {
+    try {
+        const user = await UserModel.findById({ _id: req.body.id })
+
+        if (!user)
+            return res.status(404).json({ message: 'Пользователь не найден!' })
+
+        const product = await ProductModel.findById(req.body.productId)
+        user.viewedProducts = user.viewedProducts.filter(
+            p => String(p._id) !== String(req.body.productId)
+        )
+        await user.save()
+
+        await UserModel.findByIdAndUpdate(req.body.id, { $push: { viewedProducts: product } })
+
+        res.status(200).json({ message: 'Товар добавлен.' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+}
+
+export const clearViewedProducts = async (req, res) => {
+    try {
+        const user = await UserModel.findById({ _id: req.params.userId })
+
+        if (!user)
+            return res.status(404).json({ message: 'Пользователь не найден!' })
+
+        user.viewedProducts = []
+        await user.save()
+
+        res.status(200).json({ message: 'Список просмотренных товаров очищен.' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }
 }

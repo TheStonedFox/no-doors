@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
 
 const CartItemSchema = new mongoose.Schema(
     {
@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema(
             url: String,
             publicId: String
         },
-        viewedProducts: [],
+        viewedProducts: [{}],
         cartItems: [CartItemSchema],
         favoriteItems: [],
         orders: [],
