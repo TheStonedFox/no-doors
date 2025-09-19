@@ -10,7 +10,6 @@ export default function SearchResult({ itemsList, className }) {
     const scrollHandler = () => setScrollTop(itemsListRef.current.scrollTop)
     const [scrollTop, setScrollTop] = useState(0)
 
-
     useEffect(() => {
         if (scrollTop / itemsListRef.current.scrollHeight > 0.8 && visibleItems < itemsList.length)
             setVisibleItems(prev => prev + 20)

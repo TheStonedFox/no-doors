@@ -22,8 +22,8 @@ import { toggleFiltersPanel } from '../../redux/features/uiSlice'
 import Button from '../../components/Button/Button'
 
 export default function SearchPage() {
+    const dispatch = useDispatch()
 
-    // const [products, isLoading, error] = useProducts()
     const [searchParams, setSearchParams] = useSearchParams()
     document.querySelector('title').innerHTML = searchParams.getAll('word').length ? `Поиск товаров "${searchParams.getAll('word')[0]}"` : 'Поиск товаров'
     const models = searchParams.getAll('model')
@@ -31,14 +31,10 @@ export default function SearchPage() {
 
     const isFiltersPanelOpen = useSelector(state => state.ui.isFiltersPanelOpen)
 
-    const dispatch = useDispatch()
-
     const [filterOptions, setFilterOptions] = useState({ brands: null, categories: null })
     const [isLoading, setIsLoading] = useState(true)
     const [productsList, setProductsList] = useState([])
-    const [isFiltersLoading, setIsFiltersLoading] = useState(false)
-    const [loadedItemsCount, setLoadedItemsCount] = useState(4)
-
+    const [loadedItemsCount, setLoadedItemsCount] = useState(6)
 
     const appliedFiltersOrder = {
         minPrice: 1,
@@ -49,12 +45,6 @@ export default function SearchPage() {
         category: 6
     }
 
-    const hideUncheckBrandModels = (brandTile, params) => {
-        if (searchParams.getAll(`brand`).includes(brandTile))
-            filterOptions.brands?.map(brand => brand.title === brandTile && Object.entries(brand).map(([key]) => {
-                key !== 'title' && [key].map(m => params.delete('model', m.title))
-            }))
-    }
     useEffect(() => {
         searchProducts(`${searchParams.toString()}`)
             .then(res => setProductsList(res.products))
@@ -68,12 +58,17 @@ export default function SearchPage() {
     useEffect(() => {
         getStepChoices()
             .then(res => {
-                setIsFiltersLoading(true)
                 setFilterOptions({ brands: res.options?.brands, categories: res.options.categories })
             })
             .catch(error => console.log(error))
-            .finally(() => setIsFiltersLoading(false))
     }, [])
+
+    const hideUncheckBrandModels = (brandTile, params) => {
+        if (searchParams.getAll(`brand`).includes(brandTile))
+            filterOptions.brands?.map(brand => brand.title === brandTile && Object.entries(brand).map(([key]) => {
+                key !== 'title' && [key].map(m => params.delete('model', m.title))
+            }))
+    }
 
     const deleteParamValue = (params, key, value) => {
         const values = params.getAll(key).filter(v => v !== value)
@@ -94,6 +89,13 @@ export default function SearchPage() {
             searchParams.get('maxPrice') === '10000'
 
         return !isOnlyDefaultPrice
+    }
+
+    const showMoreButtonClick = () => {
+        if (loadedItemsCount !== productsList.length)
+            setLoadedItemsCount(prev => prev + 6 <= productsList.length - 6 ? prev + 6 : productsList.length)
+        else
+            setLoadedItemsCount(6)
     }
 
     return (
@@ -143,24 +145,18 @@ export default function SearchPage() {
                 {!isLoading && <ItemsList className={styles['search-page__search-items']}>
                     {productsList?.map((product, index) => index < loadedItemsCount && <ProductCard productData={product} key={product._id} />)}
 
-
+                    {productsList?.length > 6 && loadedItemsCount !== productsList.length && !isLoading && <Button
+                        className={styles['search-page__more-button']}
+                        title={loadedItemsCount !== productsList.length ? 'Показать еще' : 'Скрыть'}
+                        onClick={showMoreButtonClick}
+                    />}
                 </ItemsList>}
-
 
                 {!productsList.length && !isLoading && <EmptyPlaceholder title='Товаров не найдено.' />}
 
                 {isLoading && <Spinner />}
             </div>
-            {productsList?.length > 4 && !isLoading && <Button
-                className={styles['favorites-page__more-button']}
-                title={loadedItemsCount !== productsList.length ? 'Показать еще' : 'Скрыть'}
-                onClick={() => {
-                    if (loadedItemsCount !== productsList.length)
-                        setLoadedItemsCount(prev => prev + 4 <= productsList.length - 4 ? prev + 4 : productsList.length)
-                    else
-                        setLoadedItemsCount(4)
-                }}
-            />}
+
         </div >
     )
 }

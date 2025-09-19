@@ -49,7 +49,7 @@ export default function SearchResultItem({ itemInfo }) {
             navigate(`/products/${_id}`)
         }}>
             <div className={styles['item__image']} style={{ opacity: inStock ? '1' : '0.5' }}>
-                <img src="../../../../public/images/categories/03.png" alt="product image" />
+                <img src="/images/categories/03.png" alt="product image" />
             </div>
             <div className={styles['item_info']} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <Link className={styles['item__title']} to={`products/${_id}`} onClick={() => dispatch(toggleSearchResults())}>{title}</Link>

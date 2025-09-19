@@ -3,7 +3,7 @@
     flex-direction: column;
     overflow: hidden;
     padding-bottom: 50px;
-    max-height: 648px;
+    max-height: 100%;
 }
 
 .products-section__header {
@@ -43,25 +43,18 @@
     .header__button:active {
         background-color: var(--ui---main);
         color: #fff;
-
     }
 }
 
 .popular-products__list {
     display: flex;
     overflow-x: auto;
-    overflow-y: hidden;
     gap: 20px;
     padding: 5px;
     white-space: nowrap;
-    box-sizing: border-box;
     width: 100%;
     box-sizing: border-box;
 }
-
-/* .popular-products__list>div {
-    flex: 0 0 33.333%;
-} */
 
 .popular-products__list::-webkit-scrollbar {
     display: none;

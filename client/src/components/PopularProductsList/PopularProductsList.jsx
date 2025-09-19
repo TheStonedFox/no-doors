@@ -24,7 +24,6 @@ export default function PopularProductsList() {
         })
     }
 
-
     return (
         <section className={styles['main-page__popular-products-section']}>
             <section className={styles['products-section__header']}>
