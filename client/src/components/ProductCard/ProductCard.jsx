@@ -24,9 +24,6 @@ export default function ProductCard({ productData, ref }) {
     const [quantity, setQuantity] = useState(null)
     const [imageLoading, setImageLoading] = useState(true)
 
-    const [product, setProduct] = useState()
-
-
     const userData = useSelector((state) => state.user.userData)
     const { favoriteItems = [], cartItems = [], _id } = userData || {}
     const { title, price, wholesalePrice, inStock, _id: productId, discount, createdAt } = productData || {}
