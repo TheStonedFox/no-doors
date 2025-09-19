@@ -62,17 +62,11 @@ function App() {
       dispatch(closeCatalog())
     }
 
-    const handleKeyPress = (e) => {
-      // if (/^[a-z0-9]$/i.test(e.key) && !isSearchResultsOpen) {
-      //   dispatch(toggleSearchResults())
-      // }
-    }
+
     window.addEventListener('scroll', handleScroll)
-    window.addEventListener('keypress', handleKeyPress)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('keypress', handleKeyPress)
     }
   }, [])
 

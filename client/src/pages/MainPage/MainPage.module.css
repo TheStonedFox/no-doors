@@ -41,9 +41,7 @@ body .main-page {
 }
 
 .slide img {
-    /* display: none; */
     position: absolute;
-    /* width: 250px; */
     top: -8%;
     right: -120px;
     width: 500px;
@@ -55,27 +53,8 @@ body .main-page {
     display: flex;
     align-items: center;
     gap: 5px;
-    bottom: -10px;
-    left: -10px;
-    text-align: center;
-    padding: 20px;
-}
-
-.pagination .swiper-pagination-bullet {
-    width: 20px;
-    height: 4px;
-    background: #fff;
-    opacity: 0.4;
-    border-radius: 99px;
-    transition: all 0.3s ease;
-}
-
-:global(.swiper-pagination-bullet:hover) {
-    opacity: 0.7;
-}
-
-:global(.swiper-pagination-bullet-active) {
-    opacity: 1;
+    bottom: 0px !important;
+    padding: 10px;
 }
 
 .slide h2 {

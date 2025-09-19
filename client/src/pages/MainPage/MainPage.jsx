@@ -87,21 +87,21 @@ export default function MainPage() {
                         <h2>Защитное стекло на
                             iPhone 11 Pro
                             по лучшей цене!</h2>
-                        <Button className={styles['slide__button']} title='Подробнее' />
+                        <Button className={styles['slide__button']} title='Подробнее' onClick={() => navigate('/products/6885584b0dbdaea18816ed38')} />
                         <img src="/images/intro-slider/01.png" alt="slider image" />
                     </SwiperSlide>
                     <SwiperSlide className={styles.slide}>
                         <h2>Защитное стекло на
                             iPhone 11 Pro
                             по лучшей цене!</h2>
-                        <Button className={styles['slide__button']} title='Подробнее' />
+                        <Button className={styles['slide__button']} title='Подробнее' onClick={() => navigate('/products/6885584b0dbdaea18816ed38')} />
                         <img src="/images/intro-slider/01.png" alt="slider image" />
                     </SwiperSlide>
                     <SwiperSlide className={styles.slide}>
                         <h2>Защитное стекло на
                             iPhone 11 Pro
                             по лучшей цене!</h2>
-                        <Button className={styles['slide__button']} title='Подробнее' />
+                        <Button className={styles['slide__button']} title='Подробнее' onClick={() => navigate('/products/6885584b0dbdaea18816ed38')} />
                         <img src="/images/intro-slider/01.png" alt="slider image" />
                     </SwiperSlide>
 

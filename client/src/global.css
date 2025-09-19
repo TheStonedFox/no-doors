@@ -130,9 +130,6 @@
   transform: 0.2s;
 }
 
-
-.header-link:active {}
-
 .about-section {
   display: flex;
   flex-direction: column;
@@ -198,7 +195,6 @@
 
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
-  /* убираем стандартный стиль */
   height: 14px;
   width: 14px;
   background: url('../public/images/search-cross.svg') no-repeat center center;
@@ -210,6 +206,16 @@ input[type="search"]::-moz-search-clear {
   display: none;
 }
 
+.swiper-pagination-bullet {
+  background-color: #fff !important;
+  margin: 0 2px !important;
+  opacity: 1;
+}
+
+.swiper-pagination-bullet:hover {
+  background-color: rgb(175, 173, 173) !important;
+  opacity: 0.4;
+}
 
 /* Скролл */
 
