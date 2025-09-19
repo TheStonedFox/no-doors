@@ -32,7 +32,7 @@ cloudinary.config({
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.qamea.mongodb.net/no-doors?retryWrites=true&w=majority&appName=Cluster0`)
     .then(() => console.log('DB ok'))
-    .catch(() => console.log('DB err'))
+    .catch((err) => console.log(err))
 
 const app = express()
 
