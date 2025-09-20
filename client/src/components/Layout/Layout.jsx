@@ -10,15 +10,17 @@ import Popup from '../Popup/Popup'
 import { toggleSearchResults } from '../../redux/features/uiSlice'
 import NotificationToast from '../NotificationToast/NotificationToast'
 import ScrollUpButton from '../ScrollUpButton/ScrollUpButton'
-
+import { useLocation } from 'react-router-dom'
 
 
 export default function Layout({ children }) {
 
     const isPopupOpen = useSelector((state) => state.ui.isPopupOpen)
     const notificationsRef = useRef(null)
+    const { pathname } = useLocation()
 
     useEffect(() => { document.querySelector('html').style = `${isPopupOpen ? 'overflow-y: hidden' : ''}` }, [isPopupOpen])
+    useEffect(() => window.scrollTo(0, 0), [pathname])
 
     const notificationList = useSelector((state) => state.ui.notificationList)
 
@@ -32,22 +34,6 @@ export default function Layout({ children }) {
         }
     }
 
-    // useEffect(() => {
-
-    //     const handleKeyDown = (e) => {
-    //         let isFocus = false
-    //         if (e.key === 'Backspace' && !isFocus) {
-    //             e.preventDefault()
-    //             const input = document.querySelector('#search-input>div>input')
-    //             if (input) input.focus()
-    //             isFocus = true
-    //         }
-    //     }
-    //     document.addEventListener('keydown', handleKeyDown)
-
-    //     return () => document.removeEventListener('keypress', handleKeyDown)
-
-    // }, [])
 
     return (
         <div className={styles['layout']} onClick={onLayoutClick}>

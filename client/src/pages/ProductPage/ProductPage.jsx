@@ -70,8 +70,6 @@ export default function ProductPage() {
     //#region useEffects
     useEffect(() => { document.querySelector('title').innerHTML = product?.title || 'No Doors' }, [product])
 
-    useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [id])
-
     const fetchProduct = () => {
         setIsLoading(true)
         setError(null)
@@ -158,6 +156,7 @@ export default function ProductPage() {
     }
 
     //#endregion
+
     useEffect(() => {
         const handleEscapeKeyDown = (e) => e.key === 'Escape' && setIsFullScreenMode(false)
         document.addEventListener('keyup', handleEscapeKeyDown)
@@ -182,7 +181,6 @@ export default function ProductPage() {
             setTimeout(() => fullScreenSwiperRef.current.update(), 50)
         }
     }, [isFullScreenMode, fullScreenSwiperRef.current])
-
 
     const images = [
         '/images/categories/03.png',
