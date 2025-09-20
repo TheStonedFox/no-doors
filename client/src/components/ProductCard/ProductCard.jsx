@@ -33,7 +33,7 @@ export default function ProductCard({ productData, ref }) {
     const dispatch = useDispatch()
     const tokenStatus = useSelector((state) => state.user.isTokenValid)
 
-    const [favoriteItemAction, cartItemAction] = useProductActions()
+    const [favoriteItemAction, cartItemAction, isCartFinally, isFavoriteFinally] = useProductActions()
 
     const onFavoriteButtonClick = () => {
         if (!tokenStatus)
@@ -77,7 +77,10 @@ export default function ProductCard({ productData, ref }) {
                 <div className={`${styles['product-card__tag']} ${styles['product-card__popular-tag']}`}>Популярное</div>
                 {new Date().getUTCDate() - date.getDate() <= 7 && <div className={`${styles['product-card__tag']} ${styles['product-card__new-tag']}`}>Новинка</div>}
             </div>}
-            <FavoriteIcon className={styles['product-card__fav-button']} onClick={onFavoriteButtonClick} inFavorite={inFavorite} />
+            <button disabled={!isFavoriteFinally} onClick={onFavoriteButtonClick}>
+                <FavoriteIcon className={styles['product-card__fav-button']} inFavorite={inFavorite} />
+            </button>
+
             <Link to={`/products/${productId}`} style={{ opacity: inStock ? '1' : '0.5' }}>
                 <div className={styles['product-card__image']}>
                     {imageLoading && <Spinner />}
@@ -96,6 +99,7 @@ export default function ProductCard({ productData, ref }) {
                 {Boolean(inStock) && <div className={styles['product-card__bottom']}>
                     <Counter onCounterChange={onCounterChange} maxValue={inStock} />
                     <BorderedButton
+                        disabled={!isCartFinally}
                         className={styles['product-card__cart-button']}
                         title={inCart ? 'В корзине' : 'В корзину'}
                         onClick={onAddToCartButtonClick} />

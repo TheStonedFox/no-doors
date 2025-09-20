@@ -23,7 +23,6 @@
     gap: 60px;
 }
 
-
 .links {
     display: flex;
     align-items: center;
@@ -37,37 +36,13 @@
     color: var(--typography---main);
 }
 
-
-
 .profile-link {
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 15px;
-    /* border-bottom: 1px solid gray; */
     width: 100%;
     padding-bottom: 20px;
-}
-
-/* если браузер понимает blur */
-@supports (filter: blur(10px)) {
-    .bg-avatar-blur-img {
-        display: none;
-        position: absolute;
-        top: -170px;
-        object-fit: contain;
-        height: 420px;
-        width: 420px;
-        filter: blur(70px);
-        z-index: -1;
-    }
-}
-
-/* если не поддерживает blur */
-@supports not (filter: blur(10px)) {
-    .bg-avatar-blur-img {
-        display: none;
-    }
 }
 
 .profile-link img {
@@ -75,6 +50,7 @@
     z-index: 10;
     width: 64px;
     height: 64px;
+    object-fit: cover;
     border-radius: 50%;
 }
 

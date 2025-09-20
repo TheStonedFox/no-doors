@@ -23,10 +23,7 @@ export default function BurgerMenu() {
         menuRef,
         () => dispatch(toggleBurger(false)))
 
-
-
     return (
-
         <div style={isBurgerOpen ?
             { transform: `translate(0px)`, padding: '50px' } :
             { transform: 'translate(-100%)', padding: '50px 0px', boxShadow: 'none' }}
@@ -36,15 +33,10 @@ export default function BurgerMenu() {
             <ThemeToggle className={styles['burger-menu__theme-toggle']} mode={localStorage.getItem('theme') || null} />
 
             <div className={styles.box}>
-                <img className={styles['bg-avatar-blur-img']} src={userData?.avatar?.url} />
                 <ul className={styles.links}>
-                    <Link className={styles['profile-link']}
-                        to='/profile'
-                        onClick={() => dispatch(toggleBurger())}
-                    >
+                    <Link className={styles['profile-link']} to='/profile' onClick={() => dispatch(toggleBurger())}>
                         {userData?.avatar?.url ? <img src={userData.avatar.url} alt="avatar" /> : <AvatarIcon />}
                         <p>{userData?.fio ? userData?.fio.split(' ').slice(0, 2).join(' ') : 'Личный кабинет'}</p>
-
                     </Link>
                     <Link
                         to='/about'

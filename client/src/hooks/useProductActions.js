@@ -6,17 +6,15 @@ import { useState } from 'react'
 
 export default function useProductActions() {
     const dispatch = useDispatch()
-
     const userData = useSelector((state) => state.user.userData)
     const tokenStatus = useSelector((state) => state.user.isTokenValid)
-    const [isFinally, setIsFinally] = useState(true)
-
+    const [isCartFinally, setIsCartFinally] = useState(true)
+    const [isFavoriteFinally, setIsFavoriteFinally] = useState(true)
     const { favoriteItems = [], cartItems = [], _id } = userData || {}
 
     const cartItemAction = (productId, quantity) => {
         if (!tokenStatus) return
-        if (!isFinally) return
-        setIsFinally(false)
+        setIsCartFinally(false)
         if (!cartItems?.map(item => item?.productId).includes(productId)) {
             api.addCartItem(_id, productId, quantity || 1)
                 .then(res => {
@@ -27,7 +25,7 @@ export default function useProductActions() {
                 .catch(error =>
                     dispatch(addNotification(
                         { type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
-                .finally(() => setIsFinally(true))
+                .finally(() => setIsCartFinally(true))
 
         } else {
             api.removeCartItem(_id, productId)
@@ -38,14 +36,13 @@ export default function useProductActions() {
                 }).catch(error =>
                     dispatch(addNotification(
                         { type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
-                .finally(() => setIsFinally(true))
+                .finally(() => setIsCartFinally(true))
         }
     }
 
     const favoriteItemAction = (productId) => {
         if (!tokenStatus) return
-        if (!isFinally) return
-        setIsFinally(false)
+        setIsFavoriteFinally(false)
         if (!favoriteItems?.includes(productId)) {
             api.addFavoriteItem(_id, productId)
                 .then(() => {
@@ -56,7 +53,7 @@ export default function useProductActions() {
                 .catch(error =>
                     dispatch(addNotification(
                         { type: 'error', text: error.data?.error || 'Неизвестная ошибка' })))
-                .finally(() => setIsFinally(true))
+                .finally(() => setIsFavoriteFinally(true))
 
         } else {
             api.removeFavoriteItem(_id, productId)
@@ -65,8 +62,8 @@ export default function useProductActions() {
                     dispatch(updateFavoriteCounter(favoriteItems?.length - 1))
                     dispatch(addNotification({ type: 'success', text: 'Товар удален из избранного.' }))
                 })
-                .finally(() => setIsFinally(true))
+                .finally(() => setIsFavoriteFinally(true))
         }
     }
-    return [favoriteItemAction, cartItemAction]
+    return [favoriteItemAction, cartItemAction, isCartFinally, isFavoriteFinally]
 }
