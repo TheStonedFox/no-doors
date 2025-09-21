@@ -1,5 +1,4 @@
 import UserModel from '../models/UserModel.js'
-import ProductModel from '../models/ProductModel.js'
 
 export const toggleFavoriteItem = async (req, res) => {
 

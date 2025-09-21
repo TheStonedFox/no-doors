@@ -81,9 +81,7 @@ app.put(`/favorites/:userId`, CheckAuth, favoriteController.clearFavorites)
 //#endregion
 
 //#region cart
-// app.post('/cart-items/:productId', cartController.addCartItem)
 app.post('/cart-items/:productId', cartController.toggleCartItem)
-// app.delete('/cart-items/:productId', cartController.removeCartItem)
 app.patch('/cart-items/:id', cartController.updateCartItem)
 app.put(`/cart/:userId`, cartController.clearCart)
 //#endregion
