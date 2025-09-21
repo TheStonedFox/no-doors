@@ -49,10 +49,7 @@ export default function FavoritesPage() {
                 <h2 className={`${'section-title'} ${styles['favorites-page__title']}`}>Избранное</h2>
                 {Boolean(userData?.favoriteItems?.length) && <a href='#' className='header-link header-link_clear' onClick={onFavoritesClearButtonClick}>Очистить корзину</a>}
             </section>
-            {!userData?.favoriteItems && <div>Загрузка...</div>}
             {userData?.favoriteItems.length === 0 && !isLoading ? <EmptyPlaceholder title='Список избранного пуст.' /> : null}
-
-
             {Boolean(!isLoading && !error) && <ItemsList className={styles['favorites-page__items-list']}
                 moreButton={true} dataLength={userData?.favoriteItems.length}>
                 {

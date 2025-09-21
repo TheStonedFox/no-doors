@@ -32,21 +32,6 @@ export const getUserInfo = async (req, res) => {
     }
 }
 
-export const orders = async (req, res) => {
-
-    try {
-        const orders = await OrderModel.find({ userId: req.id }).sort({ createdAt: -1 })
-
-        if (orders.length === 0)
-            return res.status(200).json({ message: 'Заказов нет.' })
-
-
-        return res.status(200).json({ orders })
-    } catch (error) {
-        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
-    }
-}
-
 export const update = async (req, res) => {
     try {
         const user = await UserModel.findById({ _id: req.id })
@@ -114,7 +99,7 @@ export const addViewedProduct = async (req, res) => {
         const user = await UserModel.findById({ _id: req.body.id })
 
         if (!user)
-            return res.status(404).json({ message: 'Пользователь не найден!' })
+            return res.status(404).json({ message: 'Пользователь не найден.' })
 
         const product = await ProductModel.findById(req.body.productId)
         user.viewedProducts = user.viewedProducts.filter(
@@ -135,12 +120,27 @@ export const clearViewedProducts = async (req, res) => {
         const user = await UserModel.findById({ _id: req.params.userId })
 
         if (!user)
-            return res.status(404).json({ message: 'Пользователь не найден!' })
+            return res.status(404).json({ message: 'Пользователь не найден.' })
 
         user.viewedProducts = []
         await user.save()
 
         res.status(200).json({ message: 'Список просмотренных товаров очищен.' })
+    } catch (error) {
+        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
+    }
+}
+
+export const getUserOrders = async (req, res) => {
+    try {
+        const user = await UserModel.findById({ _id: req.params.userId })
+
+        if (!user)
+            return res.status(404).json({ message: 'Пользователь не найден.' })
+
+        const orders = await OrderModel.find({ userId: user._id }).sort({ createdAt: -1 })
+
+        res.status(200).json({ orders, message: 'Список заказов получен.' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

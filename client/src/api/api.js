@@ -12,6 +12,7 @@ export const checkResetPasswordLink = async (token) => apiRequest(`auth/reset-pa
 //#region profile
 export const getUser = async () => apiRequest('profile', 'GET')
 export const getUserInfo = async (userId) => apiRequest(`profile/${userId}`, 'GET')
+export const getUserOrders = async (userId) => apiRequest(`profile/orders/${userId}`, 'GET')
 export const updateUserInfo = async (data) => apiRequest('profile', 'PATCH', data)
 export const uploadAvatar = async (body) => apiRequest('profile/upload', 'POST', body)
 export const addViewedProduct = async (body) => apiRequest('profile/viewed-products', 'POST', body)

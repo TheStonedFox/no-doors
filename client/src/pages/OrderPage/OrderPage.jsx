@@ -41,8 +41,6 @@ export default function OrderPage() {
             setUserInfo(prev => ({ ...prev, address: null }))
     }, [selectedOptions])
 
-    // useEffect(() => { console.log(userInfo) }, [userInfo])
-
     function onOrderButtonClick() {
         setValidationErrors([])
 

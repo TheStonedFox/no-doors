@@ -22,7 +22,7 @@ export default function ProfileViewedProducts() {
                 dispatch(addNotification({ type: 'info', text: res.message }))
                 dispatch(setUserData())
             })
-            .catch((error) => console.log(error))
+            .catch((error) => dispatch(addNotification({ type: 'error', text: error.message })))
     }
     return (
         <section className={styles['viewed-products']}>

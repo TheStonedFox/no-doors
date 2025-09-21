@@ -5,7 +5,7 @@ import { IoChevronBackOutline } from "react-icons/io5"
 import deviceTypesEnTitles from '@utils/deviceTypeEnTitle'
 import { generateId } from '../../utils/generateId'
 
-export default function DropDownMenu({ title, deviceTypes, brandModels, categories, list, className }) {
+export default function DropDownMenu({ title, deviceTypes, brandModels, categories, list }) {
     const navigate = useNavigate()
     const [deviceType, setDeviceType] = useState()
     const [model, setModel] = useState()
@@ -60,7 +60,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
                 <p>{subtitle}</p>
             </section>
 
-            {brandModels && categories ? <div className={styles['dropdown-menu__content']}>
+            {<div className={styles['dropdown-menu__content']}>
                 {list && <section className={styles['dropdown-menu__list']} style={{ height: deviceType ? '0px' : '100%' }}>
                     {list?.map(item => <p
                         key={generateId()}
@@ -78,6 +78,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
                         key={generateId()}
                         className={styles['dropdown-menu__device-type-item']}
                         onClick={() => {
+                            if (!brandModels) return
                             setDeviceType(dt)
                             setSubtitle(deviceTypesEnTitles[dt])
                             setStep('model')
@@ -106,8 +107,7 @@ export default function DropDownMenu({ title, deviceTypes, brandModels, categori
                         }}>{category}</p>)}
                 </section>}
 
-            </div> : <p>Пусто.</p>}
-
+            </div>}
         </div >
     )
 }

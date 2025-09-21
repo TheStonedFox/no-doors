@@ -81,7 +81,7 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
                         setQuantity(value)
                         updateCartItem(userData._id, _id, value)
                             .then(() => dispatch(setUserData()))
-                            .catch(error => alert(error))
+                            .catch(error => console.log(error))
                     }}
                     initialValue={initialQuantityValue} /> : <p>{quantity}</p>}
                 <p>{discount === 0 ?

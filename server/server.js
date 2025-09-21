@@ -64,6 +64,7 @@ app.patch('/profile', CheckAuth, validations.profileInfoValidation, userControll
 app.post('/profile/upload', CheckAuth, upload.single("avatar"), userController.uploadAvatar)
 app.post('/profile/viewed-products', CheckAuth, userController.addViewedProduct)
 app.delete('/profile/viewed-products/:userId', CheckAuth, userController.clearViewedProducts)
+app.get('/profile/orders/:userId', CheckAuth, userController.getUserOrders)
 //#endregion
 
 //#region products

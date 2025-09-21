@@ -39,8 +39,6 @@ export default function MainPage() {
 
     useEffect(() => {
         document.querySelector('title').innerHTML = 'No Doors'
-        if (chooseValuesError)
-            return alert(chooseValuesError)
     }, [])
 
     useEffect(() => { !chooseValuesIsLoading && setChooseOptions({ brands, categories }) }, [chooseValuesIsLoading])

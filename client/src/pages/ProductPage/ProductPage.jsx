@@ -43,7 +43,7 @@ export default function ProductPage() {
     const isProductActionPanelOpen = useSelector(state => state.ui.isProductActionPanelOpen)
     const isTokenValid = useSelector(state => state.user.isTokenValid)
 
-    const [favoriteItemAction, cartItemAction] = useProductActions()
+    const [favoriteItemAction, cartItemAction, isCartFinally, isFavoriteFinally] = useProductActions()
 
     const swiperRef = useRef(null)
     const fullScreenSwiperRef = useRef(null)
@@ -117,6 +117,7 @@ export default function ProductPage() {
     const onAddToFavoriteButtonClick = () => {
         if (!isTokenValid)
             return dispatch(addNotification({ text: 'Нужно войти в аккаунт для этого действия', type: 'info', route: 'auth/' }))
+        if (!isFavoriteFinally) return
         favoriteItemAction(id)
         setInFavorite(!inFavorite)
     }
@@ -282,7 +283,7 @@ export default function ProductPage() {
                     {Boolean(inStock && !error) && <Counter maxValue={inStock} onCounterChange={(value) => setQuantity(value)} />}
 
                     {!isLoading ? <section className={styles['info__controls']}>
-                        {!error && <AddToCartButton onClick={onAddToCartButtonClick} inCart={inCart} />}
+                        {!error && <AddToCartButton disabled={!isCartFinally} onClick={onAddToCartButtonClick} inCart={inCart} />}
 
                         {!error && <FavoriteButton
                             className={styles['controls__add-to-favorite-button']}

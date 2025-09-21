@@ -11,7 +11,8 @@ import { statusColors, statusTitles } from '@utils/statusHelper'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from '@api/api'
 
-import { togglePopup } from '../../../../redux/features/uiSlice'
+import { addNotification, togglePopup } from '../../../../redux/features/uiSlice'
+import { getOrder } from '../../../../api/api'
 
 
 export default function OrderDetailsPopup({ orderId }) {
@@ -26,16 +27,13 @@ export default function OrderDetailsPopup({ orderId }) {
     useEffect(() => {
         api.getOrder(orderId)
             .then(res => setOrder(res.order))
-            .catch(error => alert(error))
-    }, [orderId])
-
-
+            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
+    }, [orderId, dispatch])
 
     useEffect(() => {
         api.createPayment(order?.sum, order?._id)
             .then(res => setPayData(res))
-            .catch(error => alert(error))
-
+            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
 
         if (order?.paymentMethod === 'online') {
             api.getPaymentStatus(orderId)
@@ -43,14 +41,12 @@ export default function OrderDetailsPopup({ orderId }) {
                     if (res?.status === 'sandbox' | res?.status === 'success') {
                         api.updatePaymentStatus(orderId, { status: 'paid' })
                             .then(() => setPaymentStatus('paid'))
-                            .catch(error => alert(error))
+                            .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
                     }
-                }).catch(error => alert(error))
+                }).catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
         }
-
         setPaymentStatus(order?.status)
-
-    }, [order])
+    }, [order, orderId, dispatch])
 
     return (
         <div className={styles['order-details-popup']}>
@@ -69,20 +65,15 @@ export default function OrderDetailsPopup({ orderId }) {
 
                 {order?.paymentMethod === 'online' && paymentStatus === 'pending' && <form id='liqpay-form' action="https://www.liqpay.ua/api/3/checkout" target='_blank' method='POST'
                     onSubmit={async (event) => {
-                        event.preventDefault() // сначала всегда отменяем
-                        const res = await fetch(`http://localhost:3001/orders/${orderId}`, {
-                            headers: { 'Authorization': localStorage.getItem('token') }
-                        })
-                        const actualOrder = await res.json()
-                        setOrder(actualOrder.order)
-                        console.log(actualOrder)
+                        event.preventDefault()
 
-                        if (actualOrder.status === 'paid') {
-                            alert('Этот заказ уже оплачен')
-                            return
-                        }
+                        const actualOrder =
+                            await getOrder(orderId).catch((error) => dispatch(addNotification({ type: 'error', text: error.message })))
 
-                        // если всё ок — сабмитим вручную
+                        setOrder(actualOrder?.order)
+
+                        if (actualOrder?.status === 'paid') return
+
                         event.target.submit()
                         dispatch(togglePopup())
                     }}>

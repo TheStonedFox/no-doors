@@ -16,7 +16,8 @@ import Button from '../Button/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleFiltersPanel } from '../../redux/features/uiSlice'
 import useSwipe from '../../hooks/useSwipe'
-import { generateId } from '../../utils/generateId'
+import EmptyPlaceholder from '../EmptyPlaceholder/EmptyPlaceholder'
+import { getChooseValues } from '../../redux/features/sharedSlice'
 
 export default function FiltersPanel({ isOpen }) {
 
@@ -90,7 +91,6 @@ export default function FiltersPanel({ isOpen }) {
 
         setSearchParams(newParams)
     }
-
     const { brands, categories, error: isFiltersError, isLoading: isFiltersLoading } = useSelector(state => state.shared.chooseValues)
 
     useEffect(() => {
@@ -122,9 +122,7 @@ export default function FiltersPanel({ isOpen }) {
     useEffect(() => {
         !searchParams.get('sortType') && searchParams.set('sortType', 'decreasingPrice')
         setSortType(searchParams.get('sortType'))
-
-        isFiltersError && alert(isFiltersError)
-
+        isFiltersError && console.log(isFiltersError)
     }, [])
 
     useEffect(() => {
@@ -145,7 +143,7 @@ export default function FiltersPanel({ isOpen }) {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onTouchMove={handleTouchMove}>
-            {!isFiltersLoading && <section className={styles['filter']}>
+            {!isFiltersLoading && !isFiltersError && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Сортировка:</h3>
                 <button className={styles['filters-panel__sort-dropdown']}
                     style={{ borderRadius: isSortListOpen ? '4px 4px 0 0' : '', transition: '0.2s' }}
@@ -199,7 +197,7 @@ export default function FiltersPanel({ isOpen }) {
                 </div>
             </section>}
 
-            {!isFiltersLoading && <section className={styles['filter']}>
+            {!isFiltersLoading && !isFiltersError && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Бренд</h3>
                 <div className={styles['filter__options']}>
                     {brands?.map((brand) => <Checkbox
@@ -210,7 +208,7 @@ export default function FiltersPanel({ isOpen }) {
                 </div>
             </section>}
 
-            {!isFiltersLoading && Boolean(params.brands.length) && <section className={styles['filter']}>
+            {!isFiltersLoading && !isFiltersError && Boolean(params.brands.length) && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Тип устройства</h3>
                 <div className={styles['filter__options']}>
                     <Checkbox
@@ -241,7 +239,7 @@ export default function FiltersPanel({ isOpen }) {
             </section>}
 
 
-            {!isFiltersLoading && <section className={styles['filter']}>
+            {!isFiltersLoading && !isFiltersError && <section className={styles['filter']}>
                 <h3 className={styles['filter__title']}>Категория</h3>
                 <div className={styles['filter__options']}>
                     {categories?.map(category => <Checkbox
@@ -251,7 +249,7 @@ export default function FiltersPanel({ isOpen }) {
                 </div>
             </section>}
 
-            {!isFiltersLoading && <section className={`${styles['filter']} ${styles['filter__price']}`}
+            {!isFiltersLoading && !isFiltersError && <section className={`${styles['filter']} ${styles['filter__price']}`}
                 onTouchStart={() => setDisableSwipe(true)} onTouchEnd={() => setDisableSwipe(false)}>
                 <h3 className={styles['filter__title']}>Цена</h3>
                 <CustomRangeSelector
@@ -259,10 +257,11 @@ export default function FiltersPanel({ isOpen }) {
                     initialMin={Number(searchParams.get('minPrice')) || 0}
                     onValuesChange={(range) => setPriceRange({ min: range.minValue, max: range.maxValue })} />
             </section>}
-            {!isFiltersLoading && <Button className={styles['filters-panel__close-button']} title='Закрыть'
+            {!isFiltersLoading && !isFiltersError && <Button className={styles['filters-panel__close-button']} title='Закрыть'
                 onClick={() => dispatch(toggleFiltersPanel())} />}
 
             {isFiltersLoading && <Spinner />}
+            {!isFiltersLoading && isFiltersError && <EmptyPlaceholder title='Не удалось загрузить данные.' actionTitle='Попробовать еще раз.' action={() => dispatch(getChooseValues())} />}
         </section>
     )
 }

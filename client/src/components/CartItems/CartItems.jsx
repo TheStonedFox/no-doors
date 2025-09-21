@@ -8,15 +8,18 @@ import CartItem from '../CartItem/CartItem'
 import styles from './CartItems.module.css'
 import { getOrder } from '@api/api'
 import EmptyPlaceholder from '../EmptyPlaceholder/EmptyPlaceholder'
+import { useDispatch } from 'react-redux'
+import { addNotification } from '../../redux/features/uiSlice'
+
 
 export default function CartItems({ orderId, className, viewOnly }) {
-
+    const dispatch = useDispatch()
     const { products, userData, isLoading, error, refetch } = useCart()
 
     const [order, setOrder] = useState()
 
     useEffect(() => {
-        orderId && getOrder(orderId).then(res => setOrder(res.order)).catch(error => alert(error))
+        orderId && getOrder(orderId).then(res => setOrder(res.order)).catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
     }, [orderId])
 
     return (
