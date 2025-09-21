@@ -1,4 +1,3 @@
-import PopularProductsList from '../../components/PopularProductsList/PopularProductsList'
 import styles from './AboutPage.module.css'
 
 

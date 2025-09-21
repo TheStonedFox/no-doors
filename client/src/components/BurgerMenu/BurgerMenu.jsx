@@ -6,7 +6,7 @@ import { closeBurger, toggleBurger } from '../../redux/features/uiSlice'
 import { useDispatch } from 'react-redux'
 
 import styles from './BurgerMenu.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import useSwipe from '../../hooks/useSwipe'
 import AvatarIcon from '../../svg/AvatarIcon'
 export default function BurgerMenu() {

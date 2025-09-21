@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './Slide.module.css'
-import Spinner from '../../components/Spinner/Spinner'
 
 
 export default function Slide({ onZoom, image }) {

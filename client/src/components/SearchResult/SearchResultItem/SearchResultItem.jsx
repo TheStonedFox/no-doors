@@ -24,24 +24,24 @@ export default function SearchResultItem({ itemInfo }) {
 
     const { cartItems, favoriteItems } = userData || {}
 
-    const [favoriteItemAction, cartItemAction] = useProductActions()
+    const { favoriteItemAction, cartItemAction } = useProductActions()
 
     useEffect(() => {
         setInCart(cartItems?.map(item => item?.productId).includes(_id))
         setIsInFavorite(favoriteItems?.includes(_id))
     }, [_id, cartItems, favoriteItems])
 
-    const onFavoriteButtonClick = async () => {
-        setIsInFavorite(!isInFavorite)
+    const onFavoriteButtonClick = (e) => {
+        e.stopPropagation()
         favoriteItemAction(_id)
+        setIsInFavorite(!isInFavorite)
     }
 
-    const onCartButtonClick = () => {
+    const onCartButtonClick = (e) => {
+        e.stopPropagation()
         cartItemAction(_id)
         setInCart(!inCart)
     }
-
-
 
     return (
         <div className={styles['search-result__item']} tabIndex={-1} onClick={() => {

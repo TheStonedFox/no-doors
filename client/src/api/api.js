@@ -28,16 +28,17 @@ export const getProductComments = async (productId, type) => apiRequest(`product
 
 //#region favorites
 export const addFavoriteItem = async (userId, productId) => apiRequest(`favorites/${productId}`, 'POST', { id: userId })
+export const toggleFavoriteItem = async (userId, productId) => apiRequest(`favorites/${productId}`, 'POST', { id: userId })
 export const removeFavoriteItem = async (userId, productId) => apiRequest(`favorites/${productId}`, 'DELETE', { id: userId })
 export const clearFavorites = async (userId) => apiRequest(`favorites/${userId}`, 'PUT')
 //#endregion
 
 //#region cart
-export const addCartItem = async (userId, productId, quantity) => apiRequest(`cart-items/${productId}`, 'POST',
-    { userId: userId, quantity: quantity || 1 })
+// export const addCartItem = async (userId, productId, quantity) => apiRequest(`cart-items/${productId}`, 'POST',
+//     { userId: userId, quantity: quantity || 1 })
 
-export const removeCartItem = async (userId, productId) => apiRequest(`cart-items/${productId}`, 'DELETE', { userId })
-
+// export const removeCartItem = async (userId, productId) => apiRequest(`cart-items/${productId}`, 'DELETE', { userId })
+export const toggleCartItem = async (body, productId) => apiRequest(`cart-items/${productId}`, 'POST', body)
 export const updateCartItem = async (userId, productId, quantity) => apiRequest(`cart-items/${productId}`, 'PATCH',
     { id: userId, quantity })
 

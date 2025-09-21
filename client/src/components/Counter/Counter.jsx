@@ -5,7 +5,11 @@ import { useState } from 'react'
 export default function Counter({ onCounterChange, initialValue, maxValue }) {
     const [value, setValue] = useState(1)
 
-    useEffect(() => initialValue && setValue(initialValue), [initialValue])
+    useEffect(() => {
+        if (initialValue) {
+            setValue(initialValue)
+        }
+    }, [initialValue])
 
     const handleInput = (e) => {
         if (Number(e.target.value) === 0) e.target.value = e.target.value.replace('0', '')

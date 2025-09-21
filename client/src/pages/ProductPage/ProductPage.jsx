@@ -43,7 +43,7 @@ export default function ProductPage() {
     const isProductActionPanelOpen = useSelector(state => state.ui.isProductActionPanelOpen)
     const isTokenValid = useSelector(state => state.user.isTokenValid)
 
-    const [favoriteItemAction, cartItemAction, isCartFinally, isFavoriteFinally] = useProductActions()
+    const { favoriteItemAction, cartItemAction, isCartFinally, isFavoriteFinally } = useProductActions()
 
     const swiperRef = useRef(null)
     const fullScreenSwiperRef = useRef(null)

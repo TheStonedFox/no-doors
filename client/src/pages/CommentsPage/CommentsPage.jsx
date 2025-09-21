@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { togglePopup } from '../../redux/features/uiSlice'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { checkReviewEligibility, getProduct, getProductComments } from '../../api/api'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { IoChevronBackOutline } from "react-icons/io5"
 
 import RadioButtonGroup from '../../components/RadioButtonGroup/RadioButtonGroup.jsx'

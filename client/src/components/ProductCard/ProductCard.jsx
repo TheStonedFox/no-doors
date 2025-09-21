@@ -15,7 +15,7 @@ import useProductActions from '../../hooks/useProductActions'
 import { setUserData } from '../../redux/features/userSlice'
 import Spinner from '../Spinner/Spinner'
 import { addNotification } from '../../redux/features/uiSlice'
-import { getProduct } from '../../api/api'
+
 
 export default function ProductCard({ productData, ref }) {
 
@@ -33,7 +33,7 @@ export default function ProductCard({ productData, ref }) {
     const dispatch = useDispatch()
     const tokenStatus = useSelector((state) => state.user.isTokenValid)
 
-    const [favoriteItemAction, cartItemAction, isCartFinally, isFavoriteFinally] = useProductActions()
+    const { favoriteItemAction, cartItemAction, isCartFinally, isFavoriteFinally } = useProductActions()
 
     const onFavoriteButtonClick = () => {
         if (!tokenStatus)
@@ -64,7 +64,6 @@ export default function ProductCard({ productData, ref }) {
         }
 
     }, [cartItems, favoriteItems, productId, tokenStatus, dispatch])
-
 
     function onCounterChange(value) {
         setQuantity(value)

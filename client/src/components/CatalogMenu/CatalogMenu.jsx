@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom'
 
 import styles from './CatalogMenu.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { closeCatalog, toggleCatalog } from '../../redux/features/uiSlice'
+import { toggleCatalog } from '../../redux/features/uiSlice'
 
-import MoreArrowIcon from './MoreArrowIcon/MoreArrowIcon'
 import BrandTree from '../BrandTree/BrandTree'
 import { generateId } from '../../utils/generateId'
 import useSwipe from '../../hooks/useSwipe'

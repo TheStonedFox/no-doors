@@ -5,7 +5,7 @@ import FavoriteIcon from '../HeaderFavoriteIcon'
 import { Link } from 'react-router-dom'
 import SearchInput from '../../SearchInput/SearchInput'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import CartIcon from '../CartIcon'
 import { addNotification, toggleBurger } from '../../../redux/features/uiSlice'
 

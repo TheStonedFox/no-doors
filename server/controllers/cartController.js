@@ -1,39 +1,29 @@
 import ProductModel from '../models/ProductModel.js'
 import UserModel from '../models/UserModel.js'
 
-export const addCartItem = async (req, res) => {
+export const toggleCartItem = async (req, res) => {
     try {
-        const user = await UserModel.findOneAndUpdate(
-            { _id: req.body.userId },
-            { $push: { cartItems: { productId: req.params.productId, quantity: req.body.quantity } } }
-        )
+        const productId = req.params.productId
+        const cartItem = await UserModel.findOne({ _id: req.body.userId, 'cartItems.productId': productId })
 
-        if (!user)
-            return res.status(404).json({ message: 'Не удалось обновить данные.' })
+        if (cartItem) {
+            const user = await UserModel.findOneAndUpdate(
+                { _id: req.body.userId },
+                { $pull: { cartItems: { productId: productId } } },
+            )
+            if (!user)
+                return res.status(404).json({ message: 'Не удалось обновить данные.' })
+            res.status(200).json({ message: 'Товар удален из корзины.' })
+        } else {
+            const user = await UserModel.findOneAndUpdate(
+                { _id: req.body.userId },
+                { $push: { cartItems: { productId: req.params.productId, quantity: req.body.quantity } } }
+            )
+            if (!user)
+                return res.status(404).json({ message: 'Не удалось обновить данные.' })
+            res.status(200).json({ message: 'Товар добавлен в корзину.' })
+        }
 
-        const product = await ProductModel.findById(req.params.productId)
-
-        if (!product)
-            return res.status(404).json({ message: 'Товар не найден.' })
-
-        res.status(200).json({ message: 'Товар добавлен в корзину.', ID: req.params.productId })
-    } catch (error) {
-        res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
-    }
-
-}
-
-export const removeCartItem = async (req, res) => {
-    try {
-        const user = await UserModel.findOneAndUpdate(
-            { _id: req.body.userId },
-            { $pull: { cartItems: { productId: req.params.productId } } },
-        )
-
-        if (!user)
-            return res.status(404).json({ message: 'Не удалось обновить данные.' })
-
-        res.status(200).json({ message: 'Товар удален из корзины.' })
     } catch (error) {
         res.status(500).json({ error: 'Ошибка на сервере.', details: error.message })
     }

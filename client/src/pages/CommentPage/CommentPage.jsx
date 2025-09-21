@@ -6,9 +6,7 @@ import { getAllReplies, getComment } from '../../api/api'
 import { useNavigate, useParams } from 'react-router-dom'
 import { IoChevronBackOutline } from "react-icons/io5"
 import { useDispatch, useSelector } from 'react-redux'
-import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/SkeletonLadingShimmer'
 import Spinner from '../../components/Spinner/Spinner'
-import { setIdCommentToUpdate } from '../../redux/features/sharedSlice.js'
 
 import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder'
 import { addNotification, togglePopup } from '../../redux/features/uiSlice'

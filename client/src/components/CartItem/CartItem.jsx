@@ -31,10 +31,10 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
     const userData = useSelector((state) => state.user.userData)
     const dispatch = useDispatch()
 
-    const [, cartItemAction] = useProductActions()
+    const { cartItemAction } = useProductActions()
 
     useEffect(() => {
-        setQuantity(initialQuantityValue ? initialQuantityValue : 1)
+        setQuantity(initialQuantityValue || 1)
         return () => dispatch(setUserData())
     }, [])
 

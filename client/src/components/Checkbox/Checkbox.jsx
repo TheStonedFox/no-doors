@@ -1,8 +1,6 @@
-import { useEffect } from 'react'
 
 import styles from './Checkbox.module.css'
 
-import { useState } from 'react'
 
 export default function Checkbox({ onClick, isChecked, title, onChange }) {
     return (

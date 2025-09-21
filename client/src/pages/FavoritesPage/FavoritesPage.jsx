@@ -65,7 +65,7 @@ export default function FavoritesPage() {
                 title={loadedItemsCount !== userData.favoriteItems.length ? 'Показать еще' : 'Скрыть'}
                 onClick={() => {
                     if (loadedItemsCount !== userData.favoriteItems.length)
-                        setLoadedItemsCount(prev => prev + 4 <= userData.favoriteItems.length - 4 ? prev + 4 : userData.favoriteItems.length)
+                        setLoadedItemsCount(prev => prev + 4 <= userData?.favoriteItems.length - 4 ? prev + 4 : userData?.favoriteItems.length)
                     else
                         setLoadedItemsCount(4)
                 }}

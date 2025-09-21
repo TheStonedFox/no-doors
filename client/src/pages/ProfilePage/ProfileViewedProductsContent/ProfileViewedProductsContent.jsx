@@ -1,8 +1,6 @@
-import React from 'react'
 
 import styles from './ProfileViewedProductsContent.module.css'
 
-import ItemsList from '../../../components/ItemsList/ItemsList'
 import EmptyPlaceholder from '../../../components/EmptyPlaceholder/EmptyPlaceholder'
 import { useDispatch, useSelector } from 'react-redux'
 import ProductCard from '../../../components/ProductCard/ProductCard'
