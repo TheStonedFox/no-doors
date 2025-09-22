@@ -33,6 +33,15 @@ Check out the project live and explore all features! 🎉
   - **Likes** can be added to reviews and questions  
   - **Five-star rating system** for reviews, with average rating automatically calculated ⭐⭐⭐⭐⭐
   - Reviews **cannot be deleted**, only edited; answers **can be deleted** by any registered user at any time
+- **Toast Notifications:**
+  - Custom toast notifications for user feedback  
+  - Can pass a **route** parameter:
+    - If a route is provided, clicking the notification navigates to that route  
+    - If no route is provided, clicking simply dismisses the notification  
+  - Swipe gestures on mobile devices:
+    - **Swipe right:** navigates to route if provided; disabled if no route  
+    - **Swipe left:** always dismisses the notification  
+  - Notifications automatically disappear after 5–7 seconds
 - **Product Catalog with Filters:**
   - Brand, category, device model, device type, price range (slider)
 - Cart and Favorites 🛒❤️
