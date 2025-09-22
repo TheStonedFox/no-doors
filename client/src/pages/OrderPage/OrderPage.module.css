@@ -161,7 +161,7 @@
 
 }
 
-@media(max-width: 767px) {
+@media(max-width: 800px) {
     .order-page__layout {
         grid-template-columns: 1fr;
     }

@@ -63,7 +63,7 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
                 <Field title='Цена (Розница)' value={`${getPrice(discount, price)} ₴`} />
                 <Field title='Цена (Опт от 5)' value={`${getPrice(discount, wholesalePrice)} ₴`} />
                 {!viewOnly && <Field title='Остаток' value={`${inStock} шт.`} />}
-                <Field title='Сумма' value={discount === 0 ?
+                <Field title='Сумма' value={!discount ?
                     quantity < 5 ?
                         price * quantity : wholesalePrice * quantity
                     : quantity < 5 ?
@@ -84,7 +84,7 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
                             .catch(error => console.log(error))
                     }}
                     initialValue={initialQuantityValue} /> : <p>{quantity}</p>}
-                <p>{discount === 0 ?
+                <p>{!discount ?
                     quantity < 5 ?
                         price * quantity : wholesalePrice * quantity
                     : quantity < 5 ?
