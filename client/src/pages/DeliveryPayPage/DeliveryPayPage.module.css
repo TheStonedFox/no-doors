@@ -1,0 +1,45 @@
+.delivery-pay-page {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 60px;
+}
+
+.delivery-pay-page__content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.delivery-pay-page__title {
+    padding-top: 50px;
+    padding-bottom: 60px;
+}
+
+.delivery-pay-page__chapter {
+    display: flex;
+    flex-direction: column;
+}
+
+.delivery-pay-page__chapter ul {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chapter__title {
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 150%;
+    color: var(--typography---main);
+    margin-bottom: 15px;
+}
+
+@media(max-width: 700px) {
+
+    .delivery-pay-page__title {
+        padding-top: 30px;
+        padding-bottom: 35px;
+    }
+}

@@ -1,0 +1,19 @@
+.location {
+    display: flex;
+    color: var(--typography---second);
+    gap: 5px;
+}
+
+.location .location__route-link {}
+
+@media(hover: hover) {
+    .location__route-link:hover {
+        color: var(--ui---main);
+    }
+}
+
+@media(hover: none) {
+    .location__route-link:active {
+        color: var(--ui---main);
+    }
+}

@@ -1,4 +1,51 @@
 .guarantees-page {
     max-width: var(--container-width);
     margin: 0 auto;
+    padding-top: 20px;
+    padding-bottom: 60px;
+
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+}
+
+.guarantees-page__title {
+    padding-top: 50px;
+    padding-bottom: 60px;
+}
+
+.guarantees-page__content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.guarantees-page__chapter {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.guarantees-page__chapter ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chapter__title {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 150%;
+    color: var(--typography---main);
+}
+
+
+@media(max-width: 700px) {
+
+    .guarantees-page__title {
+        padding-top: 30px;
+        padding-bottom: 35px;
+    }
 }

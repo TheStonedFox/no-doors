@@ -12,6 +12,7 @@ import { getProducts } from '@api/api'
 import { clearFavorites } from '../../api/api'
 import { setUserData } from '../../redux/features/userSlice'
 import { addNotification } from '../../redux/features/uiSlice'
+import Location from '../../components/Location/Location'
 
 export default function FavoritesPage() {
 
@@ -42,9 +43,9 @@ export default function FavoritesPage() {
         })
             .catch(error => dispatch(addNotification({ type: 'error', text: error.message })))
     }
-
     return (
         <div className={`${styles['favorites-page']} container`}>
+            <Location path='favorites' />
             <section className={styles['favorites-page__header']}>
                 <h2 className={`${'section-title'} ${styles['favorites-page__title']}`}>Избранное</h2>
                 {Boolean(userData?.favoriteItems?.length) && <a href='#' className='header-link header-link_clear' onClick={onFavoritesClearButtonClick}>Очистить корзину</a>}

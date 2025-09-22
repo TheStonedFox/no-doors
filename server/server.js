@@ -106,7 +106,6 @@ app.patch('/replies/:replyId/like', CheckAuth, replyController.replyLike)
 app.patch('/replies/:replyId', CheckAuth, replyController.editReply)
 //#endregion
 
-
 //#region liqpay
 app.post('/create-payment', CheckAuth, paymentController.create)
 app.post('/payment-status/:orderId', CheckAuth, paymentController.status)
@@ -119,7 +118,6 @@ app.get('/chooses-steps', sharedController.getChooseSteps)
 
 app.get('/search', productController.searchProducts)
 //#endregion
-
 
 
 app.listen(process.env.PORT || 5000, '0.0.0.0', () => {

@@ -51,7 +51,7 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
     return (
         <div className={styles['cart-item']} >
             <div className={styles['cart-item__img']}>
-                <img style={{ display: imageLoading ? 'none' : 'flex' }} src="../../../public/images/categories/03.png" width='80%' alt="product image" onLoad={() => setImageLoading(false)} />
+                <img style={{ display: imageLoading ? 'none' : 'flex' }} src="images/categories/03.png" width='80%' alt="product image" onLoad={() => setImageLoading(false)} />
                 {imageLoading && <Spinner />}
             </div>
 

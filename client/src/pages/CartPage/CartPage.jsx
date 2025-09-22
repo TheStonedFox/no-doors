@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom'
 import Button from '@components/Button/Button'
 import CartItems from '@components/CartItems/CartItems'
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
-
 import styles from './CartPage.module.css'
 import { useCart } from '../../hooks/useCart'
 import { clearCart } from '../../api/api'
@@ -10,6 +9,7 @@ import { clearCart } from '../../api/api'
 import { setUserData } from '../../redux/features/userSlice'
 import { useDispatch } from 'react-redux'
 import { addNotification } from '../../redux/features/uiSlice'
+import Location from '../../components/Location/Location'
 
 export default function CartPage() {
     const dispatch = useDispatch()
@@ -27,6 +27,7 @@ export default function CartPage() {
 
     return (
         <div className={`${styles['cart-page']} container`} >
+            <Location path='cart' />
             <section className={styles['cart-page__header']}>
                 <h2 className={`${'section-title'} ${styles['cart-page__title']}`}>Ваша корзина</h2>
                 {Boolean(userData?.cartItems.length) &&

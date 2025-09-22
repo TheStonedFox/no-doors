@@ -20,6 +20,7 @@ import { FaFilter } from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleFiltersPanel } from '../../redux/features/uiSlice'
 import Button from '../../components/Button/Button'
+import Location from '../../components/Location/Location'
 
 export default function SearchPage() {
     const dispatch = useDispatch()
@@ -97,9 +98,9 @@ export default function SearchPage() {
         else
             setLoadedItemsCount(6)
     }
-
     return (
         <div className={`${styles['search-page']} container`}>
+            <Location path='search' />
             <h2 className={`section-title ${styles['search-page__title']}`}>{categories.length === 1 ? categories : 'Комплектующие'} {models.length === 1 && `для ${models}`}</h2>
 
             <section className={styles['search-page__applied-filters-box']}>
