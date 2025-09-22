@@ -126,10 +126,6 @@
     z-index: 9;
 }
 
-/* .hide-burger {
-    width: 0;
-} */
-
 .lines {
     display: flex;
     flex-direction: column;
