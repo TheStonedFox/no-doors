@@ -55,14 +55,12 @@ Check out the project live and explore all features! 🎉
 cd server
 npm install          # Install backend dependencies
 npm start            # Run the server (Node.js)
-# Or use "npm run dev" for development with auto-restart via supervisor
 
 cd client
 npm install          # Install frontend dependencies
 npm run dev          # Start the React app (Vite)
 
-
 ### 1️⃣ Clone the repository
 ```bash
-git clone <[repository-url](https://github.com/TheStonedFox/no-doors)>
-cd <no-doors>
+git clone https://github.com/TheStonedFox/no-doors.git
+cd no-doors
