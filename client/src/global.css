@@ -86,7 +86,6 @@
   margin: 0 auto;
 }
 
-
 #radio-button-active {
   background: var(--ui---main);
   border: 1px solid transparent;
@@ -243,17 +242,6 @@ body::-webkit-scrollbar {
   background: #555;
 }
 
-
-
-/* Для Firefox */
-* {
-  /* scrollbar-width: thin; */
-  /* auto | thin | none */
-  /* scrollbar-color: #888 transparent; */
-  /* цвет ползунка и трека */
-}
-
-/* Скролл */
 
 /* reset css */
 /* Reset and base styles  */

@@ -66,8 +66,6 @@ export default function MainPage() {
         }
     }
 
-
-
     return (
         <div className={`${styles['main-page']} container`} >
             {choosesStep !== 'result' && <section className={styles['main-page__intro-section']}>

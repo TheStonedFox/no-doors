@@ -3,6 +3,7 @@
     flex-direction: column;
     margin: 0 auto;
     max-width: var(--container-width);
+    padding-top: 20px;
 }
 
 .auth-page__title {
@@ -116,10 +117,12 @@
     .auth-page__layout {
         display: flex;
         flex-direction: column-reverse;
-        /* align-items: center; */
     }
+}
 
-    /* .auth-page__auth-box {
-        max-width: 80%;
-    } */
+@media(max-width: 800px) {
+    .auth-page__title {
+        padding-top: 25px;
+        padding-bottom: 30px;
+    }
 }

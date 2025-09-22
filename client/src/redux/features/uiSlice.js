@@ -36,7 +36,9 @@ export const uiSlice = createSlice({
             if (action.payload)
                 return state.isFiltersPanelOpen = action.payload
             state.isFiltersPanelOpen = !state.isFiltersPanelOpen
-            // state.isBurgerOpen = false
+        },
+        closeFiltersPanel: (state) => {
+            state.isFiltersPanelOpen = false
         },
         togglePopup: (state, action) => {
             state.isPopupOpen = !state.isPopupOpen
@@ -62,8 +64,6 @@ export const uiSlice = createSlice({
             state.theme = action.payload
         },
         addNotification: (state, action) => {
-            // state.notificationList = [action.payload, ...state.notificationList]
-            // if (state.notificationList.findIndex(i => i.text === action.payload.text && i.type === action.payload.type))
             state.notificationList = [{ ...action.payload, id: generateId() }, ...state.notificationList]
         },
         removeNotification: (state, action) => {
@@ -77,4 +77,4 @@ export const uiSlice = createSlice({
     }
 })
 
-export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification, closeCatalog, toggleProductActionsPanel } = uiSlice.actions
+export const { toggleBurger, toggleCatalog, closeAll, updateCartCounter, updateFavoriteCounter, togglePopup, closeBurger, toggleSearchResults, toggleFiltersPanel, setTheme, addNotification, removeNotification, closeCatalog, toggleProductActionsPanel, closeFiltersPanel } = uiSlice.actions

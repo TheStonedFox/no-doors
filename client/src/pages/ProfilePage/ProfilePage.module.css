@@ -2,14 +2,20 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 100px;
+    padding-top: 20px;
 }
-
-.profile-page__header {}
 
 .header__title {
     font-weight: 700;
     font-size: 2.5rem;
     color: var(--typography---main);
+}
+
+.profile__header {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 50px 0;
 }
 
 
@@ -24,11 +30,18 @@
     gap: 25px;
     align-items: center;
     flex-direction: column;
-    padding: 30px;
+    padding: 20px;
     justify-content: space-between;
-    height: 460px;
+    height: max-content;
     animation: shiftActions .1s ease-in-out forwards;
     transform: translateX(-100%);
+
+    background-color: var(--ui---bg-main-darker);
+    border-radius: 8px;
+
+    -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
 
 }
 
@@ -139,5 +152,9 @@
 @media(max-width: 800px) {
     .profile-page__layout {
         grid-template-columns: 1fr;
+    }
+
+    .profile__header {
+        padding: 25px 0;
     }
 }

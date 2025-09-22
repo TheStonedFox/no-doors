@@ -20,6 +20,8 @@ import { useCart } from '@hooks/useCart'
 import { makeOrder } from '@api/api'
 import { useNavigate } from 'react-router-dom'
 
+import Location from '../../components/Location/Location'
+
 export default function OrderPage() {
 
     const dispatch = useDispatch()
@@ -75,6 +77,7 @@ export default function OrderPage() {
 
     return (
         <div className={styles['order-page']}>
+            <Location path='cart/order' />
             <h2 className={`${'section-title'} ${styles['order-page__title']}`}>Оформление заказа</h2>
             <div className={styles['order-page__layout']}>
                 <section className={styles['contacts-data']}>

@@ -1,4 +1,3 @@
-import ProductModel from '../models/ProductModel.js'
 import UserModel from '../models/UserModel.js'
 
 export const toggleCartItem = async (req, res) => {
@@ -17,7 +16,7 @@ export const toggleCartItem = async (req, res) => {
         } else {
             const user = await UserModel.findOneAndUpdate(
                 { _id: req.body.userId },
-                { $push: { cartItems: { productId: req.params.productId, quantity: req.body.quantity } } }
+                { $push: { cartItems: { productId: req.params.productId, quantity: req.body.quantity | 1 } } }
             )
             if (!user)
                 return res.status(404).json({ message: 'Не удалось обновить данные.' })

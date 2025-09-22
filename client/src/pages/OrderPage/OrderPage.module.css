@@ -4,11 +4,12 @@
     margin: 0 auto;
     max-width: var(--container-width);
     padding-bottom: 100px;
-    padding-top: 50px;
+    padding-top: 20px;
 }
 
 .order-page__title {
-    margin-bottom: 60px;
+    padding-top: 50px;
+    padding-bottom: 60px;
 }
 
 .contacts-data__input {
@@ -64,6 +65,13 @@
     padding: 40px;
     flex-direction: column;
     min-width: 360px;
+    background-color: var(--ui---bg-main-darker);
+    border-radius: 8px;
+    height: max-content;
+
+    -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);
 }
 
 .result__title {
@@ -143,6 +151,14 @@
     .result {
         padding: 20px;
     }
+}
+
+@media(max-width: 800px) {
+    .order-page__title {
+        padding-top: 30px;
+        padding-bottom: 35px;
+    }
+
 }
 
 @media(max-width: 767px) {

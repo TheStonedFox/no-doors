@@ -1,5 +1,6 @@
 .product-page {
     position: relative;
+    padding-top: 20px;
     /* transform: translateX(100%);
     animation: shiftPage 0.25s ease-in-out forwards; */
 }
@@ -16,6 +17,26 @@
 }
  */
 
+.product-page__location {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    text-wrap: nowrap;
+    color: var(--typography---second);
+}
+
+
+@media(hover: hover) {
+    .product-page__location>a:hover {
+        color: var(--ui---main);
+    }
+}
+
+@media(hover: none) {
+    .product-page__location>a:active {
+        color: var(--ui---main);
+    }
+}
 
 .product-card__full-screen-slider {
     position: fixed;

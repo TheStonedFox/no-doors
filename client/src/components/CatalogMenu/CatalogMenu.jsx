@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import styles from './CatalogMenu.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleCatalog } from '../../redux/features/uiSlice'
+import { closeCatalog, toggleCatalog } from '../../redux/features/uiSlice'
 
 import BrandTree from '../BrandTree/BrandTree'
 import { generateId } from '../../utils/generateId'
@@ -33,6 +33,19 @@ export default function CatalogMenu({ ref }) {
         return () => removeEventListener('scroll', scrollHandler)
     }, [])
 
+    useEffect(() => {
+        const catalogButton = document.getElementById('catalogButton')
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target) && !catalogButton.contains(event.target)) {
+                dispatch(closeCatalog())
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [menuRef, dispatch])
 
     return (
         <div
@@ -42,7 +55,7 @@ export default function CatalogMenu({ ref }) {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onTouchMove={handleTouchMove}
-            ref={menuRef}>
+            ref={menuRef} id='catalog-menu'>
             <div className={styles.box}>
                 <ul className={styles.links}>
                     {brands?.map((brand, i) => <BrandTree key={generateId()} brand={brands[i]} onChange={(brand) => setSelectedBrand(brand)} isOpen={brand.title === selectedBrand} />)}

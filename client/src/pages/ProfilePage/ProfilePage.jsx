@@ -21,7 +21,7 @@ import ProfileHistoryContent from './ProfileHistoryContent/ProfileHistoryContent
 import SkeletonLadingShimmer from '../../components/SkeletonLadingShimmer/SkeletonLadingShimmer'
 import ProfileViewedProductsContent from './ProfileViewedProductsContent/ProfileViewedProductsContent'
 
-
+import Location from '../../components/Location/Location'
 
 
 export default function ProfilePage() {
@@ -112,6 +112,7 @@ export default function ProfilePage() {
         setAvatarLocalFile(null)
     }
 
+
     const handleFileChange = (e) => {
         setAvatarLocalFile(URL.createObjectURL(e.target.files[0]))
         setUserInfo(prev => ({ ...prev, avatar: {} }))
@@ -143,12 +144,13 @@ export default function ProfilePage() {
 
     return (
         <div className={`${styles['profile-page']} container`}>
-            <section className='page-title-section'>
+            <Location path='profile' />
+            <section className={styles['profile__header']}>
                 <h1 className='section-title'>Личный кабинет</h1>
                 <Link className='header-link header-link_clear' to='/auth' onClick={onLogOutButtonClick}>Выйти из аккаунта</Link>
             </section>
             <section className={styles['profile-page__layout']}>
-                {!isLoading ? <section className={styles['profile-page__actions']}>
+                {!isLoading ? <section className={styles['profile-page__actions']} >
                     {!onAvatarUploading ? <div className={styles['actions__avatar']}>
                         {userData?.avatar?.url || avatarLocalFile ? <img
                             className={styles['avatar-image']}

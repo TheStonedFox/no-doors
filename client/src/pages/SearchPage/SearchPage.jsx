@@ -100,6 +100,7 @@ export default function SearchPage() {
     }
     return (
         <div className={`${styles['search-page']} container`}>
+
             <Location path='search' />
             <h2 className={`section-title ${styles['search-page__title']}`}>{categories.length === 1 ? categories : 'Комплектующие'} {models.length === 1 && `для ${models}`}</h2>
 

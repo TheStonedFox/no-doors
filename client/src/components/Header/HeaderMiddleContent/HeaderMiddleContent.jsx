@@ -28,7 +28,7 @@ export default function HeaderMiddleContent() {
     }
     return (
         <section className={styles['header__middle-content']}>
-            <button className={styles.burger} style={{ zIndex: 1001 }} type="button" onClick={() => dispatch(toggleBurger())}>
+            <button className={styles.burger} style={{ zIndex: 1001 }} type="button" onClick={() => dispatch(toggleBurger())} id='menuButton'>
                 <div className={styles.lines}>
                     <span className={`${styles.line} ${isBurgerOpen ? styles['line_active'] : ''}`}></span>
                     <span className={`${styles.line} ${isBurgerOpen ? styles.hide : ''}`}></span>

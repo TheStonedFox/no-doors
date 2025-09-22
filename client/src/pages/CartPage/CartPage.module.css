@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 100px;
+    padding-top: 20px;
     user-select: none;
 }
 
@@ -45,7 +46,11 @@
     color: var(--typography---second);
 }
 
-@media(max-width: 750px) {}
+@media(max-width: 800px) {
+    .cart-page__header {
+        padding: 25px 0;
+    }
+}
 
 @media(max-width: 650px) {
     .cart-page__result {

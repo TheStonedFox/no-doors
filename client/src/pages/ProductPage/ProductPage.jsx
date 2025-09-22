@@ -193,7 +193,13 @@ export default function ProductPage() {
 
     return (
         <div className={`${styles['product-page']} container`} style={isFullScreenMode ? { transform: 'none', animation: 'none' } : {}}>
-
+            <section className={styles['product-page__location']}>
+                <Link to='/'>Главная /</Link>
+                <Link to={`/search?brand=${product?.brand}`}>{product?.brand} /</Link>
+                <Link to={`/search?brand=${product?.brand}&model=${product?.model}`}>{product?.model} /</Link>
+                <Link to={`/search?brand=${product?.brand}&model=${product?.model}&category=${product?.category}`}>{product?.category} /</Link>
+                <Link>{product?.title}</Link>
+            </section>
             <section className={styles['product-page__product-card']}>
                 {!isLoading ? <section className={styles['product-card__photos']}>
                     {inStock ? <div className={styles['product-card__tags']}>

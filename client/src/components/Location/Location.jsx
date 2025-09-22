@@ -4,20 +4,23 @@ export default function Location({ path }) {
 
     const EngRoutesTitlesToRu = {
         'about': 'О компании',
-        'order': 'Заказ',
+        'order': 'Оформление заказа',
         'cart': 'Корзина',
         'favorites': 'Избранное',
-        'search': 'Поиск',
+        'search': 'Расширенный товаров',
         'guarantees': 'Гарантии',
         'delivery-and-pay': 'Доставка и оплата',
         'contacts': 'Контакты',
+        'auth': 'Вход и регистрация',
+        'profile': 'Личный кабинет',
+        'comments': 'Отзывы и вопросы',
     }
 
     const pathRoutes = path?.split('/')
     return (
         <section className={styles['location']}>
             <Link className={styles['location__route-link']} to='/'>Главная /</Link>
-            {pathRoutes.map((piece, i) =>
+            {pathRoutes?.map((piece, i) =>
                 <Link className={styles['location__route-link']}
                     key={piece}
                     to={`/${piece}`}>

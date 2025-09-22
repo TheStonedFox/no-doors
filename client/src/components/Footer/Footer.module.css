@@ -91,6 +91,22 @@
     color: var(--typography---second);
 }
 
+.footer a {
+    transition: 0.2s;
+}
+
+@media(hover: hover) {
+    .footer a:hover {
+        color: var(--ui---main);
+    }
+}
+
+@media(hover: none) {
+    .footer a:active {
+        color: var(--ui---main);
+    }
+}
+
 @media(max-width: 992px) {
     .footer {
         display: flex;

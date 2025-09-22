@@ -19,8 +19,7 @@ import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
 
 import Spinner from '../../components/Spinner/Spinner'
 import { removeSendedCodes } from '../../api/api'
-
-
+import Location from '../../components/Location/Location'
 
 export default function AuthPage() {
 
@@ -127,6 +126,7 @@ export default function AuthPage() {
 
     return (
         <div className={styles['auth-page']}>
+            <Location path='auth' />
             <h2 className={`${'section-title'} ${styles['auth-page__title']}`}>Вход и регистрация</h2>
             <div className={styles['auth-page__layout']}>
                 {isLadingEnd ? <div className={styles['auth-page__auth-box']}>

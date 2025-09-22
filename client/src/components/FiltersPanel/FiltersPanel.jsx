@@ -14,7 +14,7 @@ import CustomRangeSelector from '../CustomRangeSelector/CustomRangeSelector'
 import Spinner from '../Spinner/Spinner'
 import Button from '../Button/Button'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleFiltersPanel } from '../../redux/features/uiSlice'
+import { toggleFiltersPanel, closeFiltersPanel } from '../../redux/features/uiSlice'
 import useSwipe from '../../hooks/useSwipe'
 import EmptyPlaceholder from '../EmptyPlaceholder/EmptyPlaceholder'
 import { getChooseValues } from '../../redux/features/sharedSlice'
@@ -31,7 +31,6 @@ export default function FiltersPanel({ isOpen }) {
     }
 
     const panelRef = useRef(null)
-
     const [isSortListOpen, setIsSortListOpen] = useState(false)
     const [sortType, setSortType] = useState('decreasingPrice')
     const [priceRange, setPriceRange] = useState({ min: searchParams.get('minPrice'), max: searchParams.get('maxPrice') })
@@ -77,10 +76,6 @@ export default function FiltersPanel({ isOpen }) {
     const onCheckBoxClick = (type, paramStr) => {
         const newParams = new URLSearchParams(searchParams)
         const checkParam = paramStr !== 'category' && paramStr !== 'deviceType'
-        // if (searchParams.getAll(`${paramStr}`).includes(checkParam ? type.title : type))
-        //     newParams.delete(`${paramStr}`, checkParam ? type.title : type)
-        // else
-        //     newParams.append(`${paramStr}`, checkParam ? type.title : type)
 
         if (searchParams.getAll(`${paramStr}`).includes(checkParam ? type.title : type))
             deleteParamValue(newParams, `${paramStr}`, checkParam ? type.title : type)
@@ -131,6 +126,19 @@ export default function FiltersPanel({ isOpen }) {
 
         return () => window.removeEventListener('resize', handleResize)
     }, [])
+
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (panelRef.current && !panelRef.current.contains(event.target)) {
+                dispatch(closeFiltersPanel())
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [panelRef, dispatch])
 
 
 

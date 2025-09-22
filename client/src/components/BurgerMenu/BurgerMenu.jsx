@@ -6,7 +6,7 @@ import { closeBurger, toggleBurger } from '../../redux/features/uiSlice'
 import { useDispatch } from 'react-redux'
 
 import styles from './BurgerMenu.module.css'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import useSwipe from '../../hooks/useSwipe'
 import AvatarIcon from '../../svg/AvatarIcon'
 export default function BurgerMenu() {
@@ -22,6 +22,20 @@ export default function BurgerMenu() {
         isBurgerOpen,
         menuRef,
         () => dispatch(toggleBurger(false)))
+
+    useEffect(() => {
+        const menuButton = document.getElementById('menuButton')
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target) && !menuButton.contains(event.target)) {
+                dispatch(closeBurger())
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [menuRef, dispatch])
 
     return (
         <div style={isBurgerOpen ?

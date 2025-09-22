@@ -39,6 +39,12 @@ function Header() {
         return () => removeEventListener('scroll', scrollHandler)
     }, [dispatch])
 
+    const onKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            navigate(`/search?word=${searchValue}`)
+        }
+    }
+
     return (
         <header className={styles.header}>
             <HeaderTopContent />
@@ -49,6 +55,7 @@ function Header() {
                 <button className={styles['burger']}
                     style={{ width: isSearchResultsOpen && '0px' }}
                     type="button"
+                    id='catalogButton'
                     onClick={() => dispatch(toggleCatalog())} >
                     <div className={styles['lines']}>
                         <span className={`${styles.line} ${isCatalogOpen ? styles['line_active'] : ''}`} style={{ backgroundColor: isCatalogOpen ? '#000' : '#fff' }}
@@ -60,6 +67,7 @@ function Header() {
                     </div>
                     <h3 style={{ color: isCatalogOpen ? '#000' : '#fff' }}>Каталог</h3>
                 </button>
+
                 <div className={styles['input-container']} style={{ paddingLeft: isSearchResultsOpen ? '0' : '18px', border: isSearchResultsOpen ? '0' : '' }}>
                     <SearchIcon />
                     <input id='mobile-search-input'
@@ -67,11 +75,7 @@ function Header() {
                         placeholder="Поиск товара"
                         autoComplete='off'
                         value={searchValue}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                navigate(`/search?word=${searchValue}`)
-                            }
-                        }}
+                        onKeyDown={onKeyDown}
                         onChange={(e) => setSearchValue(e.target.value)}
                         onFocus={() => dispatch(toggleSearchResults(true))} />
                     <SearchResult className={styles['mobile-input__search-result']}

@@ -16,6 +16,9 @@ import { getAverageRating } from '../../utils/getAverageRating.js'
 import EmptyPlaceholder from '../../components/EmptyPlaceholder/EmptyPlaceholder.jsx'
 
 import Spinner from '../../components/Spinner/Spinner'
+
+import Location from '../../components/Location/Location'
+
 export default function CommentsPage() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -103,6 +106,7 @@ export default function CommentsPage() {
 
     return (
         <div className={`${styles['comments-page']} container`}>
+            <Location path='comments' />
             <section className={styles['comments-page__layout']}>
                 <button className={styles['layout__back-button']}
                     ref={backButtonRef}
