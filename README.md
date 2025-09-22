@@ -54,7 +54,14 @@ Check out the project live and explore all features! 🎉
   - Product image zoom on hover 🔍
   - Scroll-to-top button ⬆️
   - Skeleton loaders for smoother experience ⚡
+- **Mobile swipe interactions:**
+  - In certain parts of the app, such as filter panels and site menu, swipe gestures are implemented for easier interaction on mobile devices
+
 - RESTful API for client-server communication 🔗
+
+- **Performance & UX Optimizations:**
+  - Worked on improving CLS (Cumulative Layout Shift) in some parts of the app  
+  - Ensured minimal layout shifting during page load, keeping metrics within green (good) thresholds in DevTools
 
 ---
 
