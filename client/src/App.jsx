@@ -86,7 +86,7 @@ function App() {
           <Route path='/auth' element={<AuthPage />}></Route>
           <Route path='/cart' element={<AuthPage />}></Route>
 
-          {!tokenStatus ? <Route path='/auth/reset-password/' element={<ResetPasswordPage />}></Route> : null}
+          {!tokenStatus ? <Route path='/auth/reset-password' element={<ResetPasswordPage />}></Route> : null}
           <Route path='/about' element={<AboutPage />}></Route>
           <Route path='/delivery-and-pay' element={<DeliveryPayPage />}></Route>
           <Route path='/guarantees' element={<GuaranteesPage />}></Route>

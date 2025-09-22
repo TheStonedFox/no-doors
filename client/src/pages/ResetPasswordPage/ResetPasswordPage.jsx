@@ -78,8 +78,8 @@ export default function ResetPasswordPage() {
             <section className={styles['reset-password-page__main-box']}>
                 {!messageVisible ? <h2 className={styles['main-box__title']}>Придумайте новый пароль</h2> : null}
                 {!messageVisible && isLadingEnd ? <section className={styles['main-box__inputs']}>
-                    <Input placeholder='Новый пароль' onChange={(value) => setPasswords(prev => ({ ...prev, password: value, }))} />
-                    <Input placeholder='Повторите пароль' onChange={(value) => setPasswords(prev => ({ ...prev, passwordCheck: value, }))} />
+                    <Input placeholder='Новый пароль' value={passwords.password} onChange={(value) => setPasswords(prev => ({ ...prev, password: value, }))} />
+                    <Input placeholder='Повторите пароль' value={passwords.passwordCheck} onChange={(value) => setPasswords(prev => ({ ...prev, passwordCheck: value, }))} />
                 </section> : null}
 
                 {!isLadingEnd ? <Spinner /> : null}

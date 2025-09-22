@@ -124,6 +124,8 @@ export default function AuthPage() {
         validationErrors && setValidationErrors([])
     }, [mode])
 
+    const [rememberMe, setRememberMe] = useState(localStorage.getItem('rememberMe') === 'false' ? false : true)
+
     return (
         <div className={styles['auth-page']}>
             <Location path='auth' />
@@ -162,8 +164,11 @@ export default function AuthPage() {
                     </div>}
 
                     {mode === 'login' && <div className={styles['auth-page__remember-me-box']}>
-                        <Checkbox title='Запомнить меня' onChange={(value) => localStorage.setItem('rememberMe', !value ? '1' : '0')}
-                            isChecked={localStorage.getItem('rememberMe') === '1' ? true : false} />
+                        <Checkbox title='Запомнить меня' onChange={(value) => {
+                            setRememberMe(value)
+                            localStorage.setItem('rememberMe', value)
+                        }}
+                            isChecked={rememberMe} />
                         <Link onClick={() => setMode('reset')}>Забыли пароль?</Link>
                     </div>}
 

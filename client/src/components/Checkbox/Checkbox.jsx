@@ -7,7 +7,7 @@ export default function Checkbox({ onClick, isChecked, title, onChange }) {
         <div className={styles['check-box']}
             onClick={() => {
                 onClick && onClick()
-                onChange && onChange(isChecked)
+                onChange && onChange(!isChecked)
             }}>
             <div className={`${styles['check-box__indicator']} ${isChecked ? styles['active'] : null}`}>
                 <svg width={isChecked ? 8 : 0} height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
