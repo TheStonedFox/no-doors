@@ -60,19 +60,19 @@ Check out the project live and explore all features! 🎉
 
 ## ⚡ Installation & Setup
 # Install server dependencies
-npm install
+```npm install```
 
 # Run the server (Node.js)
-npm start
+```npm start```
 
 # Or for development with auto-restart
-npm run dev
+```npm run dev```
 
 # Install client dependencies
-npm install
+```npm install```
 
 # Start the React app (Vite)
-npm run dev
+```npm run dev```
 
 ### 1️⃣ Clone the repository
 ```bash
