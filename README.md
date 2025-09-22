@@ -27,6 +27,13 @@ Check out the project live and explore all features! 🎉
 
 ## ✨ Features
 
+### Product Reviews and Questions
+
+- **Product Reviews** – Users can leave reviews only for products they have purchased. Reviews include a rating in a five-star system. Users can edit their own reviews, and the history of changes is preserved so others can see how opinions evolved over time.  
+- **Product Questions** – Any user can ask questions about any product, regardless of purchase history.  
+- **Answers to Reviews and Questions** – Any user can post answers to existing reviews and questions.  
+- **Product Rating** – The average rating of a product is calculated automatically based on all reviews and displayed with the total number of reviews.
+
 - **Product Catalog with Filters:**
   - Brand, category, device model, device type, price range (slider)
 - Cart and Favorites 🛒❤️
