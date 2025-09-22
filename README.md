@@ -26,14 +26,13 @@ Check out the project live and explore all features! 🎉
 ---
 
 ## ✨ Features
-
-### Product Reviews and Questions
-
-- **Product Reviews** – Users can leave reviews only for products they have purchased. Reviews include a rating in a five-star system. Users can edit their own reviews, and the history of changes is preserved so others can see how opinions evolved over time.  
-- **Product Questions** – Any user can ask questions about any product, regardless of purchase history.  
-- **Answers to Reviews and Questions** – Any user can post answers to existing reviews and questions.  
-- **Product Rating** – The average rating of a product is calculated automatically based on all reviews and displayed with the total number of reviews.
-
+- **Reviews & Q&A:**
+  - Users can leave **reviews** only for products they purchased  
+  - Users can ask **questions** about products (any registered user)  
+  - **Answers** to reviews and questions can be written by any registered user  
+  - **Likes** can be added to reviews and questions  
+  - **Five-star rating system** for reviews, with average rating automatically calculated ⭐⭐⭐⭐⭐
+  - Reviews **cannot be deleted**, only edited; answers **can be deleted** by any registered user at any time
 - **Product Catalog with Filters:**
   - Brand, category, device model, device type, price range (slider)
 - Cart and Favorites 🛒❤️
@@ -41,6 +40,7 @@ Check out the project live and explore all features! 🎉
 - Password recovery via email link (valid for 5 minutes) 🔒
 - Fully responsive UI (desktop & mobile) 📱💻
 - Dark and light themes 🌙☀️
+
 - UX enhancements:
   - Product image zoom on hover 🔍
   - Scroll-to-top button ⬆️
@@ -59,13 +59,20 @@ Check out the project live and explore all features! 🎉
 ---
 
 ## ⚡ Installation & Setup
-cd server
-npm install          # Install backend dependencies
-npm start            # Run the server (Node.js)
+# Install server dependencies
+npm install
 
-cd client
-npm install          # Install frontend dependencies
-npm run dev          # Start the React app (Vite)
+# Run the server (Node.js)
+npm start
+
+# Or for development with auto-restart
+npm run dev
+
+# Install client dependencies
+npm install
+
+# Start the React app (Vite)
+npm run dev
 
 ### 1️⃣ Clone the repository
 ```bash
