@@ -19,6 +19,7 @@ A full-stack e-commerce platform for mobile components, built with React, Expres
 ---
 
 ## 🌐 Live Demo & Deployment
+Deployed on Vercel free tier, so the first request might take ~20–30s to start
 - **Client:** Deployed on Vercel (<https://no-doors-nine.vercel.app/>)  
 - **Server:** Deployed on Render)  
 Check out the project live and explore all features! 🎉
