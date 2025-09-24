@@ -16,15 +16,13 @@ import { togglePopup } from '../../redux/features/uiSlice'
 import { getOrder } from '@api/api'
 import EmptyPlaceholder from '../EmptyPlaceholder/EmptyPlaceholder'
 
+
 export default function OrderCard({ orderId, orderNumber }) {
-    // const [status, sum, date] = orderInfo
     const dispatch = useDispatch()
 
     const [order, setOrder] = useState()
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
-
-    const [paymentStatus, setPaymentStatus] = useState('')
 
     const date = new Date(order?.createdAt)
 
@@ -37,7 +35,9 @@ export default function OrderCard({ orderId, orderNumber }) {
             .finally(() => setIsLoading(false))
     }, [])
 
-    const onOrderCardClick = () => !error && dispatch(togglePopup({ type: 'order-card', data: orderId }))
+    const onOrderCardClick = () => {
+        !error && dispatch(togglePopup({ type: 'order-card', data: orderId }))
+    }
 
     return (
         <div className={styles['order-card']} onClick={onOrderCardClick}>

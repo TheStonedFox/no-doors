@@ -45,7 +45,7 @@ export default function CartItem({ productData, initialQuantityValue, viewOnly, 
 
     const onTitleClick = () => {
         navigate(`/products/${_id}`)
-        dispatch(togglePopup())
+        viewOnly && dispatch(togglePopup())
     }
 
     return (

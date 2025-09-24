@@ -1,0 +1,14 @@
+.timer {
+    display: flex;
+    justify-content: center;
+    background-color: var(--ui---bg-main-darker);
+    border-radius: 4px;
+    width: 100%;
+    padding: 10px 15px;
+
+    font-size: 20px;
+    color: var(--typography---second);
+    font-weight: 600;
+    user-select: none;
+
+}

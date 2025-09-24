@@ -1,6 +1,5 @@
 import Location from '../../components/Location/Location'
 import styles from './GuaranteesPage.module.css'
-
 export default function GuaranteesPage() {
     return (
         <section className={`${styles['guarantees-page']} container`}>

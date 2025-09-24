@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -20,6 +20,7 @@ import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
 import Spinner from '../../components/Spinner/Spinner'
 import { removeSendedCodes } from '../../api/api'
 import Location from '../../components/Location/Location'
+import Timer from '../../components/Timer/Timer'
 
 export default function AuthPage() {
 
@@ -49,7 +50,6 @@ export default function AuthPage() {
 
     const [isLadingEnd, setIsLadingEnd] = useState(true)
 
-
     const onRegisterButtonClick = () => {
 
         if (data.passwordCheck !== data.password) {
@@ -61,7 +61,6 @@ export default function AuthPage() {
 
         if (mode === 'email-confirm' && !data.emailConfirmCode) return dispatch(addNotification({ type: 'error', text: 'Введите код' }))
 
-        setIsLadingEnd(false)
         register(data)
             .then(res => {
                 if (res.code === 202) return setMode('email-confirm')
@@ -73,11 +72,17 @@ export default function AuthPage() {
                 setValidationErrors(error.data.validationErrors || null)
                 dispatch(addNotification({ type: 'error', text: error.message }))
                 reCaptchaRef.current.reset()
-
             })
             .finally(() => setIsLadingEnd(true))
+
+        setIsLadingEnd(false)
+        // registerFetch()
         setData(prev => ({ ...prev, emailConfirmCode: null }))
     }
+
+    // const registerFetch = () => {
+
+    // }
 
     const onLoginButtonClick = () => {
         setIsLadingEnd(false)
@@ -177,11 +182,11 @@ export default function AuthPage() {
                             isChecked={isPolicyAccepted}
                             title={<p>Я прочитал и даю своё согласие на <a href='#'>обработку
                                 персональных данных</a></p>}
-                            onChange={(value) => setIsPolicyAccepted(!value)}
+                            onChange={(value) => setIsPolicyAccepted(value)}
                         />
                     </div>}
 
-                    {mode === 'email-confirm' && <div className={styles['auth-box__input-box']}>
+                    {mode === 'email-confirm' && <div className={styles['auth-box__input-box']} style={{ alignItems: 'center' }}>
                         <h5>На почту {data.email} был отправлен код, введите его ниже.</h5>
                         <Input placeholder='000000' value={data.emailConfirmCode}
                             onChange={(value) => setData(prev => ({ ...prev, emailConfirmCode: value }))} />

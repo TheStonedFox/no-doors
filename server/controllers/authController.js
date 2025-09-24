@@ -39,20 +39,24 @@ export const register = async (req, res) => {
             await utilityLists.updateOne({ $push: { emailConfirmedCodes: { email: req.body.email, code: generatedCode, expires: Date.now() + 5 * 60 * 1000 } } })
 
             await sendEmail(req.body.email, 'Подтверждение электронной почты', confirmEmailTemplate(generatedCode))
-            return res.status(202).json({ message: 'Регистрация не завершена полностью.' })
+            return res.status(202).json({ message: 'Регистрация не завершена полностью.', code: 202 })
         }
 
         const emailCodes = await utilityLists.emailConfirmedCodes
         const code = emailCodes.find(item => item.code === req.body.emailConfirmCode)
 
         if (!code)
-            return res.status(404).json({ message: 'Код указан не верно.', })
+            return res.status(400).json({ message: 'Код указан не верно.', code: 400 })
 
-        // if (!code.expires > Date.now() || !code.email === req.body.email)
-        if (!code.expires > Date.now())
+        utilityLists.emailConfirmedCodes.filter(code => code.expires > Date.now())
+
+        await utilityLists.save()
+        if (code.expires < Date.now())
             return res.status(400).json({ message: 'Срок действия кода истек.', })
 
-        await UtilityListsModel.updateOne({}, { $pull: { emailConfirmedCodes: code } })
+        utilityLists.emailConfirmedCodes = utilityLists.emailConfirmedCodes.filter(c => c.expires > Date.now())
+
+        await utilityLists.save()
 
         const slat = await bcrypt.genSalt(10)
         const passwordHash = await bcrypt.hash(req.body.password, slat)

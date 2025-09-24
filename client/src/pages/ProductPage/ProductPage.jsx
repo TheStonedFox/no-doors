@@ -193,13 +193,13 @@ export default function ProductPage() {
 
     return (
         <div className={`${styles['product-page']} container`} style={isFullScreenMode ? { transform: 'none', animation: 'none' } : {}}>
-            <section className={styles['product-page__location']}>
+            {!isLoading ? <section className={styles['product-page__location']}>
                 <Link to='/'>Главная /</Link>
                 <Link to={`/search?brand=${product?.brand}`}>{product?.brand} /</Link>
                 <Link to={`/search?brand=${product?.brand}&model=${product?.model}`}>{product?.model} /</Link>
                 <Link to={`/search?brand=${product?.brand}&model=${product?.model}&category=${product?.category}`}>{product?.category} /</Link>
                 <Link>{product?.title}</Link>
-            </section>
+            </section> : <SkeletonLadingShimmer style={{ height: 20, width: '100%' }} />}
             <section className={styles['product-page__product-card']}>
                 {!isLoading ? <section className={styles['product-card__photos']}>
                     {inStock ? <div className={styles['product-card__tags']}>
@@ -301,31 +301,33 @@ export default function ProductPage() {
 
             </section >
 
-            {Boolean(comments?.length) && <section className={styles['product-page__comments']}>
-                <section className={styles['comments-header']}>
-                    <h2 className='section-title'>Отзывы к товару</h2>
-                    <Link to={`/products/${id}/comments?type=review`} className='header-link'>Смотреть все отзывы</Link>
+            {
+                Boolean(comments?.length) && <section className={styles['product-page__comments']}>
+                    <section className={styles['comments-header']}>
+                        <h2 className='section-title'>Отзывы к товару</h2>
+                        <Link to={`/products/${id}/comments?type=review`} className='header-link'>Смотреть все отзывы</Link>
+                    </section>
+
+                    <section className={styles['comments-slider-wrapper']}>
+                        <Swiper
+                            className={`${styles['comments-slider']}`}
+                            spaceBetween={50}
+                            slidesPerView={1}
+                            pagination={{ clickable: true, el: `.${styles.pagination}` }}>
+
+                            {comments.map(comment => <SwiperSlide className={styles['comments-slider__slide']} key={comment._id}>
+                                <Comment commentData={comment} />
+                            </SwiperSlide>)}
+
+                            <button title='Смотреть все отзывы' className={`${styles['comments-slider__more-button']} button`}
+                                onClick={() => navigate(`/products/${id}/comments?type=review`)}>
+                                <MdOutlineReadMore />
+                            </button>
+                        </Swiper>
+                    </section>
+
                 </section>
-
-                <section className={styles['comments-slider-wrapper']}>
-                    <Swiper
-                        className={`${styles['comments-slider']}`}
-                        spaceBetween={50}
-                        slidesPerView={1}
-                        pagination={{ clickable: true, el: `.${styles.pagination}` }}>
-
-                        {comments.map(comment => <SwiperSlide className={styles['comments-slider__slide']} key={comment._id}>
-                            <Comment commentData={comment} />
-                        </SwiperSlide>)}
-
-                        <button title='Смотреть все отзывы' className={`${styles['comments-slider__more-button']} button`}
-                            onClick={() => navigate(`/products/${id}/comments?type=review`)}>
-                            <MdOutlineReadMore />
-                        </button>
-                    </Swiper>
-                </section>
-
-            </section>}
+            }
 
             <PopularProductsList />
 
