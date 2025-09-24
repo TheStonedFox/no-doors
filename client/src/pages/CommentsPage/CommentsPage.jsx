@@ -38,6 +38,8 @@ export default function CommentsPage() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
 
+    const tokenStatus = useSelector(state => state.user.isTokenValid)
+
     useEffect(() => { setCommentType(query.get('type')) }, [query])
 
     useEffect(() => window.scrollTo({ top: 0, behavior: 'smooth' }), [pathname])
@@ -131,13 +133,13 @@ export default function CommentsPage() {
                     {reviewEligibility.isProductPurchased && commentType === 'review' ? <Button title={reviewEligibility.isUserCommented ? 'Обновить отзыв' : 'Оставить отзыв'} className={styles['resume__add-comment-button']}
                         onClick={onAddReviewButtonClick} /> : null}
                     {commentType === 'review' && !reviewEligibility.isProductPurchased ? <p style={{ fontSize: 14, color: 'var(--typography---second)' }}>*Отзыв можно оставить только купив товар</p> : null}
-                    {commentType === 'question' && <Button title='Задать вопрос' onClick={onAddQuestionButtonClick} />}
+                    {commentType === 'question' && tokenStatus && <Button title='Задать вопрос' onClick={onAddQuestionButtonClick} />}
                 </section>
 
                 {!isLoading ? <section className={styles['comments-page__reviews']}>
                     {comments?.sort((a, b) => a.userId.localeCompare(b.userId)).map(comment => <Comment key={comment._id} commentData={comment} />)}
 
-                    {!comments.length && !error && !isLoading && commentType === 'question' && <EmptyPlaceholder
+                    {!comments.length && !error && !isLoading && commentType === 'question' && tokenStatus && <EmptyPlaceholder
                         title='Вопросов пока нет.'
                         action={onAddQuestionButtonClick} actionTitle='У меня появился вопрос.👀' />}
 
