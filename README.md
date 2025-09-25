@@ -1,7 +1,7 @@
 # 💻 Computer Components E-Commerce (Full-Stack)
 
 **Description:**  
-A full-stack e-commerce platform for computer components, built with React, Express, and MongoDB. Users can browse products, filter by various criteria, add items to cart and favorites, and make purchases via integrated payment systems. Designed as a portfolio project to showcase modern web development skills. 🚀
+A full-stack e-commerce platform for mobile components, built with React, Express, and MongoDB. Users can browse products, filter by various criteria, add items to cart and favorites, and make purchases via integrated payment systems. Designed as a portfolio project to showcase modern web development skills. 
 
 ---
 
@@ -19,8 +19,9 @@ A full-stack e-commerce platform for computer components, built with React, Expr
 ---
 
 ## 🌐 Live Demo & Deployment
-- **Client:** Deployed on [Vercel](<https://no-doors-nine.vercel.app/>)  
-- **Server:** Deployed on [Render])  
+Deployed on Vercel free tier, so the first request might take ~20–30s to start
+- **Client:** Deployed on Vercel (<https://no-doors-nine.vercel.app/>)  
+- **Server:** Deployed on Render)  
 Check out the project live and explore all features! 🎉
 
 ---
