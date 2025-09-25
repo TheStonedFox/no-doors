@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -13,7 +13,6 @@ import { addNotification } from '../../redux/features/uiSlice'
 
 import { useDispatch } from 'react-redux'
 import RegisterAdvantagesIcon from '../../svg/RegisterAdvantagesIcon'
-
 import ReCAPTCHA from 'react-google-recaptcha'
 import { checkTokenThunk, setUserData } from '../../redux/features/userSlice'
 
@@ -42,13 +41,15 @@ export default function AuthPage() {
     const [validationErrors, setValidationErrors] = useState([])
     const [isCaptchaNeed, setIsCaptchaNeed] = useState(false)
     const [isPolicyAccepted, setIsPolicyAccepted] = useState(false)
+    const [isLadingEnd, setIsLadingEnd] = useState(true)
+
 
     useEffect(() => {
         if (reCaptchaRef.current)
             reCaptchaRef.current.reset()
     }, [mode, isCaptchaNeed])
 
-    const [isLadingEnd, setIsLadingEnd] = useState(true)
+
 
     const onRegisterButtonClick = () => {
 
@@ -60,7 +61,14 @@ export default function AuthPage() {
             return dispatch(addNotification({ type: 'info', text: 'Вы должны дать свое согласие на обработку персональных данных, прежде чем завершить регистрацию.' }))
 
         if (mode === 'email-confirm' && !data.emailConfirmCode) return dispatch(addNotification({ type: 'error', text: 'Введите код' }))
+        registerFetch()
 
+
+        setIsLadingEnd(false)
+        setData(prev => ({ ...prev, emailConfirmCode: null }))
+    }
+
+    const registerFetch = () => {
         register(data)
             .then(res => {
                 if (res.code === 202) return setMode('email-confirm')
@@ -74,15 +82,7 @@ export default function AuthPage() {
                 reCaptchaRef.current.reset()
             })
             .finally(() => setIsLadingEnd(true))
-
-        setIsLadingEnd(false)
-        // registerFetch()
-        setData(prev => ({ ...prev, emailConfirmCode: null }))
     }
-
-    // const registerFetch = () => {
-
-    // }
 
     const onLoginButtonClick = () => {
         setIsLadingEnd(false)
@@ -124,10 +124,7 @@ export default function AuthPage() {
             .finally(() => setIsLadingEnd(true))
     }
 
-    useEffect(() => {
-        setData(prev => ({ ...prev, emailConfirmCode: null }))
-        validationErrors && setValidationErrors([])
-    }, [mode])
+
 
     const [rememberMe, setRememberMe] = useState(localStorage.getItem('rememberMe') === 'false' ? false : true)
 
@@ -136,78 +133,87 @@ export default function AuthPage() {
             <Location path='auth' />
             <h2 className={`${'section-title'} ${styles['auth-page__title']}`}>Вход и регистрация</h2>
             <div className={styles['auth-page__layout']}>
-                {isLadingEnd ? <div className={styles['auth-page__auth-box']}>
-                    <h3>
-                        {mode === 'login' && 'Вход'}
-                        {mode === 'register' && 'Регистрация'}
-                        {mode === 'reset' && 'Восстановление пароля'}
-                    </h3>
-
-                    {mode === 'register' && <div className={styles['auth-box__input-box']}>
-                        <h5>ФИО:</h5>
-                        <Input placeholder='Иванов Иван Иванович' type='text' value={data.fio} errorFrame={validationErrors?.find(error => error.path === 'fio')} onChange={(value) => setData(prev => ({ ...prev, fio: value }))} />
+                <section className={styles['auth-page__modes']}>
+                    {!isLadingEnd && <div className={styles['auth-page__loading-curtain']}>
+                        <Spinner />
                     </div>}
 
-                    {mode === 'register' && <div className={styles['auth-box__input-box']}>
-                        <h5>Телефон:</h5>
-                        <Input placeholder='0123456789' type='tel' value={data.phone} errorFrame={validationErrors?.find(error => error.path === 'phone')} onChange={(value) => setData(prev => ({ ...prev, phone: value }))} />
-                    </div>}
+                    <div className={styles['auth-page__auth-box']}>
+                        <h3>
+                            {mode === 'login' && 'Вход'}
+                            {mode === 'register' && 'Регистрация'}
+                            {mode === 'reset' && 'Восстановление пароля'}
+                        </h3>
 
-                    {mode !== 'email-confirm' && <div className={styles['auth-box__input-box']}>
-                        <h5>Электронная почта:</h5>
-                        <Input placeholder='example@mail.com' type='email' value={data.email} errorFrame={validationErrors?.find(error => error.path === 'email')} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />
-                    </div>}
+                        {mode === 'register' && <div className={styles['auth-box__input-box']}>
+                            <h5>ФИО:</h5>
+                            <Input placeholder='Иванов Иван Иванович' type='text' value={data.fio} errorFrame={validationErrors?.find(error => error.path === 'fio')} onChange={(value) => setData(prev => ({ ...prev, fio: value }))} />
+                        </div>}
 
-                    {mode !== 'reset' && mode !== 'email-confirm' && <div className={styles['auth-box__input-box']}>
-                        <h5>Пароль:</h5>
-                        <Input placeholder='Введите пароль' type='password' value={data.password} errorFrame={validationErrors?.find(error => error.path === 'password')} onChange={(value) => setData(prev => ({ ...prev, password: value }))} />
-                    </div>}
+                        {mode === 'register' && <div className={styles['auth-box__input-box']}>
+                            <h5>Телефон:</h5>
+                            <Input placeholder='0123456789' type='tel' value={data.phone} errorFrame={validationErrors?.find(error => error.path === 'phone')} onChange={(value) => setData(prev => ({ ...prev, phone: value }))} />
+                        </div>}
 
-                    {mode === 'register' && <div className={styles['auth-box__input-box']}>
-                        <h5>Пароль еще раз:</h5>
-                        <Input placeholder='Введите пароль еще раз' value={data.passwordCheck} onChange={(value) => setData(prev => ({ ...prev, passwordCheck: value }))} />
-                    </div>}
+                        {mode !== 'email-confirm' && <div className={styles['auth-box__input-box']}>
+                            <h5>Электронная почта:</h5>
+                            <Input placeholder='example@mail.com' type='email' value={data.email} errorFrame={validationErrors?.find(error => error.path === 'email')} onChange={(value) => setData(prev => ({ ...prev, email: value }))} />
 
-                    {mode === 'login' && <div className={styles['auth-page__remember-me-box']}>
-                        <Checkbox title='Запомнить меня' onChange={(value) => {
-                            setRememberMe(value)
-                            localStorage.setItem('rememberMe', value)
-                        }}
-                            isChecked={rememberMe} />
-                        <Link onClick={() => setMode('reset')}>Забыли пароль?</Link>
-                    </div>}
+                        </div>}
 
-                    {mode === 'register' && <div className={styles['auth-page__policy-box']}>
-                        <Checkbox
-                            isChecked={isPolicyAccepted}
-                            title={<p>Я прочитал и даю своё согласие на <a href='#'>обработку
-                                персональных данных</a></p>}
-                            onChange={(value) => setIsPolicyAccepted(value)}
-                        />
-                    </div>}
+                        {mode !== 'reset' && mode !== 'email-confirm' && <div className={styles['auth-box__input-box']}>
+                            <h5>Пароль:</h5>
+                            <Input placeholder='Введите пароль' type='password' value={data.password} errorFrame={validationErrors?.find(error => error.path === 'password')} onChange={(value) => setData(prev => ({ ...prev, password: value }))} />
+                        </div>}
 
-                    {mode === 'email-confirm' && <div className={styles['auth-box__input-box']} style={{ alignItems: 'center' }}>
-                        <h5>На почту {data.email} был отправлен код, введите его ниже.</h5>
-                        <Input placeholder='000000' value={data.emailConfirmCode}
-                            onChange={(value) => setData(prev => ({ ...prev, emailConfirmCode: value }))} />
-                    </div>}
+                        {mode === 'register' && <div className={styles['auth-box__input-box']}>
+                            <h5>Пароль еще раз:</h5>
+                            <Input placeholder='Введите пароль еще раз' value={data.passwordCheck} onChange={(value) => setData(prev => ({ ...prev, passwordCheck: value }))} />
+                        </div>}
 
-                    {isCaptchaNeed && mode === 'email-confirm' || mode !== 'register' ? <ReCAPTCHA
-                        ref={reCaptchaRef}
-                        style={{ margin: '0 auto' }}
-                        sitekey={import.meta.env.VITE_RE_CAPTCHA_SITE_KEY}
-                        onChange={(token) => setData(prev => ({ ...prev, reCaptchaToken: token }))}></ReCAPTCHA> : false}
+                        {mode === 'login' && <div className={styles['auth-page__remember-me-box']}>
+                            <Checkbox title='Запомнить меня' onChange={(value) => {
+                                setRememberMe(value)
+                                localStorage.setItem('rememberMe', value)
+                            }}
+                                isChecked={rememberMe} />
+                            <Link onClick={() => setMode('reset')}>Забыли пароль?</Link>
+                        </div>}
 
-                    <div className={styles['auth-page__buttons']}>
-                        {mode === 'login' && <Button title='Войти' onClick={onLoginButtonClick} />}
-                        {mode === 'login' && <BorderedButton onClick={() => setMode('register')} title='Зарегистрироваться' />}
-                        {mode === 'register' && <Button title='Продолжить' onClick={onRegisterButtonClick} />}
-                        {mode === 'email-confirm' && <Button title='Зарегистрироваться' onClick={onRegisterButtonClick} />}
-                        {mode === 'reset' && <Button onClick={onResetPasswordButtonClick} title='Восстановить пароль' />}
-                        {mode !== 'login' && <BorderedButton onClick={onGoBackButtonClick} title='Назад' />}
+                        {mode === 'register' && <div className={styles['auth-page__policy-box']}>
+                            <Checkbox
+                                isChecked={isPolicyAccepted}
+                                title={<p>Я прочитал и даю своё согласие на <a href='#'>обработку
+                                    персональных данных</a></p>}
+                                onChange={(value) => setIsPolicyAccepted(value)}
+                            />
+                        </div>}
+
+                        {mode === 'email-confirm' && <div className={styles['auth-box__input-box']} style={{ alignItems: 'center' }}>
+                            <h5>На почту {data.email} был отправлен код, введите его ниже.</h5>
+                            <Input placeholder='000000' value={data.emailConfirmCode}
+                                onChange={(value) => setData(prev => ({ ...prev, emailConfirmCode: value }))} />
+                            <Timer timerValue={300} onRestart={registerFetch} />
+                        </div>}
+
+                        {isCaptchaNeed && mode === 'email-confirm' || mode !== 'register' ? <ReCAPTCHA
+                            ref={reCaptchaRef}
+                            style={{ margin: '0 auto' }}
+                            sitekey={import.meta.env.VITE_RE_CAPTCHA_SITE_KEY}
+                            onChange={(token) => setData(prev => ({ ...prev, reCaptchaToken: token }))}></ReCAPTCHA> : false}
+
+                        <div className={styles['auth-page__buttons']}>
+                            {mode === 'login' && <Button title='Войти' onClick={onLoginButtonClick} />}
+                            {mode === 'login' && <BorderedButton onClick={() => setMode('register')} title='Зарегистрироваться' />}
+                            {mode === 'register' && <Button title='Продолжить' onClick={onRegisterButtonClick} />}
+                            {mode === 'email-confirm' && <Button title='Зарегистрироваться' onClick={onRegisterButtonClick} />}
+                            {mode === 'reset' && <Button onClick={onResetPasswordButtonClick} title='Восстановить пароль' />}
+                            {mode !== 'login' && <BorderedButton onClick={onGoBackButtonClick} title='Назад' />}
+                        </div>
+
                     </div>
+                </section>
 
-                </div> : <Spinner />}
                 <div className={styles['auth-page__advantages-box']}>
                     <RegisterAdvantagesIcon className={styles['advantages-box__icon']} />
                     <h3 className={styles['advantages-box__title']}>У зарегистрированных пользователей ряд преимуществ:</h3>
@@ -230,6 +236,7 @@ export default function AuthPage() {
                 </div>
 
             </div>
+
         </div >
     )
 }

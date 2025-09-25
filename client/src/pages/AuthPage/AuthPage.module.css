@@ -4,6 +4,7 @@
     margin: 0 auto;
     max-width: var(--container-width);
     padding-top: 20px;
+    padding-bottom: 60px;
 }
 
 .auth-page__title {
@@ -12,6 +13,7 @@
 }
 
 .auth-page__layout {
+    position: relative;
     display: grid;
     grid-template-columns: 380px auto;
     gap: 30px;
@@ -111,6 +113,23 @@
 
 .advantages-box__list>li>ul>li::first-letter {
     color: var(--ui---main);
+}
+
+.auth-page__modes {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-page__loading-curtain {
+    display: flex;
+    align-content: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: var(--ui---bg-main-darker);
+    border-radius: 8px;
+    z-index: 10;
 }
 
 @media(max-width: 992px) {
